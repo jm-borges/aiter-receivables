@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
-use App\Models\BusinessPartner;
+use App\Models\Core\BusinessPartner;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; 
-        
+use Illuminate\Http\Request;
+
 class BusinessPartnerService
 {
     /**

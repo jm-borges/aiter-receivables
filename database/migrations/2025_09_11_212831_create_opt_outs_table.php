@@ -12,7 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('opt_outs', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+
+            // Relacionamento com OptIn
+            $table->uuid('opt_in_id')->nullable()->index();
+
+            // Status e identificadores
+            $table->string('status')->nullable();
+            $table->string('identd_ctrl_opt_in')->nullable();
+            $table->string('identdCtrlReqSolicte')->nullable();
+            $table->string('identdCtrlOptOut')->nullable();
+
             $table->timestamps();
         });
     }

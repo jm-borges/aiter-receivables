@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
 use App\Actions\RRC0013Action;
 use App\Enums\OptInStatus;
@@ -45,7 +45,7 @@ class OptOutService
 
         if (!$optIn->optOut) {
             $optIn->optOut = OptOut::create([
-                'opt_in' => $optIn->id,
+                'opt_in_id' => $optIn->id,
                 'status' => OptOutStatus::PENDING,
                 'identd_ctrl_opt_in' => $optIn->identdCtrlOptIn,
                 'identdCtrlReqSolicte' => (string) Str::uuid(),

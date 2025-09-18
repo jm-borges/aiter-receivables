@@ -12,7 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contracts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+
+            $table->uuid('client_id')->nullable()->index();
+            $table->uuid('supplier_id')->nullable()->index();
+
+            $table->double('value')->nullable();
+
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+
+            $table->string('status')->nullable();
+
             $table->timestamps();
         });
     }

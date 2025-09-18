@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Core;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +13,10 @@ class Receivable extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
+        'opt_in_id',
         'client_id',
         'acquirer_id',
+        'payment_arrangement_id',
         'contract_id',
         'tpObj',
         'cnpjER',
@@ -49,8 +51,18 @@ class Receivable extends Model
         return $this->belongsTo(BusinessPartner::class, 'acquirer_id');
     }
 
+    public function paymentArrangement(): BelongsTo
+    {
+        return $this->belongsTo(PaymentArrangement::class);
+    }
+
     public function contract(): BelongsTo
     {
         return $this->belongsTo(Contract::class, 'contract_id');
+    }
+
+    public function optIn(): BelongsTo
+    {
+        return $this->belongsTo(OptIn::class);
     }
 }

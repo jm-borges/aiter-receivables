@@ -12,7 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('business_partners', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+
+            $table->string('name')->nullable();
+            $table->string('fantasy_name')->nullable();
+            $table->text('description')->nullable();
+            $table->string('type')->nullable();
+
+            $table->string('document_number')->nullable()->index();
+            $table->string('state_subscription')->nullable();
+            $table->string('city_subscription')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+
+            $table->string('postal_code')->nullable();
+            $table->string('address')->nullable();
+            $table->string('address_number')->nullable();
+            $table->string('address_complement')->nullable();
+            $table->string('address_neighborhood')->nullable();
+            $table->string('address_city')->nullable();
+            $table->string('address_city_code')->nullable();
+            $table->string('address_state')->nullable();
+            $table->string('address_state_code')->nullable();
+
             $table->timestamps();
         });
     }

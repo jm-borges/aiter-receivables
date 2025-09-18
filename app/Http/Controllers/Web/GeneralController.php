@@ -3,16 +3,12 @@
 namespace App\Http\Controllers\Web;
 
 use App\Actions\RRC0011Action;
-use App\Actions\RRC0013Action;
-use App\Enums\OptInStatus;
-use App\Enums\OptOutStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Core\BusinessPartner;
 use App\Models\Operation;
 use App\Models\Core\OptIn;
-use App\Models\Core\OptOut;
 use App\Models\Core\PaymentArrangement;
-use App\Models\Receivable;
+use App\Models\Core\Receivable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -31,6 +27,9 @@ class GeneralController extends Controller
         $receivables = Receivable::get();
         $operations = Operation::get();
 
+        //A QUESTÃO DA PAGINAÇÃO NA RRC0010
+
+        //NA RRC0010, QUEM É O TITULAR?
 
         //O que é o valor total e o valor livre usuario final de um recebível?
         // O que impede a Altri de especificar que um determinado valor de recebível deve ficar como garantia para ela?

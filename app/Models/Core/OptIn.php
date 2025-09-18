@@ -6,6 +6,8 @@ use App\Enums\OptInStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OptIn extends Model
@@ -51,5 +53,30 @@ class OptIn extends Model
     public function optOut(): HasOne
     {
         return $this->hasOne(OptOut::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(BusinessPartner::class, 'client_id');
+    }
+
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function acquirer(): BelongsTo
+    {
+        return $this->belongsTo(BusinessPartner::class, 'acquirer_id');
+    }
+
+    public function paymentArrangement(): BelongsTo
+    {
+        return $this->belongsTo(PaymentArrangement::class);
+    }
+
+    public function receivables(): HasMany
+    {
+        return $this->hasMany(Receivable::class);
     }
 }

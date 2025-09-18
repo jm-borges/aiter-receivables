@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
-use App\Models\BusinessPartner;
+use App\Models\Core\BusinessPartner;
 use App\Enums\BusinessPartnerType;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class BusinessPartnerController extends Controller

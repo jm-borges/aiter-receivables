@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Jobs\DispatchOptInJob;
 use App\Models\Core\Contract;
 use App\Models\Core\BusinessPartner;

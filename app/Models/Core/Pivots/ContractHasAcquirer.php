@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Pivots;
+namespace App\Models\Core\Pivots;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;

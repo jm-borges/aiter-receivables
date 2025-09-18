@@ -31,10 +31,15 @@
                 <a href="{{ route('contracts.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
                     Contratos
                 </a>
+                <a href="{{ route('opt-ins.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
+                    Opt-Ins
+                </a>
+                <a href="{{ route('receivables.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
+                    Recebíveis
+                </a>
             </nav>
         </div>
     </header>
-
 
     {{-- Main content --}}
     <main class="flex-1 max-w-7xl mx-auto p-6 space-y-6">

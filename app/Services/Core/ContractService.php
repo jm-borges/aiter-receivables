@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
-use App\Models\Contract;
+use App\Models\Core\Contract;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; 
-        
+use Illuminate\Http\Request;
+
 class ContractService
 {
     /**

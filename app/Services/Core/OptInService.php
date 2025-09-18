@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
 use App\Jobs\RequestOptInJob;
 use App\Models\Core\BusinessPartner;

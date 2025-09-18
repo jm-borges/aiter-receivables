@@ -13,15 +13,25 @@ return new class extends Migration
     {
         Schema::create('receivables', function (Blueprint $table) {
             $table->uuid('id')->primary();
+
+            // Relacionamentos
+            $table->uuid('opt_in_id')->nullable()->index();
+            $table->uuid('client_id')->nullable()->index();
+            $table->uuid('acquirer_id')->nullable()->index();
+            $table->uuid('payment_arrangement_id')->nullable()->index();
+            $table->uuid('contract_id')->nullable()->index();
+
+            // Dados do recebível
             $table->string('tpObj')->nullable();
             $table->string('cnpjER')->nullable();
             $table->string('cnpjCreddrSub')->nullable();
-            $table->unsignedInteger('codInstitdrArrajPgto')->nullable();
+            $table->string('codInstitdrArrajPgto')->nullable();
             $table->string('cnpjOuCnpjBaseOuCpfUsuFinalRecbdr')->nullable();
             $table->double('vlrLivreUsuFinalRecbdr')->nullable();
             $table->date('dtPrevtLiquid')->nullable();
             $table->double('vlrTot')->nullable();
             $table->string('indrDomcl')->nullable();
+
             $table->timestamps();
         });
     }

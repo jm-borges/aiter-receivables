@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
 use App\Jobs\GetContractReceivablesJob;
 use App\Models\Core\Contract;
-use App\Models\Receivable;
+use App\Models\Core\Receivable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 

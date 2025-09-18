@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
-use App\Models\PaymentArrangement;
+use App\Models\Core\PaymentArrangement;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; 
-        
+use Illuminate\Http\Request;
+
 class PaymentArrangementService
 {
     /**

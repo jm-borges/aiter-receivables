@@ -14,7 +14,7 @@ class OptOut extends Model
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'opt_in',
+        'opt_in_id',
         'status',
         'identd_ctrl_opt_in',
         'identdCtrlReqSolicte',

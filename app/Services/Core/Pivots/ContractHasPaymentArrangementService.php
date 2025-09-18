@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core\Pivots;
 
-use App\Models\ContractHasPaymentArrangement;
+use App\Models\Core\Pivots\ContractHasPaymentArrangement;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; 
-        
+use Illuminate\Http\Request;
+
 class ContractHasPaymentArrangementService
 {
     /**
