@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\ReceivableService;
+use App\Services\Core\ReceivableService;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('clean:old-records')->dailyAt('23:59');
