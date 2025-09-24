@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\OptOuts\GetOptOutsRequest;
 use App\Http\Requests\OptOuts\StoreOptOutRequest;
 use App\Http\Requests\OptOuts\UpdateOptOutRequest;
 use App\Http\Resources\OptOutResource;
-use App\Models\OptOut;
-use App\Services\OptOutService;
+use App\Models\Core\OptOut;
+use App\Services\Core\OptOutService;
 use Illuminate\Http\JsonResponse;
 
 class OptOutController extends Controller

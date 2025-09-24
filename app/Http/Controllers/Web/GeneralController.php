@@ -25,7 +25,6 @@ class GeneralController extends Controller
     {
         $optIns = OptIn::get();
         $receivables = Receivable::get();
-        $operations = Operation::get();
 
         //A QUESTÃO DA PAGINAÇÃO NA RRC0010
 
@@ -40,7 +39,7 @@ class GeneralController extends Controller
         //Quem são os "titulares" ?
         //Uma unidade recebível nunca tem uma ID ou um identificador único? 
 
-        return view('index', ['optIns' => $optIns, 'receivables' => $receivables, 'operations' => $operations]);
+        return view('index', ['optIns' => $optIns, 'receivables' => $receivables]);
     }
 
     public function optIn(Request $request)

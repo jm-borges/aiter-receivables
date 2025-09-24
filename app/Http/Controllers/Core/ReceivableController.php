@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Receivables\GetReceivablesRequest;
 use App\Http\Requests\Receivables\StoreReceivableRequest;
 use App\Http\Requests\Receivables\UpdateReceivableRequest;
 use App\Http\Resources\ReceivableResource;
-use App\Models\Receivable;
-use App\Services\ReceivableService;
+use App\Models\Core\Receivable;
+use App\Services\Core\ReceivableService;
 use Illuminate\Http\JsonResponse;
 
 class ReceivableController extends Controller

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\BusinessPartners\GetBusinessPartnersRequest;
 use App\Http\Requests\BusinessPartners\StoreBusinessPartnerRequest;
 use App\Http\Requests\BusinessPartners\UpdateBusinessPartnerRequest;
 use App\Http\Resources\BusinessPartnerResource;
-use App\Models\BusinessPartner;
-use App\Services\BusinessPartnerService;
+use App\Models\Core\BusinessPartner;
+use App\Services\Core\BusinessPartnerService;
 use Illuminate\Http\JsonResponse;
 
 class BusinessPartnerController extends Controller

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\OptIns\GetOptInsRequest;
 use App\Http\Requests\OptIns\StoreOptInRequest;
 use App\Http\Requests\OptIns\UpdateOptInRequest;
 use App\Http\Resources\OptInResource;
-use App\Models\OptIn;
-use App\Services\OptInService;
+use App\Models\Core\OptIn;
+use App\Services\Core\OptInService;
 use Illuminate\Http\JsonResponse;
 
 class OptInController extends Controller

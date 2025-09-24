@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core\Pivots;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractHasPaymentArrangements\GetContractHasPaymentArrangementsRequest;
 use App\Http\Requests\ContractHasPaymentArrangements\StoreContractHasPaymentArrangementRequest;
 use App\Http\Requests\ContractHasPaymentArrangements\UpdateContractHasPaymentArrangementRequest;
 use App\Http\Resources\ContractHasPaymentArrangementResource;
-use App\Models\ContractHasPaymentArrangement;
-use App\Services\ContractHasPaymentArrangementService;
+use App\Models\Core\Pivots\ContractHasPaymentArrangement;
+use App\Services\Core\Pivots\ContractHasPaymentArrangementService;
 use Illuminate\Http\JsonResponse;
 
 class ContractHasPaymentArrangementController extends Controller

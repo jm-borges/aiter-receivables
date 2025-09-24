@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core\Pivots;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractHasAcquirers\GetContractHasAcquirersRequest;
 use App\Http\Requests\ContractHasAcquirers\StoreContractHasAcquirerRequest;
 use App\Http\Requests\ContractHasAcquirers\UpdateContractHasAcquirerRequest;
 use App\Http\Resources\ContractHasAcquirerResource;
-use App\Models\ContractHasAcquirer;
-use App\Services\ContractHasAcquirerService;
+use App\Models\Core\Pivots\ContractHasAcquirer;
+use App\Services\Core\Pivots\ContractHasAcquirerService;
 use Illuminate\Http\JsonResponse;
 
 class ContractHasAcquirerController extends Controller

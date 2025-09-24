@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentArrangements\GetPaymentArrangementsRequest;
 use App\Http\Requests\PaymentArrangements\StorePaymentArrangementRequest;
 use App\Http\Requests\PaymentArrangements\UpdatePaymentArrangementRequest;
 use App\Http\Resources\PaymentArrangementResource;
-use App\Models\PaymentArrangement;
-use App\Services\PaymentArrangementService;
+use App\Models\Core\PaymentArrangement;
+use App\Services\Core\PaymentArrangementService;
 use Illuminate\Http\JsonResponse;
 
 class PaymentArrangementController extends Controller

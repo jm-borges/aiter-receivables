@@ -2,148 +2,156 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h1>Detalhes do Parceiro</h1>
-
-        <div class="mb-3">
-            <a href="{{ route('business-partners.edit', $businessPartner) }}" class="btn btn-warning">Editar</a>
-            <a href="{{ route('business-partners.index') }}" class="btn btn-secondary">Voltar</a>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold text-gray-800">Detalhes do Parceiro</h1>
+            <div class="space-x-2">
+                <a href="{{ route('business-partners.edit', $businessPartner) }}"
+                    class="inline-flex items-center px-4 py-2 bg-yellow-500 text-white text-sm font-medium rounded-md shadow hover:bg-yellow-600">
+                    Editar
+                </a>
+                <a href="{{ route('business-partners.index') }}"
+                    class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-md shadow hover:bg-gray-300">
+                    Voltar
+                </a>
+            </div>
         </div>
 
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <th>Nome</th>
-                    <td>{{ $businessPartner->name }}</td>
-                </tr>
-                <tr>
-                    <th>Nome Fantasia</th>
-                    <td>{{ $businessPartner->fantasy_name }}</td>
-                </tr>
-                <tr>
-                    <th>Tipo</th>
-                    <td>{{ $businessPartner->type->label() }}</td>
-                </tr>
-                <tr>
-                    <th>Documento</th>
-                    <td>{{ $businessPartner->document_number }}</td>
-                </tr>
-                <tr>
-                    <th>Email</th>
-                    <td>{{ $businessPartner->email }}</td>
-                </tr>
-                <tr>
-                    <th>Telefone</th>
-                    <td>{{ $businessPartner->phone }}</td>
-                </tr>
-            </tbody>
-        </table>
+        {{-- Dados principais --}}
+        <div class="bg-white shadow rounded-lg mb-8">
+            <table class="min-w-full divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Nome</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Nome Fantasia</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->fantasy_name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Tipo</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->type->label() }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Documento</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->document_number }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Telefone</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <h4>Endereço</h4>
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <th>CEP</th>
-                    <td>{{ $businessPartner->postal_code }}</td>
-                </tr>
-                <tr>
-                    <th>Rua</th>
-                    <td>{{ $businessPartner->address }}</td>
-                </tr>
-                <tr>
-                    <th>Número</th>
-                    <td>{{ $businessPartner->address_number }}</td>
-                </tr>
-                <tr>
-                    <th>Complemento</th>
-                    <td>{{ $businessPartner->address_complement }}</td>
-                </tr>
-                <tr>
-                    <th>Bairro</th>
-                    <td>{{ $businessPartner->address_neighborhood }}</td>
-                </tr>
-                <tr>
-                    <th>Cidade</th>
-                    <td>{{ $businessPartner->address_city }}</td>
-                </tr>
-                <tr>
-                    <th>Estado</th>
-                    <td>{{ $businessPartner->address_state }}</td>
-                </tr>
-            </tbody>
-        </table>
+        {{-- Endereço --}}
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Endereço</h2>
+        <div class="bg-white shadow rounded-lg mb-8">
+            <table class="min-w-full divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">CEP</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->postal_code }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Rua</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->address }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Número</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->address_number }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Complemento</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->address_complement }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Bairro</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->address_neighborhood }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Cidade</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->address_city }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Estado</th>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->address_state }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Contratos --}}
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Contratos</h2>
+        @if ($businessPartner->contracts->isEmpty())
+            <p class="text-sm text-gray-500">Nenhum contrato registrado.</p>
+        @else
+            <div class="overflow-x-auto bg-white shadow rounded-lg mb-8">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Cliente</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Fornecedor</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Valor</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Início</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Fim</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach ($businessPartner->contracts as $contract)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $contract->id }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $contract->client->name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $contract->supplier->name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $contract->value }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $contract->start_date }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $contract->end_date }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
+        {{-- Recebíveis --}}
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Recebíveis</h2>
+        @if ($businessPartner->receivables->isEmpty())
+            <p class="text-sm text-gray-500">Nenhum recebível registrado.</p>
+        @else
+            <div class="overflow-x-auto bg-white shadow rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Descrição</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Contrato</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Data</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Valor</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach ($businessPartner->receivables as $receivable)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $receivable->id }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $receivable->tpObj }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">
+                                    {{ $receivable->contract ? $receivable->contract->id : '—' }}
+                                </td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $receivable->dtPrevtLiquid }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $receivable->vlrTot }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ $receivable->status }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
-
-    {{-- Contratos --}}
-    <h4>Contratos</h4>
-    @php
-        $contracts = $businessPartner->contracts;
-    @endphp
-
-    @if ($contracts->isEmpty())
-        <p>Nenhum contrato registrado.</p>
-    @else
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Fornecedor</th>
-                    <th>Valor</th>
-                    <th>Início</th>
-                    <th>Fim</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($contracts as $contract)
-                    <tr>
-                        <td>{{ $contract->id }}</td>
-                        <td>{{ $contract->client->name }}</td>
-                        <td>{{ $contract->supplier->name }}</td>
-                        <td>{{ $contract->value }}</td>
-                        <td>{{ $contract->start_date }}</td>
-                        <td>{{ $contract->end_date }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-
-    {{-- Recebíveis --}}
-    <h4>Recebíveis</h4>
-    @if ($businessPartner->receivables->isEmpty())
-        <p>Nenhum recebível registrado.</p>
-    @else
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Descrição</th>
-                    <th>Contrato</th>
-                    <th>Data</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($businessPartner->receivables as $receivable)
-                    <tr>
-                        <td>{{ $receivable->id }}</td>
-                        <td>{{ $receivable->tpObj }}</td>
-                        <td>
-                            @if ($receivable->contract)
-                                {{ $receivable->contract->id }}
-                            @else
-                                —
-                            @endif
-                        </td>
-                        <td>{{ $receivable->dtPrevtLiquid }}</td>
-                        <td>{{ $receivable->vlrTot }}</td>
-                        <td>{{ $receivable->status }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
-
 @endsection

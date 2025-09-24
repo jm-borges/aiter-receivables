@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Contracts\GetContractsRequest;
 use App\Http\Requests\Contracts\StoreContractRequest;
 use App\Http\Requests\Contracts\UpdateContractRequest;
 use App\Http\Resources\ContractResource;
-use App\Models\Contract;
-use App\Services\ContractService;
+use App\Models\Core\Contract;
+use App\Services\Core\ContractService;
 use Illuminate\Http\JsonResponse;
 
 class ContractController extends Controller
