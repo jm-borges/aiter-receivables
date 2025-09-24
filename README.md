@@ -229,6 +229,64 @@ O protótipo utiliza **rotas web** (`routes/web.php`) para exibir telas simples 
 
 ---
 
+## ▶️ Como Rodar o Projeto
+
+### 🔧 Pré-requisitos
+
+* **PHP 8.3+**
+* **Composer**
+* **MySQL** ou outro banco configurado no `.env`
+* Extensões PHP comuns: `mbstring`, `openssl`, `pdo`, `tokenizer`, `xml`
+
+### 🚀 Passos de Instalação
+
+1. **Clonar o repositório**
+
+   ```bash
+   git clone <url-do-repo>
+   cd dix_receivables
+   ```
+
+2. **Criar o arquivo de configuração `.env`**
+
+   * Copiar o exemplo:
+
+     ```bash
+     cp .env.example .env
+     ```
+   * Editar o `.env` e configurar:
+
+     * Conexão com o banco de dados (`DB_*`)
+     * Serviços externos (Nuclea, RTM, Bugsnag, etc.)
+
+3. **Instalar dependências PHP**
+
+   ```bash
+   composer install
+   ```
+
+4. **Gerar chave da aplicação**
+
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Executar as migrations**
+
+   ```bash
+   php artisan migrate
+   ```
+
+6. **Rodar o servidor local**
+
+   ```bash
+   php artisan serve
+   ```
+
+   O sistema ficará disponível em: [http://localhost:8000](http://localhost:8000)
+
+---
+
 ## 🗂️ Estrutura de Pastas e Responsabilidades
 
 ### 1. **Ações (`app/Actions`)**
