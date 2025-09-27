@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Receivable extends Model
 {
@@ -17,7 +18,6 @@ class Receivable extends Model
         'client_id',
         'acquirer_id',
         'payment_arrangement_id',
-        'contract_id',
         'tpObj',
         'cnpjER',
         'cnpjCreddrSub',
@@ -56,9 +56,10 @@ class Receivable extends Model
         return $this->belongsTo(PaymentArrangement::class);
     }
 
-    public function contract(): BelongsTo
+    public function contracts(): BelongsToMany
     {
-        return $this->belongsTo(Contract::class, 'contract_id');
+        return $this->belongsToMany(Contract::class, 'contract_has_receivables')
+            ->withPivot(['amount']);
     }
 
     public function optIn(): BelongsTo

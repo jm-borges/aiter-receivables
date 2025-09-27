@@ -66,8 +66,8 @@ class BusinessPartner extends Model
     public function receivables(): HasMany
     {
         return match ($this->type) {
-            BusinessPartnerType::CLIENT   => $this->hasMany(Contract::class, 'client_id'),
-            BusinessPartnerType::ACQUIRER => $this->hasMany(Contract::class, 'acquirer_id'),
+            BusinessPartnerType::CLIENT   => $this->hasMany(Receivable::class, 'client_id'),
+            BusinessPartnerType::ACQUIRER => $this->hasMany(Receivable::class, 'acquirer_id'),
         };
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Core\Contract;
-use App\Services\OptInService;
+use App\Services\Core\OptInService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 

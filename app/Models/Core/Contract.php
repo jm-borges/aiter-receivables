@@ -53,4 +53,10 @@ class Contract extends Model
     {
         return $this->belongsToMany(PaymentArrangement::class, 'contract_has_payment_arrangements');
     }
+
+    public function receivables(): BelongsToMany
+    {
+        return $this->belongsToMany(Receivable::class, 'contract_has_receivables')
+            ->withPivot(['amount']);
+    }
 }
