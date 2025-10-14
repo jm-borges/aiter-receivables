@@ -28,7 +28,7 @@ class ContractController extends Controller
         $clients = BusinessPartner::where('type', 'client')->get();
         $suppliers = BusinessPartner::where('type', 'supplier')->get();
         $acquirers = BusinessPartner::where('type', 'acquirer')->get();
-        $paymentArrangements = PaymentArrangement::all();
+        $paymentArrangements = PaymentArrangement::orderBy('code', 'asc')->get();
 
         return view('contracts.form', compact('clients', 'suppliers', 'acquirers', 'paymentArrangements'));
     }
