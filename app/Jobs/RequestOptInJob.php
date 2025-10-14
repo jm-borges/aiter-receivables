@@ -97,7 +97,7 @@ class RequestOptInJob implements ShouldQueue
 
     private function generateUniqueIdentifier(): string
     {
-        return (string) Str::uuid();
+        return substr(hash('crc32b', Str::uuid()), 0, 20);
     }
 
     private function getFinanciadoraCnpj(): string
@@ -107,7 +107,7 @@ class RequestOptInJob implements ShouldQueue
 
     private function getIndrDomcl(): string
     {
-        return '';
+        return 'S';
     }
 
     private function getDtIniOptIn(): ?string
