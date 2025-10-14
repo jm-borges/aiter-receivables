@@ -41,7 +41,7 @@
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}"
                         {{ isset($contract) && $contract->client_id == $client->id ? 'selected' : '' }}>
-                        {{ $client->name }}
+                        {{ $client->name }} | {{ $client->document_number }}
                     </option>
                 @endforeach
             </select>
@@ -56,7 +56,7 @@
                 @foreach ($suppliers as $supplier)
                     <option value="{{ $supplier->id }}"
                         {{ isset($contract) && $contract->supplier_id == $supplier->id ? 'selected' : '' }}>
-                        {{ $supplier->name }}
+                        {{ $supplier->name }} | {{ $supplier->document_number }}
                     </option>
                 @endforeach
             </select>

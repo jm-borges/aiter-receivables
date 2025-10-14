@@ -2,6 +2,9 @@
 
 namespace App\Models\Core;
 
+use App\Models\Core\Pivots\ContractHasAcquirer;
+use App\Models\Core\Pivots\ContractHasPaymentArrangement;
+use App\Models\Core\Pivots\ContractHasReceivable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -46,17 +49,20 @@ class Contract extends Model
 
     public function acquirers(): BelongsToMany
     {
-        return $this->belongsToMany(BusinessPartner::class, 'contract_has_acquirers');
+        return $this->belongsToMany(BusinessPartner::class, 'contract_has_acquirers')
+            ->using(ContractHasAcquirer::class);
     }
 
     public function paymentArrangements(): BelongsToMany
     {
-        return $this->belongsToMany(PaymentArrangement::class, 'contract_has_payment_arrangements');
+        return $this->belongsToMany(PaymentArrangement::class, 'contract_has_payment_arrangements')
+            ->using(ContractHasPaymentArrangement::class);
     }
 
     public function receivables(): BelongsToMany
     {
         return $this->belongsToMany(Receivable::class, 'contract_has_receivables')
+            ->using(ContractHasReceivable::class)
             ->withPivot(['amount']);
     }
 }

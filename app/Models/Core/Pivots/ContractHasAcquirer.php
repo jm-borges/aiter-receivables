@@ -5,6 +5,7 @@ namespace App\Models\Core\Pivots;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Str;
 
 class ContractHasAcquirer extends Pivot
 {
@@ -28,5 +29,14 @@ class ContractHasAcquirer extends Pivot
         return [
             // Add your casts here
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($pivot) {
+            if (!$pivot->id) {
+                $pivot->id = Str::uuid()->toString();
+            }
+        });
     }
 }

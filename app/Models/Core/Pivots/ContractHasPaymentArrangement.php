@@ -3,10 +3,11 @@
 namespace App\Models\Core\Pivots;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Str;
 
-class ContractHasPaymentArrangement extends Model
+class ContractHasPaymentArrangement extends Pivot
 {
     /** @use HasFactory<\Database\Factories\ContractHasPaymentArrangementFactory> */
     use HasFactory, HasUuids;
@@ -26,5 +27,14 @@ class ContractHasPaymentArrangement extends Model
         return [
             // Add your casts here
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($pivot) {
+            if (!$pivot->id) {
+                $pivot->id = Str::uuid()->toString();
+            }
+        });
     }
 }
