@@ -123,8 +123,16 @@ Empresa que fornece o serviço de intermediário de comunicação entre a Altri 
 
 * Onde no retorno da ARC0018 da RTM é encontrado o CNPJ da credenciadora?
 * Imaginando que a operação seja registrada com sucesso, com valor por exemplo de 20.000, e no dia seguinte, uma ou mais URs reduzem o valor disponivel, o que acontece com a operação? é cancelada, fica em um estado diferente, etc?
+* Talvez seria melhor realizar várias operações com valores menores em vez de uma única para o contrato inteiro?
 
-### 🔄 Fluxos Principais do Sistema
+### Como está funcionando atualmente
+
+* O usuário administrativo (admin@teste.com) cadastra o cliente (App/Models/Core/BusinessPartner, do tipo "Client" - Estabelecimento Comercial) e um "contrato" (App/Models/Core/Contract) com esse cliente, onde ele especifica o valor, datas de inicio e final, arranjos de pagamento e adquirentes.
+* Uma vez cadastrado o contrato, o sistema já faz o dispatch dos jobs de Opt-in (App/Jobs/RequestOptInJob) para cada combinação EC x Adquirente x Arranjo, para começar a receber as informações de recebíveis, via ARRC018.
+* Todo dia, quando a Nuclea enviar (e a RTM repassar) as informações da ARRC018, o sistema registra essas informações, cadastra novos recebiveis e ajusta os valores dos já existentes.
+* O sistema então faz o dispatch de um job para atualizar a relação entre contratos e recebíveis (app\Jobs\VerifyReceivablesToOperateJob.php), e para cada contrato, caso necessário/possível, é registrado uma nova operação de Gravame, com gestão da registradora, no valor do contrato, usando a RRC0019.
+
+### 🔄 Fluxos Principais
 
 #### 🔹 Fluxo 1 – **Agenda de Recebíveis** 📅
 
