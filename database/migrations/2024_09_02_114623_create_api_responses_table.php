@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->longText('body')->nullable();
             $table->string('status')->nullable();
+            $table->longText('headers')->nullable();
             $table->string('api_request_id')->nullable();
             $table->string('api')->nullable();
             $table->timestamps();
