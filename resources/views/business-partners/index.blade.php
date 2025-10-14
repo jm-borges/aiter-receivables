@@ -37,7 +37,7 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-2 text-sm text-gray-700">{{ $partner->name }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-700">{{ $partner->fantasy_name }}</td>
-                                <td class="px-4 py-2 text-sm text-gray-700">{{ ucfirst($partner->type->label) }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-700">{{ ucfirst($partner->type->label()) }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-700">{{ $partner->document_number }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-700">{{ $partner->email }}</td>
                                 <td class="px-4 py-2 text-sm text-gray-700">{{ $partner->phone }}</td>
