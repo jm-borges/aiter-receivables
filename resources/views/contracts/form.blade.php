@@ -64,17 +64,19 @@
 
         {{-- Adquirentes --}}
         <div>
-            <label for="acquirers" class="block text-sm font-medium text-gray-700">Adquirentes</label>
-            <select name="acquirers[]" id="acquirers" multiple
-                class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <label class="block text-sm font-medium text-gray-700">Adquirentes</label>
+
+            <div class="mt-2 space-y-2">
                 @foreach ($acquirers as $acquirer)
-                    <option value="{{ $acquirer->id }}"
-                        {{ isset($contract) && $contract->acquirers->contains($acquirer->id) ? 'selected' : '' }}>
-                        {{ $acquirer->name }}
-                    </option>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="acquirers[]" value="{{ $acquirer->id }}"
+                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                            {{ isset($contract) && $contract->acquirers->contains($acquirer->id) ? 'checked' : '' }}>
+                        <span class="ml-2 text-sm text-gray-700">{{ $acquirer->name }} | CNPJ:
+                            {{ $acquirer->document_number }}</span>
+                    </label>
                 @endforeach
-            </select>
-            <p class="text-xs text-gray-500 mt-1">Segure Ctrl (ou Cmd) para selecionar múltiplos.</p>
+            </div>
         </div>
 
         {{-- Arranjos de Pagamento --}}
@@ -86,7 +88,7 @@
                         <input type="checkbox" name="payment_arrangements[]" value="{{ $arrangement->id }}"
                             class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {{ isset($contract) && $contract->paymentArrangements->contains($arrangement->id) ? 'checked' : '' }}>
-                        <span>{{ $arrangement->name }}</span>
+                        <span>{{ $arrangement->name }} | {{ $arrangement->code }}</span>
                     </label>
                 @endforeach
             </div>
