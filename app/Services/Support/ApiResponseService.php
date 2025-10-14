@@ -23,7 +23,7 @@ class ApiResponseService
             'url' => $url,
             'body' => $response->body(),
             'status' => $response->status(),
-            'headers' => $response->headers(),
+            'headers' => json_encode($response->headers()),
             'api_request_id' => $apiRequestId,
             'api' => $api,
         ]);
