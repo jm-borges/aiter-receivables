@@ -13,25 +13,12 @@ return new class extends Migration
     {
         Schema::create('operations', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('action_id')->nullable()->index();
+            $table->string('contract_id')->nullable()->index();
             $table->string('status')->nullable();
-            $table->string('cnpjER')->nullable();
-            $table->string('identdNegcRecbvl')->nullable();
             $table->string('identdOp')->nullable();
-            $table->string('indrTpNegc')->nullable();
-            $table->date('dtVencOp')->nullable();
-            $table->decimal('vlrTotLimOuSldDevdr')->nullable();
-            $table->decimal('vlrGar')->nullable();
-            $table->string('indrGestER')->nullable();
-            $table->string('indrRegrDivs')->nullable();
-            $table->string('indrAlcancContrtoCreddrSub')->nullable();
-            $table->string('indrActeIncondlOp')->nullable();
-            $table->string('identdCIPOpOrRenegcDiv')->nullable();
-            $table->string('indrActeUniddRecbvlReserv')->nullable();
-            $table->string('indrPeriodRecalc')->nullable();
-            $table->string('diaExeccRecalc')->nullable();
-            $table->timestamp('dtHrIncl')->nullable();
-            $table->string('indrSitOp')->nullable();
-            $table->string('indrAutcCess')->nullable();
+            $table->string('sitRet')->nullable();
+            $table->string('operation_href')->nullable();
             $table->timestamps();
         });
     }

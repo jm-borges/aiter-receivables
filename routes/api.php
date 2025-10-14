@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActionController;
+use App\Http\Controllers\OperationController;
 use App\Http\Controllers\ContractHasReceivableController;
 use App\Http\Controllers\ARRC018ResponseController;
 use App\Http\Controllers\Core\Pivots\ContractHasPaymentArrangementController;
@@ -70,16 +72,18 @@ Route::prefix('v1')->group(function () {
         Route::delete('attachment', [AttachmentController::class, 'destroyAllAttachment']);
 
         Route::apiResources([
-'receivables' => ReceivableController::class,
+            'receivables' => ReceivableController::class,
             'opt-ins' => OptInController::class,
             'opt-outs' => OptOutController::class,
             'business-partners' => BusinessPartnerController::class,
             'payment-arrangements' => PaymentArrangementController::class,
             'contracts' => ContractController::class,
+            'arrc018-responses' => ARRC018ResponseController::class,
             'contract-has-payment-arrangements' => ContractHasPaymentArrangementController::class,
             'contract-has-acquirers' => ContractHasAcquirerController::class,
-    'a-r-r-c018-responses' => ARRC018ResponseController::class,
-    'contract-has-receivables' => ContractHasReceivableController::class,
-]);
+            'contract-has-receivables' => ContractHasReceivableController::class,
+            'operations' => OperationController::class,
+            'actions' => ActionController::class,
+        ]);
     });
 });

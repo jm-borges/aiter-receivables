@@ -13,6 +13,8 @@ class ARRC018Response extends Model
     /** @use HasFactory<\Database\Factories\ARRC018ResponseFactory> */
     use HasFactory, HasUuids;
 
+    protected $table = 'arrc018_responses';
+
     protected $fillable = [
         'payment_arrangement_id', //string
         'source_file_name', //string

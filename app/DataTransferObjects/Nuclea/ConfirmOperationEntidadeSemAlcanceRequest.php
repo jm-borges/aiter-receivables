@@ -2,7 +2,7 @@
 
 namespace App\DataTransferObjects\Nuclea;
 
-class ConfirmOperationParticipanteRequest extends ConfirmOperationRequest
+class ConfirmOperationEntidadeSemAlcanceRequest extends ConfirmOperationRequest
 {
     public array $cessionariosAutorizados = [];
     public array $renegociacoesDividas = [];

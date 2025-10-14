@@ -2,7 +2,7 @@
 
 namespace App\DataTransferObjects\Nuclea;
 
-class ConfirmOperationParticipanteRequest extends ConfirmOperationRequest
+class ConfirmOperationEntidadeRequest extends ConfirmOperationRequest
 {
     public ?string $indrPeriodRecalc = null;
     public ?string $diaExeccRecalc = null;

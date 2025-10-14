@@ -1,4 +1,88 @@
-## 💳 Modelo de Negócio – Recebíveis como Garantia
+# 💳 Altri Receivables – Recebíveis como Garantia
+
+**IMPORTANTE: ANTES DE SEGUIR DESENVOLVENDO, CONFIRA OS CONCEITOS ABAIXO:**
+
+## Conceitos
+
+* Estabelecimento Comercial (EC)
+
+Qualquer varejo que venda produtos ou serviços usando máquinas de cartão
+
+* Arranjo de pagamento
+
+Bandeira/forma de pagamento usado por um comprador no EC (Ex: Mastercard crédito, Visa débito)
+
+* Credenciadora/Subcredenciadora (Adquirente)
+
+São as empresas que fornecem a máquina de cartão para os ECs, e enviam as informações sobre recebíveis para o sistema de pagamentos.
+
+* Recebível ou Unidade Recebível (UR)
+
+Um recebível ou unidade recebível é basicamente a soma de dinheiro a ser recebido por um EC em uma determinada data, relativo a um determinado arranjo de pagamento e um determinado adquirente (Ex: Mercado do João tem um recebível com previsão para 12/12/2026, da Cielo com Mastercard crédito). Pode aumentar ou diminuir de valor ao longo do tempo. 
+
+* UR constituida x UR a constituir
+
+Um recebível constituido é um valor que de fato existe (ocorreu uma transação), enquanto um recebível a constituir é uma "expectativa" de que aquele valor venha a existir no futuro.
+
+* Agenda de recebíveis
+
+É a lista de quais recebíveis existem em quais datas e os seus valores.
+
+* Registradora
+
+Entidade que possui e gerencia um ecossistema de negociação de recebíveis. Nesse caso, a NUCLEA.
+
+* Instituição financeira/não-financeira
+
+No contexto da registradora Núclea, a instituição financeira/não-financeira nada mais é que a empresa que vai participar das negociações de recebíveis.
+
+* Opt-in/Opt-out (anuência)
+
+Opt-in: Quando uma instituição solicita para a registradora o recebimento diário dos recebíveis de um determinado EC. Opt-out: Quando é cancelado esse recebimento.
+
+* Titular
+
+Detentor de uma unidade recebível ou parte dela.
+
+* Recebedor final
+
+Empresa que de fato iria receber o valor da unidade recebível no momento da liquidação (pagamento).
+
+* Arquivos e mensagens
+
+Dentro do ecossistema da registradora Núclea, a comunicação pode ser realizada entre os participantes na forma de arquivos (XML) e mensagens (JSON), cada uma com seu layout especifico (Ex: RRC0019 é uma mensagem para registro de operações, ARRC018 é um arquivo contendo as informações da agenda de recebíveis)
+
+## Quem é quem
+
+### ALTRI
+
+Empresa dona do sistema, que realiza as operações e participa do ecossistema da Nuclea (Instituição Financeira/Não Financeira)
+
+### NUCLEA
+
+Empresa que gerencia o ecossistema de negociação de recebíveis (Registradora)
+
+### RTM
+
+Empresa que fornece o serviço de intermediário de comunicação entre a Altri e a Nuclea para comunicações específicas (Envios de arquivos e retornos assíncronos da Núclea)
+
+## Exemplo de fluxo básico do ecossistema
+
+1. Um comprador (pessoa física ou jurídica) vai até um estabelecimento ou compra pela internet algum produto ou serviço de uma loja (o "Estabelecimento Comercial - EC")
+
+2. O comprador pagou com um cartão de crédito Visa.
+
+3. A loja usou a máquina de cartão da Cielo.
+
+4. A loja vai ter disponivel esse dinheiro na conta apenas daqui 30 dias.
+
+5. A Cielo envia as informações dessa transação (junto com as demais que foram feitas com Visa crédito nesse dia) para a Registradora Núclea
+
+6. A Núclea envia no dia seguinte a lista de valores a receber e quando dessa loja, para todas as empresas que solicitaram receber essas informações diárias.
+
+7. Com base nessas informações, a Altri pode solicitar que um determinado valor em recebíveis fique como garantia para ela, enviando as informações sobre essa operação para a Núclea.
+
+## Fluxo básico do modelo de negócios Altri
 
 1. **Compra pelo EC**
 
@@ -24,18 +108,25 @@
 5. **Liquidação**
 
    * Processo até atingir o valor **X**.
-   * **Dúvidas abertas:**
-
-     * Recebíveis pagos vão automaticamente para a conta da Altri?
-     * Quais operações/mensagens da Nuclea são necessárias para transferir valores?
 
 ---
 
-# Sistema de Recebíveis – Visão Geral e Modelo de Negócio
+## Sistema de Recebíveis – Visão Geral e Modelo de Negócio
 
-## 🔄 Fluxos Principais do Sistema
+### 📝 Pendências
 
-### 🔹 Fluxo 1 – **Agenda de Recebíveis** 📅
+* Atualizar o tratamento do webhook dos retornos da RRC0019 com base no layout da RTM
+* Fazer testes do recebimento de informações da ARRC018
+* Fazer testes da operação RRC0019
+
+### 📝 Dúvidas
+
+* Onde no retorno da ARC0018 da RTM é encontrado o CNPJ da credenciadora?
+* Imaginando que a operação seja registrada com sucesso, com valor por exemplo de 20.000, e no dia seguinte, uma ou mais URs reduzem o valor disponivel, o que acontece com a operação? é cancelada, fica em um estado diferente, etc?
+
+### 🔄 Fluxos Principais do Sistema
+
+#### 🔹 Fluxo 1 – **Agenda de Recebíveis** 📅
 
 **Objetivo:** Capturar, autorizar e disponibilizar as agendas de recebíveis de ECs (Estabelecimentos Comerciais).
 
@@ -73,7 +164,7 @@
 
 ---
 
-### 🔹 Fluxo 2 – **Troca de Titularidade / Negociação** 🔄💰
+#### 🔹 Fluxo 2 – **Troca de Titularidade / Negociação** 🔄💰
 
 **Objetivo:** Registrar negociações, alterações e conciliações de recebíveis.
 
@@ -114,7 +205,7 @@
 
 ---
 
-### 🔹 Fluxo 3 – **Direito de Preferência / Inadimplência** ⚖️
+#### 🔹 Fluxo 3 – **Direito de Preferência / Inadimplência** ⚖️
 
 **Objetivo:** Garantir prioridade de recebíveis em caso de inadimplência.
 
@@ -146,7 +237,7 @@
 
 ---
 
-### 🔹 Fluxo 4 – **Administrativos / Operacionais** ⚙️
+#### 🔹 Fluxo 4 – **Administrativos / Operacionais** ⚙️
 
 **Objetivo:** Gerenciar participantes, janelas de negociação e conciliações.
 
@@ -172,46 +263,11 @@
 
 ---
 
-## ❓ Dúvidas Técnicas
 
-* **Scheduler:** É ideal buscar os dados ativamente ao abrir a grade, ou o correto seria esperar informações da Núclea?
-* **Titularidade:** Quem é considerado titular nos recebíveis (RRC0010)?
-* **Valores de recebível:** O que seria Valor total vs. valor livre para usuário final.
-* **Identificação única:** Cada unidade tem ID? Como evitar duplicidade em operações?
-* **Garantia prioritária:** Como Altri reserva um valor específico como garantia?
-* **Resilição / liberação de excedente:** O que significa e como operacionalizar?
-* **Contratos:** Como os layouts/operacionalizações da Nuclea definem “contrato”?
 
 ---
 
-## 📝 Pendências
-
-### Maiores
-
-* Implementar ações relativas às operações de recebíveis (negociação, garantia, liquidação).
-
-### Menores / Detalhes
-
-* Adicionar horários da grade de negociação no scheduler (`routes/console.php`).
-* Implementar estrutura padrão para paginação (RRC0010 e demais consultas).
-* Armazenar no banco informações de titulares e domicílios dos recebíveis ao buscar a RRC0010.
-
----
-
-## ⏳ Estimativa de Implementação
-
-| Fluxo                                  | Estimativa  | Complexidade |
-| -------------------------------------- | ----------- | ------------ |
-| Agenda de Recebíveis                   | 2–3 semanas | Média        |
-| Troca de Titularidade / Negociação     | 4–5 semanas | Alta         |
-| Direito de Preferência / Inadimplência | 2–3 semanas | Alta         |
-| Administrativos / Operacionais         | 1–2 semanas | Baixa-média  |
-
-**Total aproximado:** 9–13 semanas (1–2 devs focados na integração) 👨‍💻👩‍💻
-
----
-
-# 📌 Estado Atual do Projeto – Sistema de Recebíveis
+# 📌 Estado Atual do Projeto (Informações técnicas)
 
 ## ⚙️ Stack Atual do Protótipo
 
@@ -226,6 +282,7 @@ O protótipo utiliza **rotas web** (`routes/web.php`) para exibir telas simples 
 * Contratos
 * Opt-ins
 * Recebíveis
+* Operações
 
 ---
 
@@ -236,7 +293,6 @@ O protótipo utiliza **rotas web** (`routes/web.php`) para exibir telas simples 
 * **PHP 8.3+**
 * **Composer**
 * **MySQL** ou outro banco configurado no `.env`
-* Extensões PHP comuns: `mbstring`, `openssl`, `pdo`, `tokenizer`, `xml`
 
 ### 🚀 Passos de Instalação
 
@@ -274,7 +330,7 @@ O protótipo utiliza **rotas web** (`routes/web.php`) para exibir telas simples 
 5. **Executar as migrations**
 
    ```bash
-   php artisan migrate
+   php artisan migrate --seed
    ```
 
 6. **Rodar o servidor local**
@@ -314,6 +370,7 @@ Representam as principais entidades do negócio:
 * `BusinessPartner` (parceiros de negócio – EC, Credenciadora/Subcredenciadora, Fornecedor)
 * `Contract` (contratos entre Altri, fornecedor e EC)
 * `PaymentArrangement` (arranjos de pagamento)
+* `Operation` (Operações)
 
 Incluem também **pivots** de relacionamento entre contratos e adquirentes/arranjos.
 
@@ -353,6 +410,7 @@ Estrutura de dados já preparada:
 
 ```markdown
 .
+├── README.md
 ├── app
 │   ├── Actions
 │   │   ├── ARRC022Action.php
@@ -376,9 +434,17 @@ Estrutura de dados já preparada:
 │   │   └── Rtm
 │   │       ├── RtmApiClient.php
 │   │       └── RtmAuthApiClient.php
+│   ├── Auxiliary
+│   │   └── UpdatedContractInfo.php
 │   ├── Console
 │   │   └── Commands
+│   │       ├── CleanOldRecords.php
+│   │       ├── MakeFullController.php
+│   │       ├── MakeFullModel.php
+│   │       ├── MakeFullResource.php
+│   │       ├── MakeRequests.php
 │   │       ├── MakeRestApiResource.php
+│   │       └── MakeService.php
 │   ├── Contracts
 │   │   └── ApiClientContract.php
 │   ├── DataTransferObjects
@@ -391,7 +457,10 @@ Estrutura de dados já preparada:
 │   │       ├── ConfirmOperationParticipanteRequest.php
 │   │       └── ConfirmOperationRequest.php
 │   ├── Enums
+│   │   ├── ActionInvolvedPartyType.php
+│   │   ├── ActionType.php
 │   │   ├── BusinessPartnerType.php
+│   │   ├── OperationStatus.php
 │   │   ├── OptInStatus.php
 │   │   └── OptOutStatus.php
 │   ├── Helpers
@@ -401,23 +470,39 @@ Estrutura de dados já preparada:
 │   │   │   ├── AttachmentController.php
 │   │   │   ├── Auth
 │   │   │   │   ├── AuthController.php
-│   │   │   │   └── PasswordResetController.php
+│   │   │   │   ├── AuthenticatedSessionController.php
+│   │   │   │   ├── ConfirmablePasswordController.php
+│   │   │   │   ├── EmailVerificationNotificationController.php
+│   │   │   │   ├── EmailVerificationPromptController.php
+│   │   │   │   ├── NewPasswordController.php
+│   │   │   │   ├── PasswordController.php
+│   │   │   │   ├── PasswordResetController.php
+│   │   │   │   ├── PasswordResetLinkController.php
+│   │   │   │   ├── RegisteredUserController.php
+│   │   │   │   └── VerifyEmailController.php
 │   │   │   ├── Controller.php
 │   │   │   ├── Core
+│   │   │   │   ├── ActionController.php
 │   │   │   │   ├── BusinessPartnerController.php
 │   │   │   │   ├── ContractController.php
+│   │   │   │   ├── Files
+│   │   │   │   │   └── ARRC018ResponseController.php
+│   │   │   │   ├── OperationController.php
 │   │   │   │   ├── OptInController.php
 │   │   │   │   ├── OptOutController.php
 │   │   │   │   ├── PaymentArrangementController.php
 │   │   │   │   ├── Pivots
 │   │   │   │   │   ├── ContractHasAcquirerController.php
-│   │   │   │   │   └── ContractHasPaymentArrangementController.php
+│   │   │   │   │   ├── ContractHasPaymentArrangementController.php
+│   │   │   │   │   └── ContractHasReceivableController.php
 │   │   │   │   └── ReceivableController.php
+│   │   │   ├── ProfileController.php
 │   │   │   ├── UserController.php
 │   │   │   ├── Web
 │   │   │   │   ├── BusinessPartnerController.php
 │   │   │   │   ├── ContractController.php
 │   │   │   │   ├── GeneralController.php
+│   │   │   │   ├── OperationController.php
 │   │   │   │   ├── OptInController.php
 │   │   │   │   └── ReceivableController.php
 │   │   │   └── Webhooks
@@ -427,6 +512,14 @@ Estrutura de dados já preparada:
 │   │   │   ├── LogRequest.php
 │   │   │   └── LogResponse.php
 │   │   ├── Requests
+│   │   │   ├── ARRC018Responses
+│   │   │   │   ├── GetARRC018ResponsesRequest.php
+│   │   │   │   ├── StoreARRC018ResponseRequest.php
+│   │   │   │   └── UpdateARRC018ResponseRequest.php
+│   │   │   ├── Actions
+│   │   │   │   ├── GetActionsRequest.php
+│   │   │   │   ├── StoreActionRequest.php
+│   │   │   │   └── UpdateActionRequest.php
 │   │   │   ├── Attachments
 │   │   │   │   ├── AddAttachmentRequest.php
 │   │   │   │   └── DestroyAttachmentRequest.php
@@ -447,10 +540,18 @@ Estrutura de dados já preparada:
 │   │   │   │   ├── GetContractHasPaymentArrangementsRequest.php
 │   │   │   │   ├── StoreContractHasPaymentArrangementRequest.php
 │   │   │   │   └── UpdateContractHasPaymentArrangementRequest.php
+│   │   │   ├── ContractHasReceivables
+│   │   │   │   ├── GetContractHasReceivablesRequest.php
+│   │   │   │   ├── StoreContractHasReceivableRequest.php
+│   │   │   │   └── UpdateContractHasReceivableRequest.php
 │   │   │   ├── Contracts
 │   │   │   │   ├── GetContractsRequest.php
 │   │   │   │   ├── StoreContractRequest.php
 │   │   │   │   └── UpdateContractRequest.php
+│   │   │   ├── Operations
+│   │   │   │   ├── GetOperationsRequest.php
+│   │   │   │   ├── StoreOperationRequest.php
+│   │   │   │   └── UpdateOperationRequest.php
 │   │   │   ├── OptIns
 │   │   │   │   ├── GetOptInsRequest.php
 │   │   │   │   ├── StoreOptInRequest.php
@@ -463,6 +564,7 @@ Estrutura de dados já preparada:
 │   │   │   │   ├── GetPaymentArrangementsRequest.php
 │   │   │   │   ├── StorePaymentArrangementRequest.php
 │   │   │   │   └── UpdatePaymentArrangementRequest.php
+│   │   │   ├── ProfileUpdateRequest.php
 │   │   │   ├── Receivables
 │   │   │   │   ├── GetReceivablesRequest.php
 │   │   │   │   ├── StoreReceivableRequest.php
@@ -472,10 +574,14 @@ Estrutura de dados já preparada:
 │   │   │       ├── StoreUserRequest.php
 │   │   │       └── UpdateUserRequest.php
 │   │   └── Resources
+│   │       ├── ARRC018ResponseResource.php
+│   │       ├── ActionResource.php
 │   │       ├── BusinessPartnerResource.php
 │   │       ├── ContractHasAcquirerResource.php
 │   │       ├── ContractHasPaymentArrangementResource.php
+│   │       ├── ContractHasReceivableResource.php
 │   │       ├── ContractResource.php
+│   │       ├── OperationResource.php
 │   │       ├── OptInResource.php
 │   │       ├── OptOutResource.php
 │   │       ├── PaymentArrangementResource.php
@@ -484,18 +590,55 @@ Estrutura de dados já preparada:
 │   ├── Jobs
 │   │   ├── DispatchOptInJob.php
 │   │   ├── GetContractReceivablesJob.php
-│   │   └── RequestOptInJob.php
+│   │   ├── RequestOptInJob.php
+│   │   └── VerifyReceivablesToOperateJob.php
 │   ├── Models
 │   │   ├── Core
+│   │   │   ├── Action.php
 │   │   │   ├── BusinessPartner.php
 │   │   │   ├── Contract.php
+│   │   │   ├── Files
+│   │   │   │   └── ARRC018Response.php
+│   │   │   ├── Operation.php
 │   │   │   ├── OptIn.php
 │   │   │   ├── OptOut.php
 │   │   │   ├── PaymentArrangement.php
 │   │   │   ├── Pivots
 │   │   │   │   ├── ContractHasAcquirer.php
-│   │   │   │   └── ContractHasPaymentArrangement.php
+│   │   │   │   ├── ContractHasPaymentArrangement.php
+│   │   │   │   └── ContractHasReceivable.php
 │   │   │   └── Receivable.php
+│   │   ├── Rtm
+│   │   │   ├── CancelOperationResponse.php
+│   │   │   ├── CipMessage.php
+│   │   │   ├── Error.php
+│   │   │   ├── HolderReceivableUnit.php
+│   │   │   ├── Merchant.php
+│   │   │   ├── MerchantResponse.php
+│   │   │   ├── OperationCancelNotification.php
+│   │   │   ├── OperationNotification.php
+│   │   │   ├── OperationResponse.php
+│   │   │   ├── OperationSummary.php
+│   │   │   ├── OperationSummaryControl.php
+│   │   │   ├── OptInNotification.php
+│   │   │   ├── OptOutResponse.php
+│   │   │   ├── Participant.php
+│   │   │   ├── Payment.php
+│   │   │   ├── PaymentInformation.php
+│   │   │   ├── ReceivableSchedule.php
+│   │   │   ├── ReceivableScheduleHolder.php
+│   │   │   ├── ReceivableScheduleReceivingFinalUser.php
+│   │   │   ├── ReceivableUnit.php
+│   │   │   ├── ReceivableUnitCancel.php
+│   │   │   ├── ReceivableUnitDomicile.php
+│   │   │   ├── ReceivableUnitDomicileOperation.php
+│   │   │   ├── ReceivableUnitFinalUser.php
+│   │   │   ├── ReceivableUnitFinalUserHolder.php
+│   │   │   ├── ReceivableUnitOtherInstitution.php
+│   │   │   ├── ReceivableUnitResponse.php
+│   │   │   ├── ReceivingFinalUserReceivableUnit.php
+│   │   │   ├── RtmAccessToken.php
+│   │   │   └── Timetable.php
 │   │   ├── Support
 │   │   │   ├── ApiRequest.php
 │   │   │   ├── ApiResponse.php
@@ -505,24 +648,39 @@ Estrutura de dados já preparada:
 │   ├── Providers
 │   │   ├── AppServiceProvider.php
 │   │   └── HelperServiceProvider.php
-│   └── Services
-│       ├── Core
-│       │   ├── BusinessPartnerService.php
-│       │   ├── ContractService.php
-│       │   ├── OptInService.php
-│       │   ├── OptOutService.php
-│       │   ├── PaymentArrangementService.php
-│       │   ├── Pivots
-│       │   │   ├── ContractHasAcquirerService.php
-│       │   │   └── ContractHasPaymentArrangementService.php
-│       │   └── ReceivableService.php
-│       ├── Support
-│       │   ├── ApiRequestService.php
-│       │   └── ApiResponseService.php
-│       └── UserService.php
-├── artisan
+│   ├── Services
+│   │   ├── Core
+│   │   │   ├── ActionService.php
+│   │   │   ├── BusinessPartnerService.php
+│   │   │   ├── ContractService.php
+│   │   │   ├── Files
+│   │   │   │   └── ARRC018ResponseService.php
+│   │   │   ├── OperationService.php
+│   │   │   ├── OptInService.php
+│   │   │   ├── OptOutService.php
+│   │   │   ├── PaymentArrangementService.php
+│   │   │   ├── Pivots
+│   │   │   │   ├── ContractHasAcquirerService.php
+│   │   │   │   ├── ContractHasPaymentArrangementService.php
+│   │   │   │   └── ContractHasReceivableService.php
+│   │   │   └── ReceivableService.php
+│   │   ├── Support
+│   │   │   ├── ApiRequestService.php
+│   │   │   └── ApiResponseService.php
+│   │   └── UserService.php
 ├── config
+│   ├── altri.php
+│   ├── app.php
+│   ├── auth.php
+│   ├── cache.php
+│   ├── database.php
+│   ├── filesystems.php
+│   ├── logging.php
+│   ├── mail.php
+│   ├── queue.php
+│   ├── sanctum.php
 │   ├── services.php
+│   └── session.php
 ├── database
 │   ├── factories
 │   ├── migrations
@@ -543,48 +701,101 @@ Estrutura de dados já preparada:
 │   │   ├── 2025_09_17_122402_create_contracts_table.php
 │   │   ├── 2025_09_17_123524_create_contract_has_acquirers_table.php
 │   │   ├── 2025_09_17_123719_create_payment_arrangements_table.php
-│   │   └── 2025_09_17_124458_create_contract_has_payment_arrangements_table.php
+│   │   ├── 2025_09_17_124458_create_contract_has_payment_arrangements_table.php
+│   │   ├── 2025_09_26_124907_create_a_r_r_c018_responses_table.php
+│   │   ├── 2025_09_26_141905_create_contract_has_receivables_table.php
+│   │   └── 2025_10_14_131728_create_actions_table.php
 │   └── seeders
+│       ├── ActionSeeder.php
+│       ├── BusinessPartnerSeeder.php
+│       ├── DatabaseSeeder.php
+│       ├── PaymentArrangementSeeder.php
+│       └── UserSeeder.php
 ├── public
+│   ├── build
+│   │   ├── assets
+│   │   │   ├── app-Bk1NQbSf.css
+│   │   │   └── app-CXDpL9bK.js
+│   │   └── manifest.json
+│   ├── favicon.ico
 │   ├── index.php
+│   └── robots.txt
 ├── resources
+│   ├── css
+│   │   └── app.css
+│   ├── js
+│   │   ├── app.js
+│   │   └── bootstrap.js
 │   └── views
+│       ├── auth
+│       │   ├── confirm-password.blade.php
+│       │   ├── forgot-password.blade.php
+│       │   ├── login.blade.php
+│       │   ├── register.blade.php
+│       │   ├── reset-password.blade.php
+│       │   └── verify-email.blade.php
 │       ├── business-partners
 │       │   ├── form.blade.php
 │       │   ├── index.blade.php
 │       │   └── show.blade.php
+│       ├── components
+│       │   ├── application-logo.blade.php
+│       │   ├── auth-session-status.blade.php
+│       │   ├── danger-button.blade.php
+│       │   ├── dropdown-link.blade.php
+│       │   ├── dropdown.blade.php
+│       │   ├── input-error.blade.php
+│       │   ├── input-label.blade.php
+│       │   ├── modal.blade.php
+│       │   ├── nav-link.blade.php
+│       │   ├── primary-button.blade.php
+│       │   ├── responsive-nav-link.blade.php
+│       │   ├── secondary-button.blade.php
+│       │   └── text-input.blade.php
 │       ├── contracts
 │       │   ├── form.blade.php
 │       │   ├── index.blade.php
 │       │   └── show.blade.php
+│       ├── dashboard.blade.php
 │       ├── index.blade.php
 │       ├── layouts
-│       │   └── app.blade.php
+│       │   ├── app.blade.php
+│       │   ├── guest.blade.php
+│       │   └── navigation.blade.php
+│       ├── operations
+│       │   ├── index.blade.php
+│       │   └── show.blade.php
 │       ├── optins
 │       │   ├── index.blade.php
 │       │   └── show.blade.php
+│       ├── profile
+│       │   ├── edit.blade.php
+│       │   └── partials
+│       │       ├── delete-user-form.blade.php
+│       │       ├── update-password-form.blade.php
+│       │       └── update-profile-information-form.blade.php
 │       └── receivables
 │           ├── index.blade.php
 │           └── show.blade.php
 ├── routes
 │   ├── api.php
+│   ├── auth.php
 │   ├── console.php
 │   └── web.php
-├── storage
-│   └── logs
-│       └── laravel.log
 ```
 
 ---
 
 ## 📊 Funcionalidades Atuais do Protótipo
 
-* **Gerenciamento básico via Web (Blade):** contratos, parceiros, opt-ins e recebíveis.
+* **Gerenciamento básico via Web (Blade):** contratos, parceiros, opt-ins, operações e recebíveis.
 * **API REST estruturada:** baseada no template, com controllers/resources/requests já padronizados.
 * **Integração preparada com Nuclea e RTM:** via `ApiClients` + `Actions`.
 * **Jobs assíncronos:** para opt-in e consulta de recebíveis.
 * **Logs estruturados:** requests/responses salvos no banco.
 * **Estrutura escalável:** já adaptada para lidar com múltiplos arranjos/adquirentes.
+
+
 
 ---
 
@@ -597,14 +808,4 @@ O projeto foi criado a partir do **Aastera Laravel Template**, que adiciona recu
 * Autenticação pronta (cadastro, login, reset de senha).
 * Integrações configuradas com **Bugsnag** (erros) e **Spatie Media Library** (uploads).
 * Helpers globais + estrutura limpa (`Controllers`, `Models`, `Services`, `Contracts`).
-
----
-
-## 📌 Próximos Passos (curto prazo)
-
-* Implementar as **ações de operações** (negociação, garantia, liquidação).
-* Completar persistência e exibição de **titulares/domicílios dos recebíveis** (RRC0010).
-* Ajustar **scheduler** no `routes/console.php` para rodar conforme janelas de negociação.
-* Criar estrutura padrão de **paginação** para consultas (ex.: RRC0010).
-* Iniciar testes de integração real com **Nuclea/RTM**.
 

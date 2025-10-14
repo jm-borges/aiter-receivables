@@ -2,6 +2,7 @@
 
 namespace App\Services\Core;
 
+use App\Auxiliary\UpdatedContractInfo;
 use App\Models\Core\Contract;
 use App\Models\Core\Receivable;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,9 +42,9 @@ class ContractService
      * Update the receivables attached to a given contract.
      *
      * @param Contract $contract
-     * @return void
+     * @return UpdatedContractInfo
      */
-    public function updateReceivablesInContract(Contract $contract): void
+    public function updateReceivablesInContract(Contract $contract): UpdatedContractInfo
     {
         $goal = $contract->value;
         $amount = $this->processExistingReceivables($contract, $goal);
@@ -51,6 +52,12 @@ class ContractService
         if (!$this->contractHasAchievedGoal($amount, $goal)) {
             $this->processNewReceivables($contract, $goal, $amount);
         }
+
+        return new UpdatedContractInfo(
+            contract: $contract->refresh(),
+            hasAchievedGoal: $this->contractHasAchievedGoal($amount, $goal),
+            thereWerePreviousOperations: $contract->operations()->count() > 0,
+        );
     }
 
     /**
@@ -79,7 +86,8 @@ class ContractService
      */
     private function processNewReceivables(Contract $contract, float $goal, float $amount): float
     {
-        foreach ($this->getNewReceivables($contract) as $receivable) {
+        $newReceivables = $this->getNewReceivables($contract);
+        foreach ($newReceivables as $receivable) {
             if ($this->contractHasAchievedGoal($amount, $goal)) {
                 break;
             }

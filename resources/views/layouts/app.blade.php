@@ -1,56 +1,36 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard')</title>
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-    {{-- TailwindCSS CDN --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    {{-- Opcional: favicon --}}
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
-</head>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+            @include('layouts.navigation')
 
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white dark:bg-gray-800 shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
 
-    {{-- Header --}}
-    <header class="bg-white shadow p-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            {{-- Título da página --}}
-            <h1 class="text-2xl font-bold">
-                Altri
-            </h1>
-
-            {{-- Menu de navegação --}}
-            <nav class="space-x-4">
-                <a href="{{ route('business-partners.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
-                    Parceiros
-                </a>
-                <a href="{{ route('contracts.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
-                    Contratos
-                </a>
-                <a href="{{ route('opt-ins.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
-                    Opt-Ins
-                </a>
-                <a href="{{ route('receivables.index') }}" class="text-gray-700 hover:text-gray-900 font-medium">
-                    Recebíveis
-                </a>
-            </nav>
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
         </div>
-    </header>
-
-    {{-- Main content --}}
-    <main class="flex-1 max-w-7xl mx-auto p-6 space-y-6">
-        @yield('content')
-    </main>
-
-    {{-- Footer --}}
-    <footer class="bg-white shadow p-4 text-center text-gray-500 text-sm">
-        &copy; {{ date('Y') }}
-    </footer>
-
-</body>
-
+    </body>
 </html>

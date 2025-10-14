@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Webhooks;
 
+use App\Enums\OperationStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\VerifyReceivablesToOperateJob;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Files\ARRC018Response;
+use App\Models\Core\Operation;
 use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
+use App\Services\Core\Files\ARRC018ResponseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -161,55 +164,24 @@ class RtmWebhookController extends Controller
     public function handleRetornosRegistroOperacao(Request $request): JsonResponse
     {
         return $this->processEvent('RefusalRetornosRegistroOperacao', $request, function ($data) {
-            Log::info("RefusalRetornosRegistroOperacao", $data);
+            $identifier = $data['identdNegcRecbvl'];
+            $operation = Operation::find($identifier);
+
+            if ($operation) {
+                $operation->update([
+                    'identdOp' => $data['identdOp'],
+                    'sitRet' => $data['sitRet'],
+                    'operation_href' => $data['operacao']['href'] ?? null,
+                    'status' => $data['sitRet'] === 'recusado' ? OperationStatus::REFUSED : OperationStatus::ACCEPTED,
+                ]);
+            }
         });
     }
 
     public function handleArrc018Response(Request $request): JsonResponse
     {
         return $this->processEvent('Arrc018Response', $request, function (array $data) {
-            ARRC018Response::create([
-                'payment_scheme_code' => $data['paymentSchemeCode'],
-                'payment_arrangement_id' => PaymentArrangement::findByCode($data['paymentSchemeCode'])?->id,
-                'source_file_name' => $data["sourceFileName"],
-                'participant_document' => $data["participantDocument"],
-                'managed_participant_id' => $data["managedParticipantId"],
-                'trade_repository_document' => $data["tradeRepositoryDocument"],
-                'created_at' => $data["createdAt"],
-            ]);
-
-            foreach ($data['receiverFinalUsers'] as $clientData) {
-                $client = BusinessPartner::findByDocumentNumber($clientData['finalUserDocument']);
-
-                foreach ($clientData['receivableUnitSchedules'] as $receivableUnitData) {
-
-                    $receivable = $client
-                        ->receivables()
-                        ->where('cnpjCreddrSub', $data['']) //onde conseguir
-                        ->where('codInstitdrArrajPgto', $data['paymentSchemeCode'])
-                        ->where('dtPrevtLiquid', $receivableUnitData['expectedSettlementDate'])
-                        ->first();
-
-                    $lockedAmount = 0;
-
-                    foreach ($receivableUnitData['holders'] as  $holder) {
-                        $lockedAmount += $holder['bankAccountOwnerTotalAmount'] ?? 0;
-                    }
-
-                    if ($receivable) {
-                        $receivable->update([
-                            'vlrTot' =>  $receivableUnitData['totalValue'],
-                            'vlrLivreUsuFinalRecbdr' => $receivableUnitData['totalValue'] - $lockedAmount, // entender melhor isso aqui
-                        ]);
-                    } else {
-                        $client->receivables()->create([
-                            //terminar de implementar
-                        ]);
-                    }
-                }
-
-                dispatch(new VerifyReceivablesToOperateJob($client));
-            }
+            app(ARRC018ResponseService::class)->process($data);
         });
     }
 

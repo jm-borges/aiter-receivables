@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('a_r_r_c018_responses', function (Blueprint $table) {
-            $table->id();
+        Schema::create('arrc018_responses', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('payment_arrangement_id')->nullable();
+            $table->string('source_file_name')->nullable();
+            $table->string('participant_document')->nullable();
+            $table->string('managed_participant_id')->nullable();
+            $table->string('trade_repository_document')->nullable();
+            $table->string('payment_scheme_code')->nullable();
             $table->timestamps();
         });
     }

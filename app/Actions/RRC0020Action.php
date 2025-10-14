@@ -7,7 +7,7 @@ use App\DataTransferObjects\Nuclea\CancelOperationRequest;
 use App\DataTransferObjects\Nuclea\ConfirmOperationRequest;
 use Illuminate\Support\Collection;
 
-class RRC0019Action
+class RRC0020Action
 {
     private NucleaApiClient $nucleaApiClient;
 
