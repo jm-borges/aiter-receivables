@@ -163,16 +163,18 @@ class RtmWebhookController extends Controller
 
     public function handleRetornosRegistroOperacao(Request $request): JsonResponse
     {
-        return $this->processEvent('RefusalRetornosRegistroOperacao', $request, function ($data) {
-            $identifier = $data['identdNegcRecbvl'];
+        return $this->processEvent('RetornosRegistroOperacao', $request, function ($data) {
+            $identifier = $data['receivableNegociationId'];
             $operation = Operation::find($identifier);
 
             if ($operation) {
                 $operation->update([
-                    'identdOp' => $data['identdOp'],
-                    'sitRet' => $data['sitRet'],
-                    'operation_href' => $data['operacao']['href'] ?? null,
-                    'status' => $data['sitRet'] === 'recusado' ? OperationStatus::REFUSED : OperationStatus::ACCEPTED,
+                    'identdOp' => $data['operationId'],
+                    'sitRet' => strtolower($data['status']),
+                    'operation_href' => $data['operationHref'] ?? null,
+                    'status' => strtolower($data['status']) === 'recusado' ?
+                        OperationStatus::REFUSED : (strtolower($data['status']) === 'aceito' ?
+                            OperationStatus::ACCEPTED : OperationStatus::ERROR),
                 ]);
             }
         });

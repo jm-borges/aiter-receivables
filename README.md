@@ -115,7 +115,6 @@ Empresa que fornece o serviço de intermediário de comunicação entre a Altri 
 
 ### 📝 Pendências
 
-* Atualizar o tratamento do webhook dos retornos da RRC0019 com base no layout da RTM
 * Fazer testes do recebimento de informações da ARRC018
 * Fazer testes da operação RRC0019
 
@@ -803,8 +802,6 @@ Estrutura de dados já preparada:
 * **Logs estruturados:** requests/responses salvos no banco.
 * **Estrutura escalável:** já adaptada para lidar com múltiplos arranjos/adquirentes.
 
-
-
 ---
 
 ## 🌐 Sobre o Template
@@ -816,4 +813,8 @@ O projeto foi criado a partir do **Aastera Laravel Template**, que adiciona recu
 * Autenticação pronta (cadastro, login, reset de senha).
 * Integrações configuradas com **Bugsnag** (erros) e **Spatie Media Library** (uploads).
 * Helpers globais + estrutura limpa (`Controllers`, `Models`, `Services`, `Contracts`).
+
+---
+
+Em caso de dúvidas: (jm.borges7312@gmail.com) e/ou (jm.borges@aastera.com)
 

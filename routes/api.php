@@ -1,21 +1,21 @@
 <?php
 
-use App\Http\Controllers\ActionController;
-use App\Http\Controllers\OperationController;
-use App\Http\Controllers\ContractHasReceivableController;
-use App\Http\Controllers\ARRC018ResponseController;
-use App\Http\Controllers\Core\Pivots\ContractHasPaymentArrangementController;
-use App\Http\Controllers\Core\Pivots\ContractHasAcquirerController;
 use App\Http\Controllers\Core\PaymentArrangementController;
 use App\Http\Controllers\Core\ContractController;
 use App\Http\Controllers\Core\BusinessPartnerController;
 use App\Http\Controllers\Core\OptOutController;
 use App\Http\Controllers\Core\OptInController;
 use App\Http\Controllers\Core\ReceivableController;
+use App\Http\Controllers\Core\ActionController;
+use App\Http\Controllers\Core\OperationController;
+use App\Http\Controllers\Core\Pivots\ContractHasPaymentArrangementController;
+use App\Http\Controllers\Core\Pivots\ContractHasAcquirerController;
+use App\Http\Controllers\Core\Pivots\ContractHasReceivableController;
+use App\Http\Controllers\Webhooks\RtmWebhookController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\Webhooks\RtmWebhookController;
+use App\Http\Controllers\Core\Files\ARRC018ResponseController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -78,12 +78,12 @@ Route::prefix('v1')->group(function () {
             'business-partners' => BusinessPartnerController::class,
             'payment-arrangements' => PaymentArrangementController::class,
             'contracts' => ContractController::class,
+            'operations' => OperationController::class,
+            'actions' => ActionController::class,
             'arrc018-responses' => ARRC018ResponseController::class,
             'contract-has-payment-arrangements' => ContractHasPaymentArrangementController::class,
             'contract-has-acquirers' => ContractHasAcquirerController::class,
             'contract-has-receivables' => ContractHasReceivableController::class,
-            'operations' => OperationController::class,
-            'actions' => ActionController::class,
         ]);
     });
 });

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core\Pivots;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ContractHasReceivables\GetContractHasReceivablesRequest;
 use App\Http\Requests\ContractHasReceivables\StoreContractHasReceivableRequest;
 use App\Http\Requests\ContractHasReceivables\UpdateContractHasReceivableRequest;
 use App\Http\Resources\ContractHasReceivableResource;
-use App\Models\ContractHasReceivable;
-use App\Services\ContractHasReceivableService;
+use App\Models\Core\Pivots\ContractHasReceivable;
+use App\Services\Core\Pivots\ContractHasReceivableService;
 use Illuminate\Http\JsonResponse;
 
 class ContractHasReceivableController extends Controller

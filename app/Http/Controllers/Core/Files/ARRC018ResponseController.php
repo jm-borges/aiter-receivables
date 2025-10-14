@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core\Files;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ARRC018Responses\GetARRC018ResponsesRequest;
 use App\Http\Requests\ARRC018Responses\StoreARRC018ResponseRequest;
 use App\Http\Requests\ARRC018Responses\UpdateARRC018ResponseRequest;
 use App\Http\Resources\ARRC018ResponseResource;
-use App\Models\ARRC018Response;
-use App\Services\ARRC018ResponseService;
+use App\Models\Core\Files\ARRC018Response;
+use App\Services\Core\Files\ARRC018ResponseService;
 use Illuminate\Http\JsonResponse;
 
 class ARRC018ResponseController extends Controller
