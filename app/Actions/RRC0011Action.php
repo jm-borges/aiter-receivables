@@ -25,15 +25,15 @@ class RRC0011Action
         ?string $indrDomcl = null,
     ): array {
         $payload = array_filter([
-            'identdCtrlReqSolicte'                 => $identdCtrlReqSolicte,
+            'identdCtrlReqSolicte'                      => $identdCtrlReqSolicte,
             'cnpjOuCnpjBaseOuCpfUsuFinalRecbdrOuTitlar' => $cnpjOuCnpjBaseOuCpfUsuFinalRecbdrOuTitlar,
-            'cnpjCreddrSub'                         => $cnpjCreddrSub,
-            'cnpjFincdr'                             => $cnpjFincdr,
-            'codInstitdrArrajPgto'                  => $codInstitdrArrajPgto,
-            'dtOptIn'                                => $dtOptIn,
-            'dtIniOptIn'                             => $dtIniOptIn,
-            'dtFimOptIn'                             => $dtFimOptIn,
-            'indrDomcl'                              => $indrDomcl,
+            'cnpjCreddrSub'                             => $cnpjCreddrSub,
+            'cnpjFincdr'                                => $cnpjFincdr,
+            'codInstitdrArrajPgto'                      => $codInstitdrArrajPgto,
+            'dtOptIn'                                   => $dtOptIn,
+            'dtIniOptIn'                                => $dtIniOptIn,
+            'dtFimOptIn'                                => $dtFimOptIn,
+            'indrDomcl'                                 => $indrDomcl,
         ], fn($value) => $value !== null);
 
         return $this->nucleaApiClient->makeRequest('post', 'anuencias', $payload);
