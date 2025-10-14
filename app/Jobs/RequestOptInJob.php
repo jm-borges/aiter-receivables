@@ -89,7 +89,7 @@ class RequestOptInJob implements ShouldQueue
             'identdCtrlReqSolicte' => $this->generateUniqueIdentifier(),
             'cnpj_financiadora' => $this->getFinanciadoraCnpj(),
             'indrDomcl' => $this->getIndrDomcl(),
-            'dtOptIn' => now()->format('Y-m-d'),
+            'dtOptIn' => $this->getDtIniOptIn(),
             'dtIniOptIn' => $this->getDtIniOptIn(),
             'dtFimOptIn' => $this->getDtFimOptIn(),
         ];
