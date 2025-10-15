@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\LogRequest;
 use App\Http\Middleware\LogResponse;
+use App\Http\Middleware\ValidateRtmToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         $middleware->append(LogRequest::class);
         $middleware->append(LogResponse::class);
+        $middleware->alias(['validate.rtm.token' => ValidateRtmToken::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

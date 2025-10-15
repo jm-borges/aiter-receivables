@@ -21,7 +21,7 @@ return new class extends Migration
             $table->uuid('payment_arrangement_id')->nullable()->index();
 
             // ARRANJO DE PAGAMENTO
-            $table->unsignedInteger('codInstitdrArrajPgto')->nullable();
+            $table->string('codInstitdrArrajPgto')->nullable();
 
             // ADQUIRENTE
             $table->string('cnpjCreddrSub')->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('cnpj_financiadora')->nullable();
             $table->string('identdCtrlOptIn')->nullable();
             $table->string('indrDomcl')->nullable();
-            $table->dateTime('dtOptIn')->nullable();
+            $table->date('dtOptIn')->nullable();
             $table->date('dtIniOptIn')->nullable();
             $table->date('dtFimOptIn')->nullable();
 
