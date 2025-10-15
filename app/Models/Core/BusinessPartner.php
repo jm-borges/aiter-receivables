@@ -20,6 +20,7 @@ class BusinessPartner extends Model
         'description',
         'type',
         'document_number',
+        'base_document_number',
         'state_subscription',
         'city_subscription',
         'email', //string
@@ -51,7 +52,9 @@ class BusinessPartner extends Model
 
     public static function findByDocumentNumber(string $documentNumber): ?self
     {
-        return self::where('document_number', $documentNumber)->first();
+        return self::where('document_number', removeSpecialCharacters($documentNumber))
+            ->orWhere('base_document_number', removeSpecialCharacters($documentNumber))
+            ->first();
     }
 
     public function contracts(): HasMany|BelongsToMany

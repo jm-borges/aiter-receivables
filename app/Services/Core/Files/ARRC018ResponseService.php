@@ -9,6 +9,7 @@ use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ARRC018ResponseService
 {
@@ -43,6 +44,7 @@ class ARRC018ResponseService
         $this->storeResponse($data);
 
         foreach ($data['receivableScheduleHolders'] as $clientData) {
+            Log::info("AAA", $clientData);
             $this->handleClientData($data, $clientData);
         }
     }
