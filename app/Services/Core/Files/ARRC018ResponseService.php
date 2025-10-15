@@ -90,7 +90,7 @@ class ARRC018ResponseService
     {
         return $client
             ->receivables()
-            ->where('cnpjCreddrSub', $data['']) //onde conseguir
+            ->where('cnpjCreddrSub', $data[''] ?? '') //onde conseguir
             ->where('codInstitdrArrajPgto', $data['paymentSchemeCode'])
             ->where('dtPrevtLiquid', $receivableUnitData['expectedSettlementDate'])
             ->first();

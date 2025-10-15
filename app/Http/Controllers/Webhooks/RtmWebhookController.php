@@ -36,7 +36,7 @@ class RtmWebhookController extends Controller
     public function handleOptOutNotification(Request $request): JsonResponse
     {
         return $this->processEvent('Opt-Out Notification', $request, function (array $data) {
-            $this->rtmWebhookSubService->createOptOutResponse($data);
+            //$this->rtmWebhookSubService->createOptOutResponse($data);
             Log::info("Processando Opt-Out...", $data);
         });
     }
@@ -44,7 +44,7 @@ class RtmWebhookController extends Controller
     public function handleTimeTable(Request $request): JsonResponse
     {
         return $this->processEvent('Time Table Notification', $request, function (array $data) {
-            $this->rtmWebhookSubService->createTimetable($data);
+            //$this->rtmWebhookSubService->createTimetable($data);
             Log::info("Atualizando Time Table...", $data);
         });
     }
@@ -52,7 +52,7 @@ class RtmWebhookController extends Controller
     public function handleOperationNotification(Request $request): JsonResponse
     {
         return $this->processEvent('Operation Notification', $request, function ($data) {
-            $this->rtmWebhookSubService->createOperationNotification($data);
+            //$this->rtmWebhookSubService->createOperationNotification($data);
             Log::info("Notificação de operação recebida.", $data);
         });
     }
@@ -68,8 +68,8 @@ class RtmWebhookController extends Controller
     public function handleOperationCancel(Request $request): JsonResponse
     {
         return $this->processEvent('Operation Cancel', $request, function ($data) {
-            $operationCancelNotification = $this->rtmWebhookSubService->createOperationCancelNotification($data);
-            $this->rtmWebhookSubService->processReceivableUnitCancels($data['receivableUnits'] ?? [], $operationCancelNotification);
+            // $operationCancelNotification = $this->rtmWebhookSubService->createOperationCancelNotification($data);
+            // $this->rtmWebhookSubService->processReceivableUnitCancels($data['receivableUnits'] ?? [], $operationCancelNotification);
             Log::info("Operação cancelada.", $data);
         });
     }
