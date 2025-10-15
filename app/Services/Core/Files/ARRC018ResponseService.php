@@ -64,11 +64,13 @@ class ARRC018ResponseService
     {
         $client = BusinessPartner::findByDocumentNumber($clientData['holderDocument']);
 
-        foreach ($clientData['holderReceivableUnits'] as $receivableUnitData) {
-            $this->handleReceivableUnitData($client, $data, $receivableUnitData);
-        }
+        if ($client) {
+            foreach ($clientData['holderReceivableUnits'] as $receivableUnitData) {
+                $this->handleReceivableUnitData($client, $data, $receivableUnitData);
+            }
 
-        dispatch(new VerifyReceivablesToOperateJob($client));
+            dispatch(new VerifyReceivablesToOperateJob($client));
+        }
     }
 
     private function handleReceivableUnitData(BusinessPartner $client, array $data, array $receivableUnitData): void
