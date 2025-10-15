@@ -60,7 +60,7 @@ class RtmWebhookController extends Controller
     public function handleOperationUpdate(Request $request): JsonResponse
     {
         return $this->processEvent('Operation Update', $request, function ($data) {
-            $this->rtmWebhookSubService->createOperationNotification($data);
+            //$this->rtmWebhookSubService->createOperationNotification($data);
             Log::info("Atualizando operação...", $data);
         });
     }
@@ -84,8 +84,8 @@ class RtmWebhookController extends Controller
     public function handleCancelOperationResponse(Request $request): JsonResponse
     {
         return $this->processEvent('Cancel Operation Response', $request, function ($data) {
-            $cancelOperationResponse = $this->rtmWebhookSubService->createCancelOperationResponse($data);
-            $this->rtmWebhookSubService->processCipMessages($data['messages'] ?? [], cancelOperationResponse: $cancelOperationResponse);
+            /*  $cancelOperationResponse = $this->rtmWebhookSubService->createCancelOperationResponse($data);
+            $this->rtmWebhookSubService->processCipMessages($data['messages'] ?? [], cancelOperationResponse: $cancelOperationResponse); */
             Log::info("Recebendo resposta de cancelamento...", $data);
         });
     }
@@ -93,10 +93,10 @@ class RtmWebhookController extends Controller
     public function handleReceivableUnitResponse(Request $request): JsonResponse
     {
         return $this->processEvent('Receivable Unit Response', $request, function ($data) {
-            $response = $this->rtmWebhookSubService->createReceivableUnitResponse($data);
+            /*  $response = $this->rtmWebhookSubService->createReceivableUnitResponse($data);
 
             $this->rtmWebhookSubService->processReceivableUnits($data['receivableUnitsApproved'] ?? [], $response, 'approved');
-            $this->rtmWebhookSubService->processReceivableUnits($data['receivableUnitsRefused'] ?? [], $response, 'refused');
+            $this->rtmWebhookSubService->processReceivableUnits($data['receivableUnitsRefused'] ?? [], $response, 'refused'); */
 
             Log::info("Processando unidade recebível...", $data);
         });
@@ -105,8 +105,8 @@ class RtmWebhookController extends Controller
     public function handleOperationSummary(Request $request): JsonResponse
     {
         return $this->processEvent('Operation Summary', $request, function ($data) {
-            $operationSummary = $this->rtmWebhookSubService->createOperationSummary($data);
-            $this->rtmWebhookSubService->processOperationSummaryControls($data['operationSummaryControl'] ?? [], $operationSummary);
+            // $operationSummary = $this->rtmWebhookSubService->createOperationSummary($data);
+            // $this->rtmWebhookSubService->processOperationSummaryControls($data['operationSummaryControl'] ?? [], $operationSummary);
 
             Log::info("Resumo da operação recebido.", $data);
         });
@@ -115,9 +115,9 @@ class RtmWebhookController extends Controller
     public function handleUpdatedParticipantList(Request $request): JsonResponse
     {
         return $this->processEvent('Updated Participant List', $request, function ($data) {
-            foreach ($data as $participantData) {
+            /* foreach ($data as $participantData) {
                 $this->rtmWebhookSubService->createParticipant($participantData);
-            }
+            } */
 
             Log::info("Lista de participantes atualizada.", $data);
         });
@@ -126,11 +126,11 @@ class RtmWebhookController extends Controller
     public function handleMerchantResponse(Request $request): JsonResponse
     {
         return $this->processEvent('Merchant Response', $request, function ($data) {
-            $merchantResponse = $this->rtmWebhookSubService->createMerchantResponse($data);
+            /*  $merchantResponse = $this->rtmWebhookSubService->createMerchantResponse($data);
 
             $this->rtmWebhookSubService->processMerchants($data['approvedMerchants'] ?? [], $merchantResponse, 'approved');
             $this->rtmWebhookSubService->processMerchants($data['rejectedMerchants'] ?? [], $merchantResponse, 'rejected');
-
+ */
             Log::info("Resposta do comerciante recebida.", $data);
         });
     }
@@ -138,11 +138,11 @@ class RtmWebhookController extends Controller
     public function handleReceivableSchedules(Request $request): JsonResponse
     {
         return $this->processEvent('Receivable Schedules', $request, function ($data) {
-            $receivableSchedule = $this->rtmWebhookSubService->createReceivableSchedule($data);
+            /*  $receivableSchedule = $this->rtmWebhookSubService->createReceivableSchedule($data);
 
             $this->rtmWebhookSubService->processReceiverFinalUsers($data['receiverFinalUsers'] ?? [], $receivableSchedule);
             $this->rtmWebhookSubService->processReceivableScheduleHolders($data['receivableScheduleHolders'] ?? [], $receivableSchedule);
-
+ */
             Log::info("Recebendo cronograma de recebíveis...", $data);
         });
     }
