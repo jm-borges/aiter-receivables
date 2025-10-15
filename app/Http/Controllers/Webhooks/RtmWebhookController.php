@@ -261,7 +261,7 @@ class RtmWebhookController extends Controller
 
             return response()->json(['message' => "{$eventName} processado com sucesso."], 200);
         } catch (Exception $e) {
-            Log::error("Erro ao processar webhook: " . $e->getMessage());
+            Log::error("Erro ao processar webhook: " . $e->getMessage() . ' | ' . $e->getFile() . ' | ' .  $e->getLine());
             return response()->json(['error' => 'Erro interno ao processar o evento.'], 500);
         }
     }
