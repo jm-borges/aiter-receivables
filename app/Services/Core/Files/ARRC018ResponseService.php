@@ -68,10 +68,11 @@ class ARRC018ResponseService
 
         if ($client) {
             foreach ($clientData['holderReceivableUnits'] as $receivableUnitData) {
-                $this->handleReceivableUnitData($client, $data, $receivableUnitData);
+                Log::info('Holder receivable units', $receivableUnitData);
+                //$this->handleReceivableUnitData($client, $data, $receivableUnitData);
             }
 
-            dispatch(new VerifyReceivablesToOperateJob($client));
+            // dispatch(new VerifyReceivablesToOperateJob($client));
         }
     }
 
