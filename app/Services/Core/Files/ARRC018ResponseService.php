@@ -44,17 +44,17 @@ class ARRC018ResponseService
         $this->storeResponse($data);
 
         foreach ($data['receivableScheduleHolders'] as $clientData) {
-            Log::info("AAA", $clientData);
             $this->handleClientData($data, $clientData);
         }
     }
 
     private function storeResponse(array $data): void
     {
-        ARRC018Response::create([
+        ARRC018Response::updateOrCreate([
+            'source_file_name' => $data["sourceFileName"],
+        ], [
             'payment_scheme_code' => $data['paymentSchemeCode'],
             'payment_arrangement_id' => PaymentArrangement::findByCode($data['paymentSchemeCode'])?->id,
-            'source_file_name' => $data["sourceFileName"],
             'participant_document' => $data["participantDocument"],
             'managed_participant_id' => $data["managedParticipantId"],
             'trade_repository_document' => $data["tradeRepositoryDocument"],
@@ -68,11 +68,10 @@ class ARRC018ResponseService
 
         if ($client) {
             foreach ($clientData['holderReceivableUnits'] as $receivableUnitData) {
-                Log::info('Holder receivable units', $receivableUnitData);
-                //$this->handleReceivableUnitData($client, $data, $receivableUnitData);
+                $this->handleReceivableUnitData($client, $data, $receivableUnitData);
             }
 
-            // dispatch(new VerifyReceivablesToOperateJob($client));
+            dispatch(new VerifyReceivablesToOperateJob($client));
         }
     }
 
@@ -91,7 +90,7 @@ class ARRC018ResponseService
     {
         return $client
             ->receivables()
-            ->where('cnpjCreddrSub', $data[''] ?? '') //onde conseguir
+            ->where('cnpjCreddrSub', $data[''] ?? '') //onde conseguir??
             ->where('codInstitdrArrajPgto', $data['paymentSchemeCode'])
             ->where('dtPrevtLiquid', $receivableUnitData['expectedSettlementDate'])
             ->first();
