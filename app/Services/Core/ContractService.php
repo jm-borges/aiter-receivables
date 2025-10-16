@@ -272,6 +272,7 @@ class ContractService
      */
     private function contractHasAchievedGoal(float $current, float $goal): bool
     {
+        Log::info('HAS ACHIVED', ['current' => $current, 'goal' => $goal]);
         return $current >= $goal;
     }
 }
