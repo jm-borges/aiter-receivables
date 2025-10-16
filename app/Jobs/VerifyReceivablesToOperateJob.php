@@ -13,42 +13,73 @@ use App\Models\Core\Operation;
 use App\Services\Core\ContractService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class VerifyReceivablesToOperateJob implements ShouldQueue
 {
     use Queueable;
 
-    private BusinessPartner $client;
+    public function __construct(private BusinessPartner $client) {}
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(BusinessPartner $client)
-    {
-        $this->client = $client;
-    }
-
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        $contracts = $this->client->load(['contracts.receivables'])->contracts;
+        Log::info("[VerifyReceivablesToOperateJob] Iniciando job", [
+            'client_id' => $this->client->id,
+            'document_number' => $this->client->document_number,
+        ]);
+
+        $contracts = $this->client->load(['clientContracts.receivables'])->clientContracts;
+
+        Log::info("[VerifyReceivablesToOperateJob] Contratos carregados", [
+            'client_id' => $this->client->id,
+            'contracts_count' => $contracts->count(),
+        ]);
 
         foreach ($contracts as $contract) {
+            Log::debug("[VerifyReceivablesToOperateJob] Processando contrato", [
+                'contract_id' => $contract->id,
+            ]);
             $this->handleContract($contract);
         }
+
+        Log::info("[VerifyReceivablesToOperateJob] Finalizado com sucesso", [
+            'client_id' => $this->client->id,
+        ]);
     }
 
     private function handleContract(Contract $contract): void
     {
-        $updatedContractInfo = app(ContractService::class)->updateReceivablesInContract($contract);
+        $updatedContractInfo = app(ContractService::class)
+            ->updateReceivablesInContract($contract);
+
         $contract = $updatedContractInfo->contract;
 
         if ($this->operationShouldBeCreated($updatedContractInfo)) {
+            Log::info("[VerifyReceivablesToOperateJob] Criando nova operação", [
+                'contract_id' => $contract->id,
+                'client_id' => $contract->client_id,
+            ]);
+
             $operation = $this->storeNewOperation($contract);
+
+            Log::debug("[VerifyReceivablesToOperateJob] Operação criada", [
+                'operation_id' => $operation->id,
+                'status' => $operation->status,
+            ]);
+
             $confirmOperationRequestData = $this->getConfirmOperationRequestData($contract, $operation);
+
             app(RRC0019Action::class)->confirmOperation($operation, $confirmOperationRequestData);
+
+            Log::info("[VerifyReceivablesToOperateJob] Operação confirmada", [
+                'operation_id' => $operation->id,
+            ]);
+        } else {
+            Log::debug("[VerifyReceivablesToOperateJob] Nenhuma operação necessária", [
+                'contract_id' => $contract->id,
+                'hasAchievedGoal' => $updatedContractInfo->hasAchievedGoal,
+                'thereWerePreviousOperations' => $updatedContractInfo->thereWerePreviousOperations,
+            ]);
         }
     }
 
@@ -64,7 +95,6 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
     private function getConfirmOperationRequestData(Contract $contract, Operation $operation): ConfirmOperationEntidadeRequest
     {
         return new ConfirmOperationEntidadeRequest(
-            //OBS: Seria interessante usar enums para cada campo para garantir consistência e erros de digitação
             tpObj: 'E',
             identdNegcRecbvl: $operation->id,
             indrTpNegc: 'OG',
@@ -81,16 +111,16 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
 
     private function buildTitularesInfo(Contract $contract): array
     {
-        return  [
+        return [
             [
-                'cnpjOuCnpjBaseOuCpfTitlar' =>  config('altri.cnpj'),
+                'cnpjOuCnpjBaseOuCpfTitlar' => config('altri.cnpj'),
                 'vlrOuPercTotOpUniddRecbvl' => $contract->value,
                 'dtIniOp' => $contract->start_date,
                 'dtFimOp' => $contract->end_date,
-                'cnpjOuCpfTitlarCt' =>  config('altri.cnpj'),
-                "ispbBcoRecbdr" => config('altri.bank_ispb'),
-                "tpCt" =>  config('altri.account_type'),
-                "ctPgto" => config('altri.account_number'),
+                'cnpjOuCpfTitlarCt' => config('altri.cnpj'),
+                'ispbBcoRecbdr' => config('altri.bank_ispb'),
+                'tpCt' => config('altri.account_type'),
+                'ctPgto' => config('altri.account_number'),
                 'usuariosFinaisRecebedores' => [
                     [
                         'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr' => $this->client->document_number,
@@ -100,22 +130,8 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
         ];
     }
 
-    private function operationShouldBeCreated(UpdatedContractInfo $updatedContractInfo): bool
+    private function operationShouldBeCreated(UpdatedContractInfo $info): bool
     {
-        $hasAchivedGoal = $updatedContractInfo->hasAchievedGoal;
-        $thereWerePreviousOperations = $updatedContractInfo->thereWerePreviousOperations;
-
-        if (!$hasAchivedGoal) {
-            return false;
-        }
-
-        if (!$thereWerePreviousOperations) {
-            return true;
-        }
-
-        //FICA FALTANDO O CENÁRIO EM QUE OS RECEBIVEIS DISPONIVEIS MUDAM, DE FORMA QUE O OBJETIVO DO CONTRATO É ATINGIDO, MAS JÁ HOUVERAM OPERAÇÕES ANTERIOR
-        //AGUARDAR RETORNO DA NUCLEA
-
-        return false;
+        return $info->hasAchievedGoal && ! $info->thereWerePreviousOperations;
     }
 }

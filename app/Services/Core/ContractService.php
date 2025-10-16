@@ -8,6 +8,7 @@ use App\Models\Core\Receivable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ContractService
@@ -46,18 +47,41 @@ class ContractService
      */
     public function updateReceivablesInContract(Contract $contract): UpdatedContractInfo
     {
+        Log::info("[ContractService] Iniciando atualização de recebíveis", [
+            'contract_id' => $contract->id,
+            'goal' => $contract->value,
+        ]);
+
         $goal = $contract->value;
         $amount = $this->processExistingReceivables($contract, $goal);
 
         if (!$this->contractHasAchievedGoal($amount, $goal)) {
+            Log::info("[ContractService] Meta ainda não atingida, buscando novos recebíveis", [
+                'contract_id' => $contract->id,
+                'current_amount' => $amount,
+                'goal' => $goal,
+            ]);
             $this->processNewReceivables($contract, $goal, $amount);
+        } else {
+            Log::info("[ContractService] Meta já atingida com recebíveis existentes", [
+                'contract_id' => $contract->id,
+                'amount' => $amount,
+            ]);
         }
 
-        return new UpdatedContractInfo(
+        $info = new UpdatedContractInfo(
             contract: $contract->refresh(),
             hasAchievedGoal: $this->contractHasAchievedGoal($amount, $goal),
-            thereWerePreviousOperations: $contract->operations()->count() > 0,
+            thereWerePreviousOperations: $contract->operations()->exists(),
         );
+
+        Log::info("[ContractService] Atualização finalizada", [
+            'contract_id' => $contract->id,
+            'hasAchievedGoal' => $info->hasAchievedGoal,
+            'thereWerePreviousOperations' => $info->thereWerePreviousOperations,
+        ]);
+
+        return $info;
     }
 
     /**
@@ -138,11 +162,24 @@ class ContractService
             return $current;
         }
 
+        Log::info("[ContractService] Atualizando recebível existente", [
+            'contract_id' => $contract->id,
+            'receivable_id' => $receivable->id,
+            'pivot_value' => $pivot,
+            'latest_value' => $latest,
+        ]);
+
         $newValue = $this->calculateNewReceivableValue($pivot, $latest, $goal, $current);
 
         if ($newValue !== null) {
             $this->syncReceivable($contract, $receivable, $newValue);
             $current += $newValue;
+            Log::info("[ContractService] Recebível sincronizado com novo valor", [
+                'contract_id' => $contract->id,
+                'receivable_id' => $receivable->id,
+                'new_value' => $newValue,
+                'total_amount' => $current,
+            ]);
         }
 
         return $current;
@@ -165,12 +202,27 @@ class ContractService
     ): float {
         $value = min($receivable->vlrTot, $goal - $current);
 
+        Log::info("[ContractService] Associando novo recebível ao contrato", [
+            'contract_id' => $contract->id,
+            'receivable_id' => $receivable->id,
+            'value' => $value,
+            'current_before' => $current,
+        ]);
+
         $contract->receivables()->attach($receivable, [
-            'id'     => (string) Str::uuid(),
+            'id' => (string) Str::uuid(),
             'amount' => $value,
         ]);
 
-        return $current + $value;
+        $newTotal = $current + $value;
+
+        Log::info("[ContractService] Novo recebível anexado com sucesso", [
+            'contract_id' => $contract->id,
+            'receivable_id' => $receivable->id,
+            'new_total' => $newTotal,
+        ]);
+
+        return $newTotal;
     }
 
     /**

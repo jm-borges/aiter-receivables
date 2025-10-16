@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 
 class BusinessPartner extends Model
 {
@@ -57,20 +58,28 @@ class BusinessPartner extends Model
             ->first();
     }
 
-    public function contracts(): HasMany|BelongsToMany
+    public function clientContracts(): HasMany
     {
-        return match ($this->type) {
-            BusinessPartnerType::CLIENT   => $this->hasMany(Contract::class, 'client_id'),
-            BusinessPartnerType::SUPPLIER => $this->hasMany(Contract::class, 'supplier_id'),
-            BusinessPartnerType::ACQUIRER => $this->belongsToMany(Contract::class, 'contract_has_acquirers'),
-        };
+        return $this->hasMany(Contract::class, 'client_id');
     }
 
-    public function receivables(): HasMany
+    public function supplierContracts(): HasMany
     {
-        return match ($this->type) {
-            BusinessPartnerType::CLIENT   => $this->hasMany(Receivable::class, 'client_id'),
-            BusinessPartnerType::ACQUIRER => $this->hasMany(Receivable::class, 'acquirer_id'),
-        };
+        return $this->hasMany(Contract::class, 'supplier_id');
+    }
+
+    public function acquirerContracts(): BelongsToMany
+    {
+        return $this->belongsToMany(Contract::class, 'contract_has_acquirers');
+    }
+
+    public function clientReceivables(): HasMany
+    {
+        return $this->hasMany(Receivable::class, 'client_id');
+    }
+
+    public function acquirerReceivables(): HasMany
+    {
+        return $this->hasMany(Receivable::class, 'acquirer_id');
     }
 }

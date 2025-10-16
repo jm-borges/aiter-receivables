@@ -71,7 +71,7 @@ class ARRC018ResponseService
                 $this->handleReceivableUnitData($client, $data, $receivableUnitData);
             }
 
-           // dispatch(new VerifyReceivablesToOperateJob($client));
+            dispatch(new VerifyReceivablesToOperateJob($client));
         }
     }
 
@@ -89,7 +89,7 @@ class ARRC018ResponseService
     private function findReceivable(BusinessPartner $client, array $data, array $receivableUnitData): ?Receivable
     {
         return $client
-            ->receivables()
+            ->clientReceivables()
             ->where('cnpjCreddrSub', $data[''] ?? '') //onde conseguir??
             ->where('codInstitdrArrajPgto', $data['paymentSchemeCode'])
             ->where('dtPrevtLiquid', $receivableUnitData['expectedSettlementDate'])
@@ -98,7 +98,7 @@ class ARRC018ResponseService
 
     private function createNewReceivable(BusinessPartner $client, array $data, array $receivableUnitData): void
     {
-        $client->receivables()->create([
+        $client->clientReceivables()->create([
             // 'acquirer_id',
             //  'cnpjCreddrSub' => ,
             'cnpjER' => $data['tradeRepositoryDocument'],

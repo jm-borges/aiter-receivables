@@ -5,7 +5,6 @@ namespace App\Actions;
 use App\ApiClients\Nuclea\NucleaApiClient;
 use App\DataTransferObjects\Nuclea\ConfirmOperationRequest;
 use App\Enums\OperationStatus;
-use App\Models\Core\Action;
 use App\Models\Core\Operation;
 use Illuminate\Support\Collection;
 

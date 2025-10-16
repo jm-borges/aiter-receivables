@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Contract extends Model
 {
@@ -64,5 +65,10 @@ class Contract extends Model
         return $this->belongsToMany(Receivable::class, 'contract_has_receivables')
             ->using(ContractHasReceivable::class)
             ->withPivot(['amount']);
+    }
+
+    public function operations(): HasMany
+    {
+        return $this->hasMany(Operation::class);
     }
 }
