@@ -3,6 +3,7 @@
 namespace App\Services\Core;
 
 use App\Auxiliary\UpdatedContractInfo;
+use App\Enums\OperationStatus;
 use App\Models\Core\Contract;
 use App\Models\Core\Receivable;
 use Illuminate\Database\Eloquent\Builder;
@@ -72,7 +73,7 @@ class ContractService
         $info = new UpdatedContractInfo(
             contract: $contract->refresh(),
             hasAchievedGoal: $this->contractHasAchievedGoal($amount, $goal),
-            thereWerePreviousOperations: $contract->operations()->exists(),
+            thereWerePreviousOperations: $contract->thereWerePreviousOperations(),
         );
 
         Log::info("[ContractService] Atualização finalizada", [

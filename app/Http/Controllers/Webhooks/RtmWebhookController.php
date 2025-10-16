@@ -78,6 +78,31 @@ class RtmWebhookController extends Controller
     {
         return $this->processEvent('Operation Response', $request, function ($data) {
             Log::info("Recebendo resposta da operação...", $data);
+
+            $identifier = $data['receivableNegociationId'];
+            $operation = Operation::find($identifier);
+
+            if ($operation) {
+                $operation->update([
+                    'identdOp' => $data['operationId'] ?? null,
+                    'sitRet' => strtolower($data['status']),
+                    'operation_href' => $data['operationHref'] ?? null,
+                    'status' => strtolower($data['status']) === 'recusado' ?
+                        OperationStatus::REFUSED : (strtolower($data['status']) === 'aceito' ?
+                            OperationStatus::ACCEPTED : OperationStatus::ERROR),
+                ]);
+
+                if (isset($data['cipMessages'])) {
+                    foreach ($data['cipMessages'] as $cipMessage) {
+                        $operation->cipMessage()->create([
+                            'code' => $cipMessage['code'],
+                            'content' => $cipMessage['content'],
+                            'field' => $cipMessage['field'],
+                            'message' => $cipMessage['message'],
+                        ]);
+                    }
+                }
+            }
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Enums\OperationStatus;
 use App\Models\Core\Pivots\ContractHasAcquirer;
 use App\Models\Core\Pivots\ContractHasPaymentArrangement;
 use App\Models\Core\Pivots\ContractHasReceivable;
@@ -70,5 +71,15 @@ class Contract extends Model
     public function operations(): HasMany
     {
         return $this->hasMany(Operation::class);
+    }
+
+    public function thereWerePreviousOperations(): bool
+    {
+        return $this->operations()
+            ->where('status', OperationStatus::WAITING_RESPONSE)
+            ->orWhere('status', OperationStatus::ACCEPTED)
+            ->orWhere('status', OperationStatus::FINISHED)
+            ->orWhere('status', OperationStatus::ACTIVE)
+            ->exists();
     }
 }

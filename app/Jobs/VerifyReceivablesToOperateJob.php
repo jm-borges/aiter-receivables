@@ -99,6 +99,7 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
             identdNegcRecbvl: $operation->id,
             indrTpNegc: 'OG',
             dtVencOp: $contract->end_date,
+            vlrGar: $contract->value,
             vlrTotLimOuSldDevdr: $contract->value,
             indrGestER: 'S',
             indrRegrDivs: 'V',
@@ -116,7 +117,7 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
             [
                 'cnpjOuCnpjBaseOuCpfTitlar' => config('altri.cnpj'),
                 'vlrOuPercTotOpUniddRecbvl' => $contract->value,
-                'dtIniOp' => $contract->start_date,
+                'dtIniOp' => now()->addDay()->format('Y-m-d'),
                 'dtFimOp' => $contract->end_date,
                 'cnpjOuCpfTitlarCt' => config('altri.cnpj'),
                 'ispbBcoRecbdr' => config('altri.bank_ispb'),

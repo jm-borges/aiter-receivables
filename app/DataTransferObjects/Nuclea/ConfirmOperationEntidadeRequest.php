@@ -21,6 +21,7 @@ class ConfirmOperationEntidadeRequest extends ConfirmOperationRequest
         public ?string $diaExeccRecalc = null,
         public array  $cessionariosAutorizados = [],
         public array  $renegociacoesDividas = [],
+        public ?float $vlrGar = null,
     ) {
         parent::__construct(
             $tpObj,
@@ -34,6 +35,7 @@ class ConfirmOperationEntidadeRequest extends ConfirmOperationRequest
             $indrActeIncondlOp,
             $indrActeUniddRecbvlReserv,
             $indrAutcCess,
+
         );
     }
 }
