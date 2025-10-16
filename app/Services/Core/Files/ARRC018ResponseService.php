@@ -71,7 +71,7 @@ class ARRC018ResponseService
                 $this->handleReceivableUnitData($client, $data, $receivableUnitData);
             }
 
-            dispatch(new VerifyReceivablesToOperateJob($client));
+           // dispatch(new VerifyReceivablesToOperateJob($client));
         }
     }
 
