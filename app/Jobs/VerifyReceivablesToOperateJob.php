@@ -105,6 +105,7 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
             indrAlcancContrtoCreddrSub: 'G',
             indrActeIncondlOp: 'N',
             indrActeUniddRecbvlReserv: 'C',
+            indrAutcCess: 'N',
             titulares: $this->buildTitularesInfo($contract),
         );
     }
