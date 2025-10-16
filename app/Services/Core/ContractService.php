@@ -61,7 +61,7 @@ class ContractService
                 'current_amount' => $amount,
                 'goal' => $goal,
             ]);
-            $this->processNewReceivables($contract, $goal, $amount);
+            $amount = $this->processNewReceivables($contract, $goal, $amount);
         } else {
             Log::info("[ContractService] Meta já atingida com recebíveis existentes", [
                 'contract_id' => $contract->id,
