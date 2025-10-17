@@ -115,7 +115,7 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
     {
         return [
             [
-                'cnpjOuCnpjBaseOuCpfTitlar' => substr(config('altri.cnpj'), 0, 8),
+                'cnpjOuCnpjBaseOuCpfTitlar' => substr($this->client->document_number, 0, 8),
                 'vlrOuPercTotOpUniddRecbvl' => $contract->value,
                 'dtIniOp' => now()->addDay()->format('Y-m-d'),
                 'dtFimOp' => $contract->end_date,
