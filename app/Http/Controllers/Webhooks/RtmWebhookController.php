@@ -94,7 +94,7 @@ class RtmWebhookController extends Controller
 
                 if (isset($data['cipMessages'])) {
                     foreach ($data['cipMessages'] as $cipMessage) {
-                        $operation->cipMessage()->create([
+                        $operation->cipMessages()->create([
                             'code' => $cipMessage['code'],
                             'content' => $cipMessage['content'],
                             'field' => $cipMessage['field'],
