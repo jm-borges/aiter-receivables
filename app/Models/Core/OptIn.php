@@ -46,7 +46,10 @@ class OptIn extends Model
     protected function casts(): array
     {
         return [
-            'type' => OptInStatus::class,
+            'status' => OptInStatus::class,
+            'dtOptIn' => 'date',
+            'dtIniOptIn' => 'date',
+            'dtFimOptIn' => 'date',
         ];
     }
 

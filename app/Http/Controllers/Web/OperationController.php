@@ -31,4 +31,9 @@ class OperationController extends Controller
 
         return view('operations.show', compact('operation'));
     }
+
+    public function executeIndex()
+    {
+        return view('operations.execute-index', []);
+    }
 }

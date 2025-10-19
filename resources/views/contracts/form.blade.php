@@ -1,19 +1,16 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold mb-6">
-                {{ isset($contract) ? 'Editar Contrato' : 'Novo Contrato' }}
-            </h1>
-
-            <div class="mb-4">
-                <a href="{{ route('contracts.index') }}"
-                    class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
-                    Voltar
-                </a>
-            </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 class="text-2xl font-bold text-custom-blue-hover mb-6">
+                {{ isset($contract) ? 'Editar Contrato' : 'Novo Contrato' }}</h1>
+            <a href="{{ route('contracts.index') }}"
+                class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
+                Voltar
+            </a>
         </div>
     </x-slot>
+
 
     @if ($errors->any())
         <div class="mb-4 p-4 bg-red-100 text-red-800 border border-red-300 rounded">

@@ -9,7 +9,7 @@ class ReceivableController extends Controller
 {
     public function index()
     {
-        $receivables = Receivable::with(['client', 'acquirer', 'paymentArrangement', 'contract', 'optIn'])
+        $receivables = Receivable::with(['client', 'acquirer', 'paymentArrangement', 'contracts', 'optIn'])
             ->latest()
             ->paginate(15);
 
@@ -18,9 +18,14 @@ class ReceivableController extends Controller
 
     public function show(string $id)
     {
-        $receivable = Receivable::with(['client', 'acquirer', 'paymentArrangement', 'contract', 'optIn'])
+        $receivable = Receivable::with(['client', 'acquirer', 'paymentArrangement', 'contracts', 'optIn'])
             ->findOrFail($id);
 
         return view('receivables.show', compact('receivable'));
+    }
+
+    public function queryIndex()
+    {
+        return view('receivables.query-index', []);
     }
 }

@@ -1,21 +1,17 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">
-                Detalhes do Contrato #{{ $contract->id }}
-            </h1>
-
-            <div class="mb-6 flex gap-3">
-                <a href="{{ route('contracts.edit', $contract) }}"
-                    class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
-                    Editar
-                </a>
-                <a href="{{ route('contracts.index') }}"
-                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition">
-                    Voltar
-                </a>
-            </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 class="text-2xl font-bold text-custom-blue-hover mb-6">
+                Detalhes do Contrato #{{ $contract->id }}</h1>
+            <a href="{{ route('contracts.edit', $contract) }}"
+                class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
+                Editar
+            </a>
+            <a href="{{ route('contracts.index') }}"
+                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition">
+                Voltar
+            </a>
         </div>
     </x-slot>
 

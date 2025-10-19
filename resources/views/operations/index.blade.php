@@ -1,9 +1,7 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">Operações</h1>
-        </div>
+        <x-page-header title="Operações" />
     </x-slot>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">

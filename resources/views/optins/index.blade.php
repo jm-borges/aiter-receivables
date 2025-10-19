@@ -37,8 +37,12 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 text-center">
+                            <a href="{{ route('opt-ins.show', $optIn->id) }}"
+                                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                                Visualizar
+                            </a>
                             @if ($optIn->status === \App\Enums\OptInStatus::ACTIVE)
-                                <form action="{{ route('opt-ins.opt-out', $optIn->id) }}" method="post"
+                                <form action="{{-- {{ route('opt-ins.opt-out', $optIn->id) }} --}}" method="post"
                                     onsubmit="return confirm('Tem certeza que deseja cancelar este Opt-In?');">
                                     @csrf
                                     @method('DELETE')

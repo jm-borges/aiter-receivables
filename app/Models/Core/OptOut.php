@@ -30,7 +30,7 @@ class OptOut extends Model
     protected function casts(): array
     {
         return [
-            'type' => OptOutStatus::class,
+            'status' => OptOutStatus::class,
         ];
     }
 

@@ -1,9 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Parceiros de Negócio') }}
-            </h2>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 class="text-2xl font-bold text-custom-blue-hover mb-6">Parceiros de Negócio</h1>
             <a href="{{ route('business-partners.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 {{ __('Novo Parceiro') }}

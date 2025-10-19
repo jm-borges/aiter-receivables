@@ -1,8 +1,12 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="max-w-7xl mx-auto py-6">
-            <h1 class="text-2xl font-bold mb-6">Detalhes do Recebível</h1>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 class="text-2xl font-bold text-custom-blue-hover mb-6">Detalhes do Recebível</h1>
+            <a href="{{ route('receivables.index') }}"
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                Voltar
+            </a>
         </div>
     </x-slot>
 
@@ -88,10 +92,5 @@
         </dl>
     </div>
 
-    <div class="mt-6">
-        <a href="{{ route('receivables.index') }}"
-            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
-            Voltar
-        </a>
-    </div>
+
 </x-app-layout>

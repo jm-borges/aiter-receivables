@@ -37,7 +37,7 @@ class Receivable extends Model
     protected function casts(): array
     {
         return [
-            // Add your casts here
+            'dtPrevtLiquid' => 'date',
         ];
     }
 
