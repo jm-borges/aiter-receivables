@@ -36,12 +36,12 @@ class ReceivableService
 
     // ---
 
-    public function getAllContractsReceivables(): void
+    /*  public function getAllContractsReceivables(): void
     {
         $contracts = Contract::get();
 
         foreach ($contracts as $contract) {
             dispatch(new GetContractReceivablesJob($contract));
         }
-    }
+    } */
 }
