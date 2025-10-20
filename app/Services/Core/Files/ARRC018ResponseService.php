@@ -98,6 +98,8 @@ class ARRC018ResponseService
 
     private function createNewReceivable(BusinessPartner $client, array $data, array $receivableUnitData): void
     {
+        $totalAvailableAmount = $this->getTotalAvailableAmount($receivableUnitData);
+
         $client->clientReceivables()->create([
             // 'acquirer_id',
             //  'cnpjCreddrSub' => ,
@@ -106,15 +108,31 @@ class ARRC018ResponseService
             'codInstitdrArrajPgto' => $data['paymentSchemeCode'],
             'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr' => $client->document_number,
             'dtPrevtLiquid' => $receivableUnitData['expectedSettlementDate'],
+            'indrDomcl' => $receivableUnitData['domicileIndicator'],
+            // ---
             'vlrTot' =>  $receivableUnitData['totalAmount'],
+            'available_value' => $totalAvailableAmount,
         ]);
     }
 
     private function updateExistingReceivable(Receivable $receivable, array $receivableUnitData): void
     {
+        $totalAvailableAmount = $this->getTotalAvailableAmount($receivableUnitData);
+
         $receivable->update([
-            'vlrTot' =>  $receivableUnitData['totalAmount'],
-            //'vlrLivreUsuFinalRecbdr' => // entender melhor isso aqui
+            'available_value' => $totalAvailableAmount,
         ]);
+    }
+
+    private function getTotalAvailableAmount(array $receivableUnitData): float
+    {
+        $holders =  $receivableUnitData['holders'];
+        $totalAvailableAmount = 0;
+
+        foreach ($holders as $holder) {
+            $totalAvailableAmount += $holder['totalAvalableAmount'];
+        }
+
+        return $totalAvailableAmount;
     }
 }

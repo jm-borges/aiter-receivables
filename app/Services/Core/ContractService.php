@@ -157,7 +157,7 @@ class ContractService
 
         $receivable->refresh();
         $pivot = $receivable->pivot->amount ?? 0;
-        $latest = $receivable->vlrTot;
+        $latest = $receivable->available_value;
 
         if ($pivot === $latest) {
             return $current;
@@ -201,7 +201,7 @@ class ContractService
         float $goal,
         float $current
     ): float {
-        $value = min($receivable->vlrTot, $goal - $current);
+        $value = min($receivable->available_value, $goal - $current);
 
         Log::info("[ContractService] Associando novo recebível ao contrato", [
             'contract_id' => $contract->id,

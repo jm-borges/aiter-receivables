@@ -69,9 +69,20 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
 
             $confirmOperationRequestData = $this->getConfirmOperationRequestData($contract, $operation);
 
-            app(RRC0019Action::class)->confirmOperation($operation, $confirmOperationRequestData);
+            if ($this->isOutsideNegotiationWindow()) {
+                $now = now('America/Sao_Paulo');
+                $nextWindow = today('America/Sao_Paulo')->setHour(12)->setMinute(0)->setSecond(0);
 
-            Log::info("[VerifyReceivablesToOperateJob] Operação confirmada", [
+                if ($now->greaterThan(today('America/Sao_Paulo')->setHour(18))) {
+                    $nextWindow->addDay();
+                }
+
+                dispatch(new ConfirmRRC0019Job($operation, $confirmOperationRequestData))->delay($nextWindow);
+            } else {
+                app(RRC0019Action::class)->confirmOperation($operation, $confirmOperationRequestData);
+            }
+
+            Log::info("[VerifyReceivablesToOperateJob] Operação enviada", [
                 'operation_id' => $operation->id,
             ]);
         } else {
@@ -83,6 +94,14 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
         }
     }
 
+    private function isOutsideNegotiationWindow(): bool
+    {
+        $now = now('America/Sao_Paulo');
+        $start = today('America/Sao_Paulo')->setHour(12);
+        $end = today('America/Sao_Paulo')->setHour(18);
+
+        return $now->lt($start) || $now->gt($end);
+    }
     private function storeNewOperation(Contract $contract): Operation
     {
         return Operation::create([

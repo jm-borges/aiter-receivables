@@ -23,10 +23,13 @@ class Receivable extends Model
         'cnpjCreddrSub',
         'codInstitdrArrajPgto',
         'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr',
-        'vlrLivreUsuFinalRecbdr',
         'dtPrevtLiquid',
-        'vlrTot',
         'indrDomcl',
+        //
+        'vlrLivreUsuFinalRecbdr',
+        'vlrTot',
+        //---
+        'available_value',
     ];
 
     /**
