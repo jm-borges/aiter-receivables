@@ -83,4 +83,9 @@ class Contract extends Model
             ->orWhere('status', OperationStatus::ACTIVE)
             ->exists();
     }
+
+    public function isExpired(): bool
+    {
+        return $this->end_date->isToday() || $this->end_date->isPast();
+    }
 }

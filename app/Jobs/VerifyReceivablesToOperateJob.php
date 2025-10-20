@@ -39,7 +39,9 @@ class VerifyReceivablesToOperateJob implements ShouldQueue
             Log::debug("[VerifyReceivablesToOperateJob] Processando contrato", [
                 'contract_id' => $contract->id,
             ]);
-            $this->handleContract($contract);
+            if (!$contract->isExpired()) {
+                $this->handleContract($contract);
+            }
         }
 
         Log::info("[VerifyReceivablesToOperateJob] Finalizado com sucesso", [

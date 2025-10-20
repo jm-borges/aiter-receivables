@@ -28,7 +28,7 @@ class RtmWebhookController extends Controller
     public function handleOptInNotification(Request $request): JsonResponse
     {
         return $this->processEvent('Opt-In Notification', $request, function (array $data) {
-            $this->rtmWebhookSubService->createOptInNotification($data);
+            //$this->rtmWebhookSubService->createOptInNotification($data);
             Log::info("Processando Opt-In...", $data);
         });
     }
