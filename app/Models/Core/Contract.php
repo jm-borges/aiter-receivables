@@ -25,6 +25,7 @@ class Contract extends Model
         'start_date',
         'end_date',
         'status',
+        'uses_registrar_management',
     ];
 
     /**
@@ -37,6 +38,7 @@ class Contract extends Model
         return [
             'start_date' => 'date',
             'end_date' => 'date',
+            'uses_registrar_management' => 'boolean',
         ];
     }
 
@@ -87,5 +89,10 @@ class Contract extends Model
     public function isExpired(): bool
     {
         return $this->end_date->isToday() || $this->end_date->isPast();
+    }
+
+    public function isFinished(): bool
+    {
+        return $this->status === ContractStatus::FINISHED;
     }
 }

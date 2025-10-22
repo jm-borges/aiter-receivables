@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\OperationHasReceivableController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CipMessageController;
 use App\Http\Controllers\Core\PaymentArrangementController;
 use App\Http\Controllers\Core\ContractController;
@@ -73,7 +75,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('attachment', [AttachmentController::class, 'destroyAllAttachment']);
 
         Route::apiResources([
-'receivables' => ReceivableController::class,
+            'receivables' => ReceivableController::class,
             'opt-ins' => OptInController::class,
             'opt-outs' => OptOutController::class,
             'business-partners' => BusinessPartnerController::class,
@@ -85,7 +87,9 @@ Route::prefix('v1')->group(function () {
             'contract-has-payment-arrangements' => ContractHasPaymentArrangementController::class,
             'contract-has-acquirers' => ContractHasAcquirerController::class,
             'contract-has-receivables' => ContractHasReceivableController::class,
-    'cip-messages' => CipMessageController::class,
-]);
+            'cip-messages' => CipMessageController::class,
+            'settings' => SettingController::class,
+            'operation-has-receivables' => OperationHasReceivableController::class,
+        ]);
     });
 });

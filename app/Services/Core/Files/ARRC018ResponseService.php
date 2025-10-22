@@ -2,14 +2,15 @@
 
 namespace App\Services\Core\Files;
 
+use App\Jobs\AutoOperateClientContractsJob;
 use App\Jobs\VerifyReceivablesToOperateJob;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Files\ARRC018Response;
 use App\Models\Core\PaymentArrangement;
-use App\Models\Core\Receivable;
+use App\Models\Core\Setting;
+use App\Services\Core\ReceivableService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class ARRC018ResponseService
 {
@@ -68,71 +69,45 @@ class ARRC018ResponseService
 
         if ($client) {
             foreach ($clientData['holderReceivableUnits'] as $receivableUnitData) {
-                $this->handleReceivableUnitData($client, $data, $receivableUnitData);
+                /// ENQUANTO A RTM NÃO ADICIONAR UM CAMPO EM QUE SEJA POSSIVEL OBTER O CNPJ DA CREDENCIADORA, É MELHOR UTILIZARMOS A RRC0010 PARA OBTER OS RECEBIVEIS DIRETO DA NUCLEA 
+                /// ATÉ LÁ, MANTER COMENTADO ESSE TRECHO PARA EVITAR INSERÇÃO DE RECEBIVEIS REPETIDOS MAS SEM CREDENCIADORA
+                /* $receivableData = $this->buildStandardizedReceivableData($client, $data, $receivableUnitData);
+                app(ReceivableService::class)->handleReceivableUnitData($client, $receivableData); */
             }
 
-            dispatch(new VerifyReceivablesToOperateJob($client));
+            if (Setting::first()->shouldAutomaticallyOperateContracts()) {
+                dispatch(new AutoOperateClientContractsJob($client));
+            }
         }
     }
 
-    private function handleReceivableUnitData(BusinessPartner $client, array $data, array $receivableUnitData): void
+    private function buildStandardizedReceivableData(BusinessPartner $client, array $data, array $receivableUnitData): array
     {
-        $receivable = $this->findReceivable($client, $data, $receivableUnitData);
+        $holders = $this->getHolders($receivableUnitData);
 
-        if ($receivable) {
-            $this->updateExistingReceivable($receivable, $data);
-        } else {
-            $this->createNewReceivable($client, $data, $receivableUnitData);
-        }
-    }
-
-    private function findReceivable(BusinessPartner $client, array $data, array $receivableUnitData): ?Receivable
-    {
-        return $client
-            ->clientReceivables()
-            ->where('cnpjCreddrSub', $data[''] ?? '') //onde conseguir??
-            ->where('codInstitdrArrajPgto', $data['paymentSchemeCode'])
-            ->where('dtPrevtLiquid', $receivableUnitData['expectedSettlementDate'])
-            ->first();
-    }
-
-    private function createNewReceivable(BusinessPartner $client, array $data, array $receivableUnitData): void
-    {
-        $totalAvailableAmount = $this->getTotalAvailableAmount($receivableUnitData);
-
-        $client->clientReceivables()->create([
-            // 'acquirer_id',
-            //  'cnpjCreddrSub' => ,
+        return [
             'cnpjER' => $data['tradeRepositoryDocument'],
-            'payment_arrangement_id' => PaymentArrangement::findByCode($data['paymentSchemeCode'])?->id,
+            'cnpjCreddrSub' => '',
             'codInstitdrArrajPgto' => $data['paymentSchemeCode'],
             'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr' => $client->document_number,
-            'dtPrevtLiquid' => $receivableUnitData['expectedSettlementDate'],
-            'indrDomcl' => $receivableUnitData['domicileIndicator'],
-            // ---
             'vlrTot' =>  $receivableUnitData['totalAmount'],
-            'available_value' => $totalAvailableAmount,
-        ]);
+            'indrDomcl' => $receivableUnitData['domicileIndicator'],
+            'dtPrevtLiquid' => $receivableUnitData['expectedSettlementDate'],
+            'titulares' => $holders,
+        ];
     }
 
-    private function updateExistingReceivable(Receivable $receivable, array $receivableUnitData): void
+    private function getHolders(array $receivableUnitData): array
     {
-        $totalAvailableAmount = $this->getTotalAvailableAmount($receivableUnitData);
+        $holdersData = $receivableUnitData['holders'];
+        $holders = [];
 
-        $receivable->update([
-            'available_value' => $totalAvailableAmount,
-        ]);
-    }
-
-    private function getTotalAvailableAmount(array $receivableUnitData): float
-    {
-        $holders =  $receivableUnitData['holders'];
-        $totalAvailableAmount = 0;
-
-        foreach ($holders as $holder) {
-            $totalAvailableAmount += $holder['totalAvalableAmount'];
+        foreach ($holdersData as $holder) {
+            $holders[] = [
+                'vlrLivreTot' => $holder['totalAvalableAmount'],
+            ];
         }
 
-        return $totalAvailableAmount;
+        return $holders;
     }
 }

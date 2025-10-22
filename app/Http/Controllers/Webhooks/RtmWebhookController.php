@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers\Webhooks;
 
+use App\Actions\RRC0010Action;
+use App\Enums\BusinessPartnerType;
 use App\Enums\OperationStatus;
+use App\Handlers\OperationsUpdater;
+use App\Handlers\ReceivablesUpdater;
 use App\Http\Controllers\Controller;
+use App\Jobs\AutoOperateClientContractsJob;
 use App\Jobs\VerifyReceivablesToOperateJob;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Files\ARRC018Response;
 use App\Models\Core\Operation;
 use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
+use App\Models\Core\Setting;
 use App\Services\Core\Files\ARRC018ResponseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,60 +31,37 @@ class RtmWebhookController extends Controller
         $this->rtmWebhookSubService = $rtmWebhookSubService;
     }
 
-    public function handleOptInNotification(Request $request): JsonResponse
-    {
-        return $this->processEvent('Opt-In Notification', $request, function (array $data) {
-            //$this->rtmWebhookSubService->createOptInNotification($data);
-            Log::info("Processando Opt-In...", $data);
-        });
-    }
-
-    public function handleOptOutNotification(Request $request): JsonResponse
-    {
-        return $this->processEvent('Opt-Out Notification', $request, function (array $data) {
-            //$this->rtmWebhookSubService->createOptOutResponse($data);
-            Log::info("Processando Opt-Out...", $data);
-        });
-    }
-
     public function handleTimeTable(Request $request): JsonResponse
     {
         return $this->processEvent('Time Table Notification', $request, function (array $data) {
-            //$this->rtmWebhookSubService->createTimetable($data);
-            Log::info("Atualizando Time Table...", $data);
+            $clients = BusinessPartner::where('type', BusinessPartnerType::CLIENT)->get();
+            foreach ($clients as $client) {
+                app(ReceivablesUpdater::class)->syncReceivablesFromRegistrar($client);
+            }
+
+            $operations = Operation::get();
+            foreach ($operations as $operation) {
+                app(OperationsUpdater::class)->syncOperationFromRegistrar($operation);
+            }
+
+            if (Setting::first()->shouldAutomaticallyOperateContracts()) {
+                foreach ($clients as $client) {
+                    dispatch(new AutoOperateClientContractsJob($client));
+                }
+            }
         });
     }
 
-    public function handleOperationNotification(Request $request): JsonResponse
+    public function handleArrc018Response(Request $request): JsonResponse
     {
-        return $this->processEvent('Operation Notification', $request, function ($data) {
-            //$this->rtmWebhookSubService->createOperationNotification($data);
-            Log::info("Notificação de operação recebida.", $data);
-        });
-    }
-
-    public function handleOperationUpdate(Request $request): JsonResponse
-    {
-        return $this->processEvent('Operation Update', $request, function ($data) {
-            //$this->rtmWebhookSubService->createOperationNotification($data);
-            Log::info("Atualizando operação...", $data);
-        });
-    }
-
-    public function handleOperationCancel(Request $request): JsonResponse
-    {
-        return $this->processEvent('Operation Cancel', $request, function ($data) {
-            // $operationCancelNotification = $this->rtmWebhookSubService->createOperationCancelNotification($data);
-            // $this->rtmWebhookSubService->processReceivableUnitCancels($data['receivableUnits'] ?? [], $operationCancelNotification);
-            Log::info("Operação cancelada.", $data);
+        return $this->processEvent('Arrc018Response', $request, function (array $data) {
+            //app(ARRC018ResponseService::class)->process($data);
         });
     }
 
     public function handleOperationResponse(Request $request): JsonResponse
     {
         return $this->processEvent('Operation Response', $request, function ($data) {
-            Log::info("Recebendo resposta da operação...", $data);
-
             $identifier = $data['receivableNegociationId'];
             $operation = Operation::find($identifier);
 
@@ -103,6 +86,70 @@ class RtmWebhookController extends Controller
                     }
                 }
             }
+        });
+    }
+
+    public function handleRetornosRegistroOperacao(Request $request): JsonResponse
+    {
+        return $this->processEvent('RetornosRegistroOperacao', $request, function ($data) {
+            $identifier = $data['receivableNegociationId'];
+            $operation = Operation::find($identifier);
+
+            if ($operation) {
+                $operation->update([
+                    'identdOp' => $data['operationId'],
+                    'sitRet' => strtolower($data['status']),
+                    'operation_href' => $data['operationHref'] ?? null,
+                    'status' => strtolower($data['status']) === 'recusado' ?
+                        OperationStatus::REFUSED : (strtolower($data['status']) === 'aceito' ?
+                            OperationStatus::ACCEPTED : OperationStatus::ERROR),
+                ]);
+            }
+        });
+    }
+
+    //---------------
+
+    public function handleOptInNotification(Request $request): JsonResponse
+    {
+        return $this->processEvent('Opt-In Notification', $request, function (array $data) {
+            //$this->rtmWebhookSubService->createOptInNotification($data);
+            Log::info("Processando Opt-In...", $data);
+        });
+    }
+
+    public function handleOptOutNotification(Request $request): JsonResponse
+    {
+        return $this->processEvent('Opt-Out Notification', $request, function (array $data) {
+            //$this->rtmWebhookSubService->createOptOutResponse($data);
+            Log::info("Processando Opt-Out...", $data);
+        });
+    }
+
+
+
+    public function handleOperationNotification(Request $request): JsonResponse
+    {
+        return $this->processEvent('Operation Notification', $request, function ($data) {
+            //$this->rtmWebhookSubService->createOperationNotification($data);
+            Log::info("Notificação de operação recebida.", $data);
+        });
+    }
+
+    public function handleOperationUpdate(Request $request): JsonResponse
+    {
+        return $this->processEvent('Operation Update', $request, function ($data) {
+            //$this->rtmWebhookSubService->createOperationNotification($data);
+            Log::info("Atualizando operação...", $data);
+        });
+    }
+
+    public function handleOperationCancel(Request $request): JsonResponse
+    {
+        return $this->processEvent('Operation Cancel', $request, function ($data) {
+            // $operationCancelNotification = $this->rtmWebhookSubService->createOperationCancelNotification($data);
+            // $this->rtmWebhookSubService->processReceivableUnitCancels($data['receivableUnits'] ?? [], $operationCancelNotification);
+            Log::info("Operação cancelada.", $data);
         });
     }
 
@@ -186,31 +233,6 @@ class RtmWebhookController extends Controller
         });
     }
 
-    public function handleRetornosRegistroOperacao(Request $request): JsonResponse
-    {
-        return $this->processEvent('RetornosRegistroOperacao', $request, function ($data) {
-            $identifier = $data['receivableNegociationId'];
-            $operation = Operation::find($identifier);
-
-            if ($operation) {
-                $operation->update([
-                    'identdOp' => $data['operationId'],
-                    'sitRet' => strtolower($data['status']),
-                    'operation_href' => $data['operationHref'] ?? null,
-                    'status' => strtolower($data['status']) === 'recusado' ?
-                        OperationStatus::REFUSED : (strtolower($data['status']) === 'aceito' ?
-                            OperationStatus::ACCEPTED : OperationStatus::ERROR),
-                ]);
-            }
-        });
-    }
-
-    public function handleArrc018Response(Request $request): JsonResponse
-    {
-        return $this->processEvent('Arrc018Response', $request, function (array $data) {
-            app(ARRC018ResponseService::class)->process($data);
-        });
-    }
 
     public function handleArrc022Response(Request $request): JsonResponse
     {

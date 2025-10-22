@@ -2,9 +2,9 @@
 
 namespace App\Services\Core;
 
-use App\Jobs\GetContractReceivablesJob;
-use App\Models\Core\Contract;
 use App\Models\Core\Receivable;
+use App\Models\Core\BusinessPartner;
+use App\Models\Core\PaymentArrangement;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -36,12 +36,66 @@ class ReceivableService
 
     // ---
 
-    /*  public function getAllContractsReceivables(): void
+    public function findReceivable(BusinessPartner $client, array $receivableData): ?Receivable
     {
-        $contracts = Contract::get();
+        return $client
+            ->clientReceivables()
+            ->where('cnpjCreddrSub', $receivableData['cnpjCreddrSub'])
+            ->where('codInstitdrArrajPgto', $receivableData['codInstitdrArrajPgto'])
+            ->where('dtPrevtLiquid', $receivableData['dtPrevtLiquid'])
+            ->first();
+    }
 
-        foreach ($contracts as $contract) {
-            dispatch(new GetContractReceivablesJob($contract));
+    //------
+
+    public function handleReceivableUnitData(BusinessPartner $client, array $receivableData): void
+    {
+        $receivable = $this->findReceivable($client, $receivableData);
+
+        if ($receivable) {
+            $this->updateExistingReceivable($receivable, $receivableData);
+        } else {
+            $this->createNewReceivable($client, $receivableData);
         }
-    } */
+    }
+
+    private function createNewReceivable(BusinessPartner $client, array $receivableData): void
+    {
+        $totalAvailableAmount = $this->getTotalAvailableAmount($receivableData);
+
+        $client->clientReceivables()->create([
+            'acquirer_id' => BusinessPartner::findByDocumentNumber($receivableData['cnpjCreddrSub'])?->id,
+            'cnpjCreddrSub' => $receivableData['cnpjCreddrSub'],
+            'cnpjER' => $receivableData['cnpjER'],
+            'payment_arrangement_id' => PaymentArrangement::findByCode($receivableData['codInstitdrArrajPgto'])?->id,
+            'codInstitdrArrajPgto' => $receivableData['codInstitdrArrajPgto'],
+            'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr' => $client->document_number,
+            'dtPrevtLiquid' => $receivableData['dtPrevtLiquid'],
+            'indrDomcl' => $receivableData['indrDomcl'],
+            // ---
+            'vlrTot' =>  $receivableData['vlrTot'],
+            'available_value' => $totalAvailableAmount,
+        ]);
+    }
+
+    private function updateExistingReceivable(Receivable $receivable, array $receivableData): void
+    {
+        $totalAvailableAmount = $this->getTotalAvailableAmount($receivableData);
+
+        $receivable->update([
+            'available_value' => $totalAvailableAmount,
+        ]);
+    }
+
+    private function getTotalAvailableAmount(array $receivableData): float
+    {
+        $holders =  $receivableData['titulares'];
+        $totalAvailableAmount = 0;
+
+        foreach ($holders as $holder) {
+            $totalAvailableAmount += $holder['vlrLivreTot'];
+        }
+
+        return $totalAvailableAmount;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Models\Core\Pivots\OperationHasReceivable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -59,9 +60,11 @@ class Receivable extends Model
         return $this->belongsTo(PaymentArrangement::class);
     }
 
-    public function contracts(): BelongsToMany
+
+    public function operations(): BelongsToMany
     {
-        return $this->belongsToMany(Contract::class, 'contract_has_receivables')
+        return $this->belongsToMany(Operation::class, 'operation_has_receivables')
+            ->using(OperationHasReceivable::class)
             ->withPivot(['amount']);
     }
 
