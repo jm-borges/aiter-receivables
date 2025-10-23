@@ -7,10 +7,18 @@ use App\Models\Core\BusinessPartner;
 use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
 use App\Services\Core\ReceivableService;
+use Illuminate\Support\Collection;
 
 class ReceivablesUpdater
 {
-    public function syncReceivablesFromRegistrar(BusinessPartner $client): void
+    public function updatesReceivables(Collection $clients): void
+    {
+        foreach ($clients as $client) {
+            $this->syncReceivablesFromRegistrar($client);
+        }
+    }
+
+    private function syncReceivablesFromRegistrar(BusinessPartner $client): void
     {
         $response = app(RRC0010Action::class)->execute(
             cnpjOuCnpjBaseOuCpfUsuFinalRecbdr: $client->document_number,

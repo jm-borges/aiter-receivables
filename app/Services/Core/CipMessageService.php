@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Core;
 
-use App\Models\CipMessage;
+use App\Models\Core\CipMessage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request; 
-        
+use Illuminate\Http\Request;
+
 class CipMessageService
 {
     /**

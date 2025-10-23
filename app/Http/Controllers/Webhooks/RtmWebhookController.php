@@ -21,6 +21,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Collection;
 
 class RtmWebhookController extends Controller
 {
@@ -35,14 +36,9 @@ class RtmWebhookController extends Controller
     {
         return $this->processEvent('Time Table Notification', $request, function (array $data) {
             $clients = BusinessPartner::where('type', BusinessPartnerType::CLIENT)->get();
-            foreach ($clients as $client) {
-                app(ReceivablesUpdater::class)->syncReceivablesFromRegistrar($client);
-            }
 
-            $operations = Operation::get();
-            foreach ($operations as $operation) {
-                app(OperationsUpdater::class)->syncOperationFromRegistrar($operation);
-            }
+            app(ReceivablesUpdater::class)->updatesReceivables($clients);
+            app(OperationsUpdater::class)->updatesOperations();
 
             if (Setting::first()->shouldAutomaticallyOperateContracts()) {
                 foreach ($clients as $client) {

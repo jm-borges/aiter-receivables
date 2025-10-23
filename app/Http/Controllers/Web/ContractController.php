@@ -2,75 +2,52 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Enums\ContractStatus;
 use App\Http\Controllers\Controller;
-use App\Jobs\DispatchOptInJob;
+use App\Http\Requests\Contracts\GetContractsRequest;
+use App\Http\Requests\Contracts\StoreContractRequest;
+use App\Http\Requests\Contracts\UpdateContractRequest;
 use App\Models\Core\Contract;
-use App\Models\Core\BusinessPartner;
-use App\Models\Core\PaymentArrangement;
-use Illuminate\Http\Request;
+use App\Services\Core\ContractService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 
 class ContractController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(GetContractsRequest $request, ContractService $contractService): View|Factory
     {
-        $contracts = Contract::with(['client', 'supplier', 'acquirers'])->paginate(20);
-        return view('contracts.index', compact('contracts'));
+        $viewData = $contractService->getIndexViewData($request);
+        return view('contracts.index', $viewData);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(ContractService $contractService): View|Factory
     {
-        $clients = BusinessPartner::where('type', 'client')->get();
-        $suppliers = BusinessPartner::where('type', 'supplier')->get();
-        $acquirers = BusinessPartner::where('type', 'acquirer')->get();
-        $paymentArrangements = PaymentArrangement::orderBy('code', 'asc')->get();
-
-        return view('contracts.form', compact('clients', 'suppliers', 'acquirers', 'paymentArrangements'));
+        $viewData = $contractService->getCreateViewData();
+        return view('contracts.form', $viewData);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreContractRequest $request, ContractService $contractService): RedirectResponse|Redirector
     {
-        $data = $request->validate([
-            'client_id' => 'required|exists:business_partners,id',
-            'supplier_id' => 'required|exists:business_partners,id',
-            'value' => 'required|numeric',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'acquirers' => 'array',
-            'acquirers.*' => 'exists:business_partners,id',
-            'payment_arrangements' => 'array',
-            'payment_arrangements.*' => 'exists:payment_arrangements,id',
-        ]);
-
-        $contract = Contract::create($data);
-
-        if (!empty($data['acquirers'])) {
-            $contract->acquirers()->sync($data['acquirers']);
-        }
-
-        if (!empty($data['payment_arrangements'])) {
-            $contract->paymentArrangements()->sync($data['payment_arrangements']);
-        }
-
-        if (!empty($data['acquirers']) || !empty($data['payment_arrangements'])) {
-            dispatch(new DispatchOptInJob($contract));
-        }
-
+        $data = [...$request->all(), 'status' => ContractStatus::ACTIVE];
+        $contractService->create($data);
         return redirect()->route('contracts.index')->with('success', 'Contrato criado com sucesso.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Contract $contract)
+    public function show(Contract $contract): View|Factory
     {
         $contract->load(['client', 'supplier', 'acquirers', 'paymentArrangements']);
         return view('contracts.show', compact('contract'));
@@ -79,56 +56,29 @@ class ContractController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Contract $contract)
+    public function edit(Contract $contract, ContractService $contractService): View|Factory
     {
         $contract->load('acquirers', 'paymentArrangements');
-
-        $clients = BusinessPartner::where('type', 'client')->get();
-        $suppliers = BusinessPartner::where('type', 'supplier')->get();
-        $acquirers = BusinessPartner::where('type', 'acquirer')->get();
-        $paymentArrangements = PaymentArrangement::all();
-
-        return view('contracts.form', compact('contract', 'clients', 'suppliers', 'acquirers', 'paymentArrangements'));
+        $viewData = $contractService->getEditViewData();
+        return view('contracts.form', $viewData);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Contract $contract)
+    public function update(UpdateContractRequest $request, Contract $contract, ContractService $contractService): RedirectResponse|Redirector
     {
-        $data = $request->validate([
-            'client_id' => 'required|exists:business_partners,id',
-            'supplier_id' => 'required|exists:business_partners,id',
-            'value' => 'required|numeric',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'acquirers' => 'array',
-            'acquirers.*' => 'exists:business_partners,id',
-            'payment_arrangements' => 'array',
-            'payment_arrangements.*' => 'exists:payment_arrangements,id',
-        ]);
-
-        $contract->update($data);
-
-        $contract->acquirers()->sync($data['acquirers'] ?? []);
-        $contract->paymentArrangements()->sync($data['payment_arrangements'] ?? []);
-
-        if (!empty($data['acquirers']) || !empty($data['payment_arrangements'])) {
-            dispatch(new DispatchOptInJob($contract));
-        }
-
+        $data = $request->all();
+        $contractService->update($contract, $data);
         return redirect()->route('contracts.index')->with('success', 'Contrato atualizado com sucesso.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Contract $contract)
+    public function destroy(Contract $contract, ContractService $contractService): RedirectResponse|Redirector
     {
-        $contract->acquirers()->detach();
-        $contract->paymentArrangements()->detach();
-        $contract->delete();
-
+        $contractService->destroy($contract);
         return redirect()->route('contracts.index')->with('success', 'Contrato removido com sucesso.');
     }
 }

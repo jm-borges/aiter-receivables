@@ -22,7 +22,15 @@ class StoreContractRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Add your validation rules here
+            'client_id' => 'required|exists:business_partners,id',
+            'supplier_id' => 'required|exists:business_partners,id',
+            'value' => 'required|numeric',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'acquirers' => 'array',
+            'acquirers.*' => 'exists:business_partners,id',
+            'payment_arrangements' => 'array',
+            'payment_arrangements.*' => 'exists:payment_arrangements,id',
         ];
     }
 

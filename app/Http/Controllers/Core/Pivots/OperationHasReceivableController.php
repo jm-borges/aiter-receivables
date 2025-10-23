@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core\Pivots;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\OperationHasReceivables\GetOperationHasReceivablesRequest;
 use App\Http\Requests\OperationHasReceivables\StoreOperationHasReceivableRequest;
 use App\Http\Requests\OperationHasReceivables\UpdateOperationHasReceivableRequest;
 use App\Http\Resources\OperationHasReceivableResource;
-use App\Models\OperationHasReceivable;
-use App\Services\OperationHasReceivableService;
+use App\Models\Core\Pivots\OperationHasReceivable;
+use App\Services\Core\Pivots\OperationHasReceivableService;
 use Illuminate\Http\JsonResponse;
 
 class OperationHasReceivableController extends Controller

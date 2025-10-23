@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CipMessages\GetCipMessagesRequest;
 use App\Http\Requests\CipMessages\StoreCipMessageRequest;
 use App\Http\Requests\CipMessages\UpdateCipMessageRequest;
 use App\Http\Resources\CipMessageResource;
-use App\Models\CipMessage;
-use App\Services\CipMessageService;
+use App\Models\Core\CipMessage;
+use App\Services\Core\CipMessageService;
 use Illuminate\Http\JsonResponse;
 
 class CipMessageController extends Controller

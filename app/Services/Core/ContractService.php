@@ -2,13 +2,12 @@
 
 namespace App\Services\Core;
 
-use App\Auxiliary\UpdatedContractInfo;
+use App\Jobs\DispatchOptInJob;
+use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
-use App\Models\Core\Receivable;
+use App\Models\Core\PaymentArrangement;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class ContractService
 {
@@ -17,229 +16,80 @@ class ContractService
      */
     public function filter(Request $request): Builder
     {
-        $query = Contract::query();
+        $query = Contract::with(['client', 'supplier', 'acquirers']);
+
+        //
 
         return $query;
     }
 
-    public function create(Request $request): Contract
+    public function create(array $data): Contract
     {
-        $contract = Contract::create($request->all());
+        $contract = Contract::create($data);
+
+        if (!empty($data['acquirers'])) {
+            $contract->acquirers()->sync($data['acquirers']);
+        }
+
+        if (!empty($data['payment_arrangements'])) {
+            $contract->paymentArrangements()->sync($data['payment_arrangements']);
+        }
+
+        if (!empty($data['acquirers']) || !empty($data['payment_arrangements'])) {
+            dispatch(new DispatchOptInJob($contract));
+        }
 
         return $contract;
     }
 
-    public function update(Contract $contract, Request $request): Contract
+    public function update(Contract $contract, array $data): Contract
     {
-        $contract->update($request->all());
+        $contract->update($data);
+
+        $contract->acquirers()->sync($data['acquirers'] ?? []);
+        $contract->paymentArrangements()->sync($data['payment_arrangements'] ?? []);
+
+        if (!empty($data['acquirers']) || !empty($data['payment_arrangements'])) {
+            //TODO: Aqui teria que verificar se é necessário atualizar ou cancelar e criar novos opt ins
+            dispatch(new DispatchOptInJob($contract));
+        }
 
         return $contract;
     }
 
-    // ---
-
-    /**
-     * Update the receivables attached to a given contract.
-     *
-     * @param Contract $contract
-     * @return UpdatedContractInfo
-     */
-    public function updateReceivablesInContract(Contract $contract): UpdatedContractInfo
+    public function destroy(Contract $contract): void
     {
-        $goal = $contract->value;
-        //current value achieved
-        //com as operações e os recebiveis atualizadas com base na registradora, 
-        //vai ser o valor dos recebiveis das operações
-
-        $amount = $this->processExistingReceivables($contract, $goal);
-
-        if (!$this->contractHasAchievedGoal($amount, $goal)) {
-            $amount = $this->processNewReceivables($contract, $goal, $amount);
-        }
-
-        return $this->getUpdatedContractInfo($contract, $goal, $amount);
+        $contract->acquirers()->detach();
+        $contract->paymentArrangements()->detach();
+        $contract->operations()->detach();
+        $contract->delete();
     }
 
-    private function getUpdatedContractInfo(Contract $contract, float $goal, float $amount): UpdatedContractInfo
+    // ------------------- VIEWS DATA ------------------------
+
+    public function getIndexViewData(Request $request): array
     {
-        return new UpdatedContractInfo(
-            contract: $this->getUpdatedContract($contract),
-            hasAchievedGoal: $this->contractHasAchievedGoal($amount, $goal),
-            thereWerePreviousOperations: $contract->thereWerePreviousOperations(),
-        );
+        $contracts = $this->filter($request)->paginate($request->per_page ?? 20);
+        return compact('contracts');
     }
 
-    private function getUpdatedContract(Contract $contract): Contract
+    public function getCreateViewData(): array
     {
-        $contract->refresh();
-        $receivables = $contract->receivables()->get();
-        $contract->receivables = $receivables;
-        return $contract;
+        $clients = BusinessPartner::where('type', 'client')->get();
+        $suppliers = BusinessPartner::where('type', 'supplier')->get();
+        $acquirers = BusinessPartner::where('type', 'acquirer')->get();
+        $paymentArrangements = PaymentArrangement::orderBy('code', 'asc')->get();
+
+        return compact('clients', 'suppliers', 'acquirers', 'paymentArrangements');
     }
 
-    /**
-     * Process already attached receivables and adjust their values if needed.
-     *
-     * @param Contract $contract
-     * @param float $goal
-     * @return float
-     */
-    private function processExistingReceivables(Contract $contract, float $goal): float
+    public function getEditViewData(): array
     {
-        return $contract->receivables->reduce(
-            fn(float $amount, Receivable $receivable): float =>
-            $this->updateReceivable($contract, $receivable, $goal, $amount),
-            0.0
-        );
-    }
+        $clients = BusinessPartner::where('type', 'client')->get();
+        $suppliers = BusinessPartner::where('type', 'supplier')->get();
+        $acquirers = BusinessPartner::where('type', 'acquirer')->get();
+        $paymentArrangements = PaymentArrangement::all();
 
-    /**
-     * Attach new receivables to the contract until the goal is achieved.
-     *
-     * @param Contract $contract
-     * @param float $goal
-     * @param float $amount
-     * @return float
-     */
-    private function processNewReceivables(Contract $contract, float $goal, float $amount): float
-    {
-        $newReceivables = $this->getNewReceivables($contract);
-        foreach ($newReceivables as $receivable) {
-            if ($this->contractHasAchievedGoal($amount, $goal)) {
-                break;
-            }
-            $amount = $this->attachNewReceivable($contract, $receivable, $goal, $amount);
-        }
-
-        return $amount;
-    }
-
-    /**
-     * Get receivables not yet attached to the given contract.
-     *
-     * @param Contract $contract
-     * @return Collection<int, Receivable>
-     */
-    private function getNewReceivables(Contract $contract): Collection
-    {
-        return Receivable::whereDoesntHave(
-            'contracts',
-            fn($q) => $q->where('contracts.id', $contract->id)
-        )->get();
-    }
-
-    /**
-     * Update a receivable already attached to the contract if its value changed.
-     *
-     * @param Contract $contract
-     * @param Receivable $receivable
-     * @param float $goal
-     * @param float $current
-     * @return float
-     */
-    private function updateReceivable(
-        Contract $contract,
-        Receivable $receivable,
-        float $goal,
-        float $current
-    ): float {
-        if ($this->contractHasAchievedGoal($current, $goal)) {
-            return $current;
-        }
-
-        $pivot = $receivable->pivot->amount ?? 0;
-        $latest = $receivable->available_value;
-
-        if ($pivot === $latest) {
-            return $current;
-        }
-
-        $newValue = $this->calculateNewReceivableValue($pivot, $latest, $goal, $current);
-
-        if ($newValue !== null) {
-            $this->syncReceivable($contract, $receivable, $newValue);
-            $current += $newValue;
-        }
-
-        return $current;
-    }
-
-    /**
-     * Attach a new receivable to the contract.
-     *
-     * @param Contract $contract
-     * @param Receivable $receivable
-     * @param float $goal
-     * @param float $current
-     * @return float
-     */
-    private function attachNewReceivable(
-        Contract $contract,
-        Receivable $receivable,
-        float $goal,
-        float $current,
-    ): float {
-        $value = min($receivable->available_value, $goal - $current);
-
-        if (!$contract->uses_registrar_management) {
-            $contract->receivables()->attach($receivable, [
-                'id' => (string) Str::uuid(),
-                'amount' => $value,
-            ]);
-        }
-
-        $newTotal = $current + $value;
-
-        return $newTotal;
-    }
-
-    /**
-     * Determine the new receivable value when its amount changed.
-     *
-     * @param float $pivot
-     * @param float $latest
-     * @param float $goal
-     * @param float $current
-     * @return float|null
-     */
-    private function calculateNewReceivableValue(
-        float $pivot,
-        float $latest,
-        float $goal,
-        float $current
-    ): ?float {
-        return match (true) {
-            $pivot > $latest  => $latest, // decreased
-            $pivot < $latest  => min($latest, $goal - $current), // increased
-            default           => null,
-        };
-    }
-
-    /**
-     * Update the pivot table for a given receivable in the contract.
-     *
-     * @param Contract $contract
-     * @param Receivable $receivable
-     * @param float $amount
-     * @return void
-     */
-    private function syncReceivable(Contract $contract, Receivable $receivable, float $amount): void
-    {
-        $contract->receivables()->updateExistingPivot($receivable->id, [
-            'id'     => (string) Str::uuid(),
-            'amount' => $amount,
-        ], true);
-    }
-
-    /**
-     * Check if the current amount has reached or exceeded the goal.
-     *
-     * @param float $current
-     * @param float $goal
-     * @return bool
-     */
-    private function contractHasAchievedGoal(float $current, float $goal): bool
-    {
-        return $current >= $goal;
+        return compact('contract', 'clients', 'suppliers', 'acquirers', 'paymentArrangements');
     }
 }

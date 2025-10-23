@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Core;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\GetSettingsRequest;
 use App\Http\Requests\Settings\StoreSettingRequest;
 use App\Http\Requests\Settings\UpdateSettingRequest;
 use App\Http\Resources\SettingResource;
-use App\Models\Setting;
-use App\Services\SettingService;
+use App\Models\Core\Setting;
+use App\Services\Core\SettingService;
 use Illuminate\Http\JsonResponse;
 
 class SettingController extends Controller

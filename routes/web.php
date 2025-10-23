@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\CreditAnalysisController;
 use App\Http\Controllers\Web\OperationController;
 use App\Http\Controllers\Web\OptInController;
 use App\Http\Controllers\Web\ReceivableController;
+use App\Http\Controllers\Web\SettingController;
 
 Route::redirect('/', '/dashboard', 301);
 
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('opt-ins', OptInController::class);
     Route::resource('receivables', ReceivableController::class);
     Route::resource('operations', OperationController::class);
+
+    Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__ . '/auth.php';

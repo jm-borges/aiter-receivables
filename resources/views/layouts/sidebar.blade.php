@@ -46,6 +46,11 @@
     </nav>
 
     <div class="p-4 border-t border-white">
+        <x-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')" icon="settings">
+            {{ __('Configurações') }}
+        </x-nav-link>
+
+
         <x-nav-link :href="route('profile.edit')" icon="account_circle" :active="request()->routeIs('profile.*')">
             {{ __('Perfil') }}
         </x-nav-link>

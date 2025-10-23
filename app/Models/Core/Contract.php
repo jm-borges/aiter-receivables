@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Enums\ContractStatus;
 use App\Enums\OperationStatus;
 use App\Models\Core\Pivots\ContractHasAcquirer;
 use App\Models\Core\Pivots\ContractHasPaymentArrangement;
@@ -22,6 +23,7 @@ class Contract extends Model
         'client_id',
         'supplier_id',
         'value',
+        'current_achieved_value',
         'start_date',
         'end_date',
         'status',
@@ -94,5 +96,15 @@ class Contract extends Model
     public function isFinished(): bool
     {
         return $this->status === ContractStatus::FINISHED;
+    }
+
+    public function hasAchievedGoal(): bool
+    {
+        return $this->value <= $this->current_achieved_value;
+    }
+
+    public function pendingValue(): float
+    {
+        return $this->hasAchievedGoal() ? 0 :  $this->value - $this->current_achieved_value;
     }
 }

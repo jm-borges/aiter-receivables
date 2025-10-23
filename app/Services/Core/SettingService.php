@@ -31,4 +31,26 @@ class SettingService
 
         return $setting;
     }
+
+    public function updateOrCreate(array $data): Setting
+    {
+        $setting = Setting::first();
+
+        if ($setting) {
+            $setting->update($data);
+        } else {
+            $setting = Setting::create($data);
+        }
+
+        return $setting;
+    }
+
+
+    //
+
+    public function getIndexViewData(): array
+    {
+        $settings = Setting::first();
+        return compact('settings');
+    }
 }

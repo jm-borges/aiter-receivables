@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('contracts', function (Blueprint $table) {
             $table->boolean('uses_registrar_management')->nullable();
+            $table->double('current_achieved_value')->nullable();
         });
     }
 
