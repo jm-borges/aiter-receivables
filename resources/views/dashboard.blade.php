@@ -3,10 +3,10 @@
         <x-page-header title="Dashboard" />
     </x-slot>
 
-    <x-top-cards />
+    <x-dashboard.top-cards />
 
-    <x-search-field />
+    <x-dashboard.search-field />
 
-    <x-dashboard-table />
+    <x-dashboard.dashboard-table />
 
 </x-app-layout>

@@ -1,17 +1,17 @@
-<div {{ $attributes->merge(['class' => 'bg-white mr-4 cursor-pointer shadow rounded']) }} style="width: 350px">
-    <div class="ml-4 mt-6 mb-4">
+<div {{ $attributes->merge(['class' => 'standard-container cursor-pointer shadow']) }} style="width: 350px">
+    <div>
         <img src="{{ $icon }}" class="w-6">
     </div>
 
-    <div class="ml-4">
-        <p class="text-lg text-custom-blue-hover font-semibold">{{ $title }}</p>
+    <div>
+        <p class="standard-container-title">{{ $title }}</p>
     </div>
 
-    <div class="ml-4">
+    <div>
         <p class="text-sm text-custom-blue-hover font-normal">{{ $description }}</p>
     </div>
 
-    <div class="flex justify-between mb-4 px-4">
+    <div class="flex justify-between px-4">
         <div class="mt-6">
             <p class="text-sm text-custom-blue-hover font-semibold">Detalhe</p>
         </div>

@@ -8,9 +8,8 @@
         <p class="dashboard-header-text">Ação</p>
     </div>
 
-    <x-dashboard-table-row />
-    <x-dashboard-table-row />
-    <x-dashboard-table-row />
-    <x-dashboard-table-row />
-
+    <x-dashboard.dashboard-table-row />
+    <x-dashboard.dashboard-table-row />
+    <x-dashboard.dashboard-table-row />
+    <x-dashboard.dashboard-table-row />
 </div>

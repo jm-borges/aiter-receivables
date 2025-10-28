@@ -1,0 +1,11 @@
+.standard-container {
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.standard-container-title {
+    color: #01264F;
+    font-size: 20px;
+    font-weight: 600;
+}
