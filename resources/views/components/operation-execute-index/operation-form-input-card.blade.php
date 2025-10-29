@@ -7,8 +7,8 @@
 ])
 
 <div class="ml-2">
-    <div class="operation-form-container-title">{{ $title }}</div>
-    <hr class="operation-form-divider">
+    <div class="form-section-title">{{ $title }}</div>
+    <hr class="form-section-divider">
 
     <div class="standard-container" style="width: {{ $width }}px; margin-top:10px">
         @if ($showInput)
@@ -19,7 +19,7 @@
         @endif
 
         <div class="mt-4">
-            <select class="operation-form-select">
+            <select class="form-select">
                 <option value="">{{ $selectLabel }}</option>
                 <option value="single">Parcela única</option>
                 <option value="multiple">Múltiplas parcelas</option>
