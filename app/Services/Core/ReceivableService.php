@@ -2,11 +2,14 @@
 
 namespace App\Services\Core;
 
+use App\Enums\BusinessPartnerType;
 use App\Models\Core\Receivable;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\PaymentArrangement;
+use App\Models\Core\Pivots\ContractHasReceivable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ReceivableService
 {
@@ -46,9 +49,69 @@ class ReceivableService
             ->first();
     }
 
+    public function calculateReceivablesSummaryByIdOrCnpj(string $identifier, bool $isCnpj = false): array
+    {
+        $businessPartner = $isCnpj
+            ? $this->loadBusinessPartnerWithRelationsByCnpj($identifier)
+            : $this->loadBusinessPartnerWithRelations($identifier);
+
+        return $this->calculateReceivablesSummaryForPartner($businessPartner);
+    }
+
+    protected function calculateReceivablesSummaryForPartner(BusinessPartner $businessPartner): array
+    {
+        $receivables = $this->getReceivablesForPartner($businessPartner);
+
+        $received = $receivables->filter->wasSettled()->sum('vlrTot');
+        $toBeReceived = $receivables->reject->wasSettled()->sum('vlrTot');
+        $locked = $receivables->sum('amount_locked_by_others');
+        $free = $receivables->sum('available_value');
+
+        $lockedByUser = ContractHasReceivable::whereIn('contract_id', $businessPartner->clientContracts->pluck('id'))
+            ->whereIn('receivable_id', $receivables->pluck('id'))
+            ->sum('amount');
+
+        return [
+            'received' => $received,
+            'to_be_received' => $toBeReceived,
+            'locked' => $locked,
+            'locked_by_user' =>  $lockedByUser,
+            'free' => $free,
+        ];
+    }
+
+    public function loadBusinessPartnerWithRelations(string $id): BusinessPartner
+    {
+        return BusinessPartner::with('clientContracts.receivables')->findOrFail($id);
+    }
+
+    public function loadBusinessPartnerWithRelationsByCnpj(string $documentNumber): BusinessPartner
+    {
+        return BusinessPartner::findByDocumentNumber($documentNumber)->load('clientContracts.receivables');
+    }
+
+    public function calculateReceivablesSummary(string $businessPartnerId): array
+    {
+        return $this->calculateReceivablesSummaryByIdOrCnpj($businessPartnerId);
+    }
+
+    public function calculateReceivablesSummaryByCnpj(string $documentNumber): array
+    {
+        return $this->calculateReceivablesSummaryByIdOrCnpj($documentNumber, true);
+    }
+
+    public function getReceivablesForPartner(BusinessPartner $partner): Collection
+    {
+        return match ($partner->type) {
+            BusinessPartnerType::CLIENT => $partner->clientReceivables()->get(),
+            BusinessPartnerType::ACQUIRER => $partner->acquirerReceivables()->get(),
+            default => collect(),
+        };
+    }
+
     //------
 
-    public function handleReceivableUnitData(BusinessPartner $client, array $receivableData): void
+    /*  public function handleReceivableUnitData(BusinessPartner $client, array $receivableData): void
     {
         $receivable = $this->findReceivable($client, $receivableData);
 
@@ -97,5 +160,5 @@ class ReceivableService
         }
 
         return $totalAvailableAmount;
-    }
+    } */
 }

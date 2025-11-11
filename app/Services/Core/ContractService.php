@@ -8,6 +8,7 @@ use App\Models\Core\Contract;
 use App\Models\Core\PaymentArrangement;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ContractService
 {
@@ -91,5 +92,43 @@ class ContractService
         $paymentArrangements = PaymentArrangement::all();
 
         return compact('contract', 'clients', 'suppliers', 'acquirers', 'paymentArrangements');
+    }
+
+    // ---
+
+    public function calculatePaymentsSummary(string $businessPartnerId): array
+    {
+        $businessPartner = $this->loadBusinessPartnerWithPayments($businessPartnerId);
+        $payments = $this->collectAllPayments($businessPartner);
+
+        return $this->summarizePayments($payments);
+    }
+
+    private function loadBusinessPartnerWithPayments(string $id): ?BusinessPartner
+    {
+        return BusinessPartner::with('clientContracts.payments')->find($id);
+    }
+
+    private function collectAllPayments(BusinessPartner $partner): Collection
+    {
+        return $partner->clientContracts
+            ->pluck('payments')
+            ->flatten(1);
+    }
+
+    private function summarizePayments(Collection $payments): array
+    {
+        return [
+            'amount_due' => $this->sumByCondition($payments, fn($p) => $p->isOverdue()),
+            'amount_to_be_recovered' => $this->sumByCondition($payments, fn($p) => $p->isPending() && !$p->isOverdue()),
+            'amount_recovered' => $this->sumByCondition($payments, fn($p) => $p->isPaid()),
+        ];
+    }
+
+    private function sumByCondition(Collection $payments, callable $condition): float
+    {
+        return $payments
+            ->filter($condition)
+            ->sum('amount');
     }
 }

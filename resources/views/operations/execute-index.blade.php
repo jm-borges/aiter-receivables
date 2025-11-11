@@ -3,7 +3,10 @@
         <x-page-header title="Executar operação" subtitle="Configure e execute operações de trava de recebíveis" />
     </x-slot>
 
-    <x-operation-execute-index.operation-client-field-container />
-    <x-operation-execute-index.operation-info-fields-container />
+    <form action="{{ route('operations.execute-submit') }}" method="post" id="execute-operation-form">
+        @csrf
+        <x-operation-execute-index.operation-client-field-container />
+        <x-operation-execute-index.operation-info-fields-container />
+    </form>
 
 </x-app-layout>

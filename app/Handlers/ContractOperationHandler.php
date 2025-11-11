@@ -5,6 +5,7 @@ namespace App\Handlers;
 use App\Actions\RRC0019Action;
 use App\DataTransferObjects\Nuclea\ConfirmOperationEntidadeRequest;
 use App\Enums\OperationStatus;
+use App\Enums\RRC0019ObjectType;
 use App\Models\Core\Action;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
@@ -17,10 +18,10 @@ class ContractOperationHandler
         private BusinessPartner $client,
     ) {}
 
-    public function dispatchOperation(): void
+    public function dispatchOperation(?array $data = null): void
     {
         $operation = $this->storeNewOperation();
-        $confirmOperationRequestData = $this->getConfirmOperationRequestData($operation);
+        $confirmOperationRequestData = $this->getConfirmOperationRequestData($operation, $data);
         app(RRC0019Action::class)->confirmOperation($operation, $confirmOperationRequestData);
     }
 
@@ -33,15 +34,15 @@ class ContractOperationHandler
         ]);
     }
 
-    private function getConfirmOperationRequestData(Operation $operation): ConfirmOperationEntidadeRequest
+    private function getConfirmOperationRequestData(Operation $operation, ?array $data = null): ConfirmOperationEntidadeRequest
     {
         return new ConfirmOperationEntidadeRequest(
-            tpObj: 'E',
+            tpObj: RRC0019ObjectType::GESTAO_REGISTRADORA->value,
             identdNegcRecbvl: $operation->id,
-            indrTpNegc: 'OG',
+            indrTpNegc: $this->contract->isAutomatic() ? $this->contract->negotiation_type->value : $data['negotiation_type']->value,
             dtVencOp: $this->contract->end_date->format('Y-m-d'),
-            vlrGar: $this->contract->pendingValue(),
-            vlrTotLimOuSldDevdr: $this->contract->pendingValue(),
+            vlrGar: $this->contract->isAutomatic() ? $this->contract->pendingValue() : $data['value'],
+            vlrTotLimOuSldDevdr: $this->contract->isAutomatic() ? $this->contract->pendingValue() : $data['value'],
             indrGestER: 'S',
             indrRegrDivs: 'V',
             indrAlcancContrtoCreddrSub: 'G',

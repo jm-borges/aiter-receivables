@@ -30,7 +30,7 @@ class ContractController extends Controller
      */
     public function store(StoreContractRequest $request, ContractService $contractService): JsonResponse
     {
-        $contract = $contractService->create($request);
+        $contract = $contractService->create($request->all());
 
         return response()->json(['data' => ContractResource::make($contract), 'message' => 'Cadastrado com sucesso'], JsonResponse::HTTP_CREATED);
     }
@@ -48,7 +48,7 @@ class ContractController extends Controller
      */
     public function update(UpdateContractRequest $request, Contract $contract, ContractService $contractService): JsonResponse
     {
-        $contract = $contractService->update($contract, $request);
+        $contract = $contractService->update($contract, $request->all());
 
         return response()->json(['data' => ContractResource::make($contract), 'message' => 'Atualizado com sucesso']);
     }

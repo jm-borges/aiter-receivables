@@ -3,6 +3,7 @@
 namespace App\Models\Core;
 
 use App\Enums\ContractStatus;
+use App\Enums\NegotiationType;
 use App\Enums\OperationStatus;
 use App\Models\Core\Pivots\ContractHasAcquirer;
 use App\Models\Core\Pivots\ContractHasPaymentArrangement;
@@ -28,6 +29,8 @@ class Contract extends Model
         'end_date',
         'status',
         'uses_registrar_management',
+        'is_automatic',
+        'negotiation_type',
     ];
 
     /**
@@ -41,7 +44,14 @@ class Contract extends Model
             'start_date' => 'date',
             'end_date' => 'date',
             'uses_registrar_management' => 'boolean',
+            'is_automatic' => 'boolean',
+            'negotiation_type' => NegotiationType::class,
         ];
+    }
+
+    public function isAutomatic(): bool
+    {
+        return $this->is_automatic;
     }
 
     public function client(): BelongsTo
@@ -106,5 +116,10 @@ class Contract extends Model
     public function pendingValue(): float
     {
         return $this->hasAchievedGoal() ? 0 :  $this->value - $this->current_achieved_value;
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(ContractPayment::class);
     }
 }

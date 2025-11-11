@@ -15,8 +15,6 @@
     <div>
         <select class="form-select">
             <option value="">Selecione uma empresa</option>
-            <option value="">Empresa 1</option>
-            <option value="">Empresa 2</option>
         </select>
     </div>
 </div>

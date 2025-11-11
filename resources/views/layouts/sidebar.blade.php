@@ -24,29 +24,33 @@
 
         <hr class="border-white">
 
-        <x-nav-link :href="route('business-partners.index')" :active="request()->routeIs('business-partners.*')" icon="groups">
+        <x-nav-link :href="'/business-partners'" :active="request()->routeIs('business-partners.*')" icon="groups">
             {{ __('Parceiros') }}
         </x-nav-link>
 
-        <x-nav-link :href="route('contracts.index')" :active="request()->routeIs('contracts.*')" icon="description">
+        <x-nav-link :href="'/contracts'" :active="request()->routeIs('contracts.*')" icon="description">
             {{ __('Contratos') }}
         </x-nav-link>
 
-        <x-nav-link :href="route('opt-ins.index')" :active="request()->routeIs('opt-ins.*')" icon="check_circle">
+        <x-nav-link :href="'/contract-payments'" :active="request()->routeIs('contracts-payments.*')" icon="payment">
+            {{ __('Pagamentos') }}
+        </x-nav-link>
+
+        <x-nav-link :href="'/opt-ins'" :active="request()->routeIs('opt-ins.*')" icon="check_circle">
             {{ __('Opt-Ins') }}
         </x-nav-link>
 
-        <x-nav-link :href="route('receivables.index')" :active="request()->routeIs('receivables.*')" icon="account_balance_wallet">
+        <x-nav-link :href="'/receivables'" :active="request()->routeIs('receivables.*')" icon="account_balance_wallet">
             {{ __('Recebíveis') }}
         </x-nav-link>
 
-        <x-nav-link :href="route('operations.index')" :active="request()->routeIs('operations.*')" icon="sync_alt">
+        <x-nav-link :href="'/operations'" :active="request()->routeIs('operations.*')" icon="sync_alt">
             {{ __('Operações') }}
         </x-nav-link>
     </nav>
 
     <div class="p-4 border-t border-white">
-        <x-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')" icon="settings">
+        <x-nav-link :href="'/settings'" :active="request()->routeIs('settings.*')" icon="settings">
             {{ __('Configurações') }}
         </x-nav-link>
 

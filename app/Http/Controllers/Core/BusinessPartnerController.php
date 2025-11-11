@@ -9,6 +9,8 @@ use App\Http\Requests\BusinessPartners\UpdateBusinessPartnerRequest;
 use App\Http\Resources\BusinessPartnerResource;
 use App\Models\Core\BusinessPartner;
 use App\Services\Core\BusinessPartnerService;
+use App\Services\Core\ContractService;
+use App\Services\Core\ReceivableService;
 use Illuminate\Http\JsonResponse;
 
 class BusinessPartnerController extends Controller
@@ -61,5 +63,26 @@ class BusinessPartnerController extends Controller
         $businessPartner->delete();
 
         return response()->json(['message' => 'Deletado com sucesso']);
+    }
+
+    public function receivablesSummary(string $id, ReceivableService $receivableService): JsonResponse
+    {
+        $summary = $receivableService->calculateReceivablesSummary($id);
+
+        return response()->json($summary);
+    }
+
+    public function receivablesSummaryByCnpj(string $cnpj, ReceivableService $receivableService): JsonResponse
+    {
+        $summary = $receivableService->calculateReceivablesSummaryByCnpj($cnpj);
+
+        return response()->json($summary);
+    }
+
+    public function contractPaymentsSummary(string $id, ContractService $contractService): JsonResponse
+    {
+        $summary = $contractService->calculatePaymentsSummary($id);
+
+        return response()->json($summary);
     }
 }

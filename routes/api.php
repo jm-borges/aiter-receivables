@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Core\ContractPaymentController;
 use App\Http\Controllers\Core\PaymentArrangementController;
 use App\Http\Controllers\Core\ContractController;
 use App\Http\Controllers\Core\BusinessPartnerController;
@@ -8,15 +9,12 @@ use App\Http\Controllers\Core\OptInController;
 use App\Http\Controllers\Core\ReceivableController;
 use App\Http\Controllers\Core\ActionController;
 use App\Http\Controllers\Core\OperationController;
-use App\Http\Controllers\Core\Pivots\ContractHasPaymentArrangementController;
-use App\Http\Controllers\Core\Pivots\ContractHasAcquirerController;
 use App\Http\Controllers\Core\Files\ARRC018ResponseController;
 use App\Http\Controllers\Webhooks\RtmWebhookController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Core\CipMessageController;
-use App\Http\Controllers\Core\Pivots\OperationHasReceivableController;
 use App\Http\Controllers\Core\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,9 +68,6 @@ Route::prefix('v1')->group(function () {
             return response()->json('User exists and Bearer token is valid');
         });
 
-        Route::post('attachment', [AttachmentController::class, 'addAttachment']);
-        Route::delete('attachment', [AttachmentController::class, 'destroyAllAttachment']);
-
         Route::apiResources([
             'receivables' => ReceivableController::class,
             'opt-ins' => OptInController::class,
@@ -83,11 +78,16 @@ Route::prefix('v1')->group(function () {
             'operations' => OperationController::class,
             'actions' => ActionController::class,
             'arrc018-responses' => ARRC018ResponseController::class,
-            'contract-has-payment-arrangements' => ContractHasPaymentArrangementController::class,
-            'contract-has-acquirers' => ContractHasAcquirerController::class,
             'cip-messages' => CipMessageController::class,
             'settings' => SettingController::class,
-            'operation-has-receivables' => OperationHasReceivableController::class,
+            'contract-payments' => ContractPaymentController::class,
         ]);
+
+        Route::get('business-partners/{id}/receivables/summary', [BusinessPartnerController::class, 'receivablesSummary']);
+        Route::get('business-partners/lookup/{cnpj}/receivables/summary', [BusinessPartnerController::class, 'receivablesSummaryByCnpj']);
+        Route::get('business-partners/{id}/contract-payments/summary', [BusinessPartnerController::class, 'contractPaymentsSummary']);
+
+        Route::post('attachment', [AttachmentController::class, 'addAttachment']);
+        Route::delete('attachment', [AttachmentController::class, 'destroyAllAttachment']);
     });
 });

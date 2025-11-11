@@ -65,12 +65,13 @@
 
             <div class="mt-2 space-y-2">
                 @foreach ($acquirers as $acquirer)
-                    <label class="inline-flex items-center">
+                    <label class="flex items-center">
                         <input type="checkbox" name="acquirers[]" value="{{ $acquirer->id }}"
                             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                             {{ isset($contract) && $contract->acquirers->contains($acquirer->id) ? 'checked' : '' }}>
-                        <span class="ml-2 text-sm text-gray-700">{{ $acquirer->name }} | CNPJ:
-                            {{ $acquirer->document_number }}</span>
+                        <span class="ml-2 text-sm text-gray-700">
+                            {{ $acquirer->name }} | CNPJ: {{ $acquirer->document_number }}
+                        </span>
                     </label>
                 @endforeach
             </div>
@@ -81,18 +82,63 @@
             <span class="block text-sm font-medium text-gray-700">Arranjos de Pagamento</span>
             <div class="mt-2 flex flex-wrap gap-4">
                 @foreach ($paymentArrangements as $arrangement)
-                    <label class="inline-flex items-center space-x-2">
+                    <label class="flex items-center space-x-2 w-64 p-2 border border-gray-200 rounded">
                         <input type="checkbox" name="payment_arrangements[]" value="{{ $arrangement->id }}"
                             class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             {{ isset($contract) && $contract->paymentArrangements->contains($arrangement->id) ? 'checked' : '' }}>
-                        <span>{{ $arrangement->name }} | {{ $arrangement->code }}</span>
+                        <span class="text-sm text-gray-700">
+                            {{ $arrangement->name }} | {{ $arrangement->code }}
+                        </span>
                     </label>
                 @endforeach
             </div>
         </div>
 
-        {{-- Valor --}}
+        {{-- Modo de Operação --}}
         <div>
+            <span class="block text-sm font-medium text-gray-700">Modo de Operação</span>
+            <div class="mt-2 flex flex-col sm:flex-row gap-4">
+                <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded w-80">
+                    <input type="radio" name="is_automatic" value="1"
+                        class="text-indigo-600 focus:ring-indigo-500"
+                        {{ !isset($contract) || $contract->isAutomatic() ? 'checked' : '' }}>
+                    <span class="text-sm text-gray-700">Automático (sistema realiza as operações)</span>
+                </label>
+
+                <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded w-80">
+                    <input type="radio" name="is_automatic" value="0"
+                        class="text-indigo-600 focus:ring-indigo-500"
+                        {{ isset($contract) && !$contract->isAutomatic() ? 'checked' : '' }}>
+                    <span class="text-sm text-gray-700">Manual (usuário realiza as operações)</span>
+                </label>
+            </div>
+        </div>
+
+
+        {{-- Tipo de Negociação --}}
+        <div>
+            <span class="block text-sm font-medium text-gray-700">Tipo de Negociação</span>
+            <div class="mt-2 flex flex-col sm:flex-row gap-4">
+                <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded w-80">
+                    <input type="radio" name="negotiation_type"
+                        value="{{ \App\Enums\NegotiationType::GRAVAME->value }}"
+                        class="text-indigo-600 focus:ring-indigo-500"
+                        {{ isset($contract) && $contract->negotiation_type === \App\Enums\NegotiationType::GRAVAME->value ? 'checked' : '' }}>
+                    <span class="text-sm text-gray-700">Gravame</span>
+                </label>
+
+                <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded w-80">
+                    <input type="radio" name="negotiation_type"
+                        value="{{ \App\Enums\NegotiationType::CESSAO->value }}"
+                        class="text-indigo-600 focus:ring-indigo-500"
+                        {{ isset($contract) && $contract->negotiation_type === \App\Enums\NegotiationType::CESSAO->value ? 'checked' : '' }}>
+                    <span class="text-sm text-gray-700">Cessão</span>
+                </label>
+            </div>
+        </div>
+
+        {{-- Valor --}}
+        <div id="value-field">
             <label for="value" class="block text-sm font-medium text-gray-700">Valor</label>
             <input type="number" step="0.01" name="value" id="value"
                 value="{{ $contract->value ?? old('value') }}" required
@@ -119,5 +165,39 @@
             </button>
         </div>
     </form>
+
+    {{-- Script para exibir/ocultar campo Valor --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('input[name="is_automatic"]');
+            const valueField = document.getElementById('value-field');
+            const valueInput = document.getElementById('value');
+            const negotiationField = document.querySelector('input[name="negotiation_type"]').closest('div');
+
+            function toggleFields() {
+                const selected = document.querySelector('input[name="is_automatic"]:checked');
+                const isManual = selected && selected.value === '0';
+
+                if (isManual) {
+                    valueField.classList.add('hidden');
+                    negotiationField.classList.add('hidden');
+                    valueInput.removeAttribute('required');
+                    valueInput.value = '';
+                } else {
+                    valueField.classList.remove('hidden');
+                    negotiationField.classList.remove('hidden');
+                    valueInput.setAttribute('required', 'required');
+                }
+            }
+
+            toggleFields();
+
+            radios.forEach(radio => {
+                radio.addEventListener('change', toggleFields);
+            });
+        });
+    </script>
+
+
 
 </x-app-layout>

@@ -15,7 +15,23 @@ class BusinessPartnerService
     {
         $query = BusinessPartner::query();
 
-        return $query;
+        if ($type = $request->get('type')) {
+            $query->where('type', $type);
+        }
+
+        if ($search = $request->get('search')) {
+            $normalized = removeSpecialCharacters($search);
+
+            $query->where(function ($q) use ($search, $normalized) {
+                $q
+                    ->where('name', 'like', "%{$search}%")
+                    ->orWhere('fantasy_name', 'like', "%{$search}%")
+                    ->orWhere('document_number', 'like', "%{$normalized}%")
+                    ->orWhere('base_document_number', 'like', "%{$normalized}%");
+            });
+        }
+
+        return $query->orderBy('name');
     }
 
     public function create(Request $request): BusinessPartner

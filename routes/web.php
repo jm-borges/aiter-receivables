@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\BusinessPartnerController;
 use App\Http\Controllers\Web\ContractController;
+use App\Http\Controllers\Web\ContractPaymentController;
 use App\Http\Controllers\Web\CreditAnalysisController;
 use App\Http\Controllers\Web\OperationController;
 use App\Http\Controllers\Web\OptInController;
@@ -22,11 +23,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('operations/execute', [OperationController::class, 'executeIndex'])->name('operations.execute');
+    Route::post('operations/execute', [OperationController::class, 'execute'])->name('operations.execute-submit');
     Route::get('receivables/query', [ReceivableController::class, 'queryIndex'])->name('receivables.query');
     Route::get('credit-analysis', [CreditAnalysisController::class, 'index'])->name('credit-analysis.index');
 
     Route::resource('business-partners', BusinessPartnerController::class);
     Route::resource('contracts', ContractController::class);
+    Route::resource('contract-payments', ContractPaymentController::class);
     Route::resource('opt-ins', OptInController::class);
     Route::resource('receivables', ReceivableController::class);
     Route::resource('operations', OperationController::class);

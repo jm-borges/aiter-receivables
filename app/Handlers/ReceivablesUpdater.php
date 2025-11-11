@@ -64,6 +64,7 @@ class ReceivablesUpdater
             'indrDomcl' => $receivableData['indrDomcl'],
             'vlrTot' =>  $receivableData['vlrTot'],
             'available_value' => $totalAvailableAmount,
+            'amount_locked_by_others' => $receivableData['vlrTot'] - $totalAvailableAmount,
         ]);
     }
 
@@ -72,7 +73,9 @@ class ReceivablesUpdater
         $totalAvailableAmount = $this->getTotalAvailableAmount($receivableData);
 
         $receivable->update([
+            'vlrTot' =>  $receivableData['vlrTot'],
             'available_value' => $totalAvailableAmount,
+            'amount_locked_by_others' => $receivableData['vlrTot'] - $totalAvailableAmount,
         ]);
 
         return $receivable;
