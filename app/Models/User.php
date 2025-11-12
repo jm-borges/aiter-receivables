@@ -4,8 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\BusinessPartnerType;
+use App\Models\Core\BusinessPartner;
+use App\Models\Core\Pivots\UserHasBusinessPartner;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -69,7 +73,10 @@ class User extends Authenticatable implements HasMedia
 
     //===================== UTILITIES ==============================
 
-    //
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_super_admin;
+    }
 
     //=================  MEDIA ==================================
 
@@ -86,5 +93,23 @@ class User extends Authenticatable implements HasMedia
 
     //=================  RELATIONSHIPS ==================================
 
-    //
+    // 
+
+    public function businessPartners(): BelongsToMany
+    {
+        return $this->belongsToMany(BusinessPartner::class, 'user_has_business_partners')
+            ->using(UserHasBusinessPartner::class)
+            ->withPivot([
+                'opt_in_start_date',
+                'opt_in_end_date',
+            ]);
+    }
+
+    public function supplier(): ?BusinessPartner
+    {
+        return $this
+            ->businessPartners()
+            ->where('type', BusinessPartnerType::SUPPLIER)
+            ->first();
+    }
 }

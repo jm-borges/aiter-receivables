@@ -3,6 +3,8 @@
 namespace App\Models\Core;
 
 use App\Enums\BusinessPartnerType;
+use App\Models\Core\Pivots\UserHasBusinessPartner;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -83,5 +85,15 @@ class BusinessPartner extends Model
     public function acquirerReceivables(): HasMany
     {
         return $this->hasMany(Receivable::class, 'acquirer_id');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_has_business_partners')
+            ->using(UserHasBusinessPartner::class)
+            ->withPivot([
+                'opt_in_start_date',
+                'opt_in_end_date',
+            ]);
     }
 }

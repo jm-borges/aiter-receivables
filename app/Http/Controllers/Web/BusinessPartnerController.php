@@ -5,13 +5,28 @@ namespace App\Http\Controllers\Web;
 use App\Models\Core\BusinessPartner;
 use App\Enums\BusinessPartnerType;
 use App\Http\Controllers\Controller;
+use App\Jobs\DispatchOptInJob;
+use App\Models\User;
+use App\Services\Core\ContractService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BusinessPartnerController extends Controller
 {
+    private User $user;
+
+    public function __construct()
+    {
+        $this->user = Auth::user();
+    }
+
     public function index()
     {
-        $partners = BusinessPartner::paginate(20);
+        if ($this->user->isSuperAdmin()) {
+            $partners = BusinessPartner::paginate(20);
+        } else {
+            $partners = $this->user->businessPartners()->where('type', BusinessPartnerType::CLIENT)->paginate(20);
+        }
 
         return view('business-partners.index', compact('partners'));
     }
@@ -30,6 +45,17 @@ class BusinessPartnerController extends Controller
         $data = $this->validateData($request);
 
         $partner = BusinessPartner::create($data);
+
+        if (!$this->user->isSuperAdmin()) {
+            $this->user->businessPartners()->attach($partner, [
+                'opt_in_start_date' => $request->opt_in_start_date,
+                'opt_in_end_date' => $request->opt_in_end_date,
+            ]);
+
+            $partner->load(['users']);
+        }
+
+        dispatch(new DispatchOptInJob($partner));
 
         return redirect()
             ->route('business-partners.index')

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
 use App\Services\Core\OptInService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,15 +12,14 @@ class DispatchOptInJob implements ShouldQueue
 {
     use Queueable;
 
-    protected Contract $contract;
 
-    public function __construct(Contract $contract)
-    {
-        $this->contract = $contract;
-    }
+    public function __construct(
+        private BusinessPartner $client,
+    ) {}
 
     public function handle(OptInService $optInService)
     {
-        $optInService->requestOptInForContract($this->contract);
+        // $optInService->requestOptInForContract($this->contract);
+        $optInService->requestOptInForClient($this->client);
     }
 }

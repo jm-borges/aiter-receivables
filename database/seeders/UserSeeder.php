@@ -19,5 +19,12 @@ class UserSeeder extends Seeder
             'password' => bcrypt('123456'),
             'is_super_admin' => true,
         ]);
+
+        User::create([
+            'name' => 'Fornecedor teste',
+            'email' => 'fornecedor@teste.com',
+            'password' => bcrypt('123456'),
+            'is_super_admin' => false,
+        ]);
     }
 }

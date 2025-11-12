@@ -29,7 +29,6 @@ class Contract extends Model
         'end_date',
         'status',
         'uses_registrar_management',
-        'is_automatic',
         'negotiation_type',
     ];
 

@@ -28,18 +28,6 @@ class ContractService
     {
         $contract = Contract::create($data);
 
-        if (!empty($data['acquirers'])) {
-            $contract->acquirers()->sync($data['acquirers']);
-        }
-
-        if (!empty($data['payment_arrangements'])) {
-            $contract->paymentArrangements()->sync($data['payment_arrangements']);
-        }
-
-        if (!empty($data['acquirers']) || !empty($data['payment_arrangements'])) {
-            dispatch(new DispatchOptInJob($contract));
-        }
-
         return $contract;
     }
 
@@ -47,13 +35,13 @@ class ContractService
     {
         $contract->update($data);
 
-        $contract->acquirers()->sync($data['acquirers'] ?? []);
+        /*    $contract->acquirers()->sync($data['acquirers'] ?? []);
         $contract->paymentArrangements()->sync($data['payment_arrangements'] ?? []);
 
         if (!empty($data['acquirers']) || !empty($data['payment_arrangements'])) {
             //TODO: Aqui teria que verificar se é necessário atualizar ou cancelar e criar novos opt ins
             dispatch(new DispatchOptInJob($contract));
-        }
+        } */
 
         return $contract;
     }

@@ -46,20 +46,29 @@
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
         </div>
 
-        {{-- Tipo --}}
-        <div>
-            <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
-            <select name="type" id="type" required
-                class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                <option value="">Selecione</option>
-                @foreach ($types as $type)
-                    <option value="{{ $type->value }}"
-                        {{ old('type', $partner->type?->value) === $type->value ? 'selected' : '' }}>
-                        {{ $type->label() }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        @if (Auth::user()->isSuperAdmin())
+            {{-- Tipo (visível para super admin) --}}
+            <div>
+                <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
+                <select name="type" id="type" required
+                    class="mt-1 block w-full rounded-md border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <option value="">Selecione</option>
+                    @foreach ($types as $type)
+                        <option value="{{ $type->value }}"
+                            {{ old('type', $partner->type?->value) === $type->value ? 'selected' : '' }}>
+                            {{ $type->label() }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @else
+            {{-- Tipo (oculto e fixo como client) --}}
+            <div class="hidden">
+                <select name="type" id="type" readonly>
+                    <option value="client" selected>Client</option>
+                </select>
+            </div>
+        @endif
 
         {{-- Documento --}}
         <div>
@@ -134,6 +143,29 @@
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
         </div>
+
+        <hr>
+
+        {{-- Datas --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label for="start_date" class="block text-sm font-medium text-gray-700">
+                    Data Início do Opt-in
+                </label>
+                <input type="date" name="opt_in_start_date" id="start_date"
+                    value="{{ $partner->pivot->opt_in_start_date ?? old('opt_in_start_date') }}" required
+                    class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+            <div>
+                <label for="end_date" class="block text-sm font-medium text-gray-700">
+                    Data Fim do Opt-in
+                </label>
+                <input type="date" name="opt_in_end_date" id="end_date"
+                    value="{{ $partner->pivot->opt_in_end_date ?? old('opt_in_end_date') }}" required
+                    class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
+        </div>
+
 
         {{-- Ações --}}
         <div class="flex items-center space-x-3 pt-4">

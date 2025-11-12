@@ -54,6 +54,11 @@
             {{ __('Configurações') }}
         </x-nav-link>
 
+        @if (Auth::user()->isSuperAdmin())
+            <x-nav-link :href="'/users'" :active="request()->routeIs('users.*')" icon="person">
+                {{ __('Usuários') }}
+            </x-nav-link>
+        @endif
 
         <x-nav-link :href="route('profile.edit')" icon="account_circle" :active="request()->routeIs('profile.*')">
             {{ __('Perfil') }}

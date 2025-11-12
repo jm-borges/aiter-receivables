@@ -2,6 +2,7 @@
 
 namespace App\Services\Core;
 
+use App\Enums\BusinessPartnerType;
 use App\Jobs\RequestOptInJob;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
@@ -44,7 +45,19 @@ class OptInService
 
         $contract->acquirers->each(function (BusinessPartner $acquirer) use ($contract, $client) {
             $contract->paymentArrangements->each(function (PaymentArrangement $paymentArrangement) use ($contract, $client, $acquirer) {
-                dispatch(new RequestOptInJob($contract, $client, $acquirer, $paymentArrangement));
+                // dispatch(new RequestOptInJob($contract, $client, $acquirer, $paymentArrangement));
+            });
+        });
+    }
+
+    public function requestOptInForClient(BusinessPartner $client): void
+    {
+        $acquirers = BusinessPartner::where('type', BusinessPartnerType::ACQUIRER)->get();
+        $paymentArrangements = PaymentArrangement::get();
+
+        $acquirers->each(function (BusinessPartner $acquirer) use ($client, $paymentArrangements) {
+            $paymentArrangements->each(function (PaymentArrangement $paymentArrangement) use ($client, $acquirer) {
+                dispatch(new RequestOptInJob($client, $acquirer, $paymentArrangement));
             });
         });
     }

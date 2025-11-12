@@ -16,21 +16,14 @@ class RequestOptInJob implements ShouldQueue
 {
     use Queueable;
 
-    protected Contract $contract;
-    protected BusinessPartner $client;
-    protected BusinessPartner $acquirer;
-    protected PaymentArrangement $paymentArrangement;
-
     /**
      * Create a new job instance.
      */
-    public function __construct(Contract $contract, BusinessPartner $client, BusinessPartner $acquirer, PaymentArrangement $paymentArrangement)
-    {
-        $this->contract = $contract;
-        $this->client = $client;
-        $this->acquirer = $acquirer;
-        $this->paymentArrangement = $paymentArrangement;
-    }
+    public function __construct(
+        protected BusinessPartner $client,
+        protected BusinessPartner $acquirer,
+        protected PaymentArrangement $paymentArrangement,
+    ) {}
 
     /**
      * Execute the job.
@@ -60,7 +53,7 @@ class RequestOptInJob implements ShouldQueue
     private function getContractData(): array
     {
         return [
-            'contract_id' => $this->contract->id,
+            // 'contract_id' => $this->contract->id,
             'payment_arrangement_id' => $this->paymentArrangement->id,
             'codInstitdrArrajPgto' => $this->paymentArrangement->code,
         ];
@@ -112,12 +105,12 @@ class RequestOptInJob implements ShouldQueue
 
     private function getDtIniOptIn(): ?string
     {
-        return $this->contract->start_date;
+        return $this->client->pivot->opt_in_start_date;
     }
 
     private function getDtFimOptIn(): ?string
     {
-        return $this->contract->end_date;
+        return $this->client->pivot->opt_in_end_date;
     }
 
     private function executeAction(OptIn $optIn): array
