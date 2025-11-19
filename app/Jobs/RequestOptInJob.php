@@ -5,11 +5,12 @@ namespace App\Jobs;
 use App\Actions\RRC0011Action;
 use App\Enums\OptInStatus;
 use App\Models\Core\BusinessPartner;
-use App\Models\Core\Contract;
 use App\Models\Core\OptIn;
 use App\Models\Core\PaymentArrangement;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class RequestOptInJob implements ShouldQueue
@@ -20,6 +21,7 @@ class RequestOptInJob implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
+        protected User $user,
         protected BusinessPartner $client,
         protected BusinessPartner $acquirer,
         protected PaymentArrangement $paymentArrangement,
@@ -105,12 +107,22 @@ class RequestOptInJob implements ShouldQueue
 
     private function getDtIniOptIn(): ?string
     {
-        return $this->client->pivot->opt_in_start_date;
+        /** @var Collection $users */
+        $users = $this->client->users;
+
+        $user = $users->firstWhere('id', $this->user->id);
+
+        return $user?->pivot?->opt_in_start_date;
     }
 
     private function getDtFimOptIn(): ?string
     {
-        return $this->client->pivot->opt_in_end_date;
+        /** @var Collection $users */
+        $users = $this->client->users;
+
+        $user = $users->firstWhere('id', $this->user->id);
+
+        return $user?->pivot?->opt_in_end_date;
     }
 
     private function executeAction(OptIn $optIn): array

@@ -8,8 +8,10 @@ use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
 use App\Models\Core\OptIn;
 use App\Models\Core\PaymentArrangement;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OptInService
 {
@@ -50,14 +52,14 @@ class OptInService
         });
     }
 
-    public function requestOptInForClient(BusinessPartner $client): void
+    public function requestOptInForClient(User $user, BusinessPartner $client): void
     {
         $acquirers = BusinessPartner::where('type', BusinessPartnerType::ACQUIRER)->get();
         $paymentArrangements = PaymentArrangement::get();
 
-        $acquirers->each(function (BusinessPartner $acquirer) use ($client, $paymentArrangements) {
-            $paymentArrangements->each(function (PaymentArrangement $paymentArrangement) use ($client, $acquirer) {
-                dispatch(new RequestOptInJob($client, $acquirer, $paymentArrangement));
+        $acquirers->each(function (BusinessPartner $acquirer) use ($user, $client, $paymentArrangements) {
+            $paymentArrangements->each(function (PaymentArrangement $paymentArrangement) use ($user, $client, $acquirer) {
+                dispatch(new RequestOptInJob($user, $client, $acquirer, $paymentArrangement));
             });
         });
     }

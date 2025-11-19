@@ -52,9 +52,7 @@ class BusinessPartnerController extends Controller
 
             $partner->load(['users']);
 
-            dd($partner);
-
-            //dispatch(new DispatchOptInJob($partner));
+            dispatch(new DispatchOptInJob($this->user, $partner));
         }
 
         return redirect('/business-partners')
