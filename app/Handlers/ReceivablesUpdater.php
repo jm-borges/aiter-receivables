@@ -3,6 +3,7 @@
 namespace App\Handlers;
 
 use App\Actions\RRC0010Action;
+use App\Auxiliary\ReceivableData;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
@@ -11,6 +12,9 @@ use Illuminate\Support\Collection;
 
 class ReceivablesUpdater
 {
+    /**
+     * @param Collection<int,BusinessPartner> $clients
+     */
     public function updatesReceivables(Collection $clients): void
     {
         foreach ($clients as $client) {
@@ -34,11 +38,12 @@ class ReceivablesUpdater
         $receivablesData = $response['body'];
 
         foreach ($receivablesData as $receivableData) {
+            $receivableData = ReceivableData::fromArray($receivableData);
             $this->handleReceivableData($client, $receivableData);
         }
     }
 
-    private function handleReceivableData(BusinessPartner $client, array $receivableData): Receivable
+    private function handleReceivableData(BusinessPartner $client, ReceivableData $receivableData): Receivable
     {
         $receivable = app(ReceivableService::class)->findReceivable($client, $receivableData);
 
@@ -49,41 +54,41 @@ class ReceivablesUpdater
         return $this->createReceivable($client, $receivableData);
     }
 
-    private function createReceivable(BusinessPartner $client, array $receivableData): Receivable
+    private function createReceivable(BusinessPartner $client, ReceivableData $receivableData): Receivable
     {
         $totalAvailableAmount = $this->getTotalAvailableAmount($receivableData);
 
         return $client->clientReceivables()->create([
-            'acquirer_id' => BusinessPartner::findByDocumentNumber($receivableData['cnpjCreddrSub'])?->id,
-            'cnpjCreddrSub' => $receivableData['cnpjCreddrSub'],
-            'cnpjER' => $receivableData['cnpjER'],
-            'payment_arrangement_id' => PaymentArrangement::findByCode($receivableData['codInstitdrArrajPgto'])?->id,
-            'codInstitdrArrajPgto' => $receivableData['codInstitdrArrajPgto'],
+            'acquirer_id' => BusinessPartner::findByDocumentNumber($receivableData->cnpjCreddrSub)?->id,
+            'cnpjCreddrSub' => $receivableData->cnpjCreddrSub,
+            'cnpjER' => $receivableData->cnpjER,
+            'payment_arrangement_id' => PaymentArrangement::findByCode($receivableData->codInstitdrArrajPgto)?->id,
+            'codInstitdrArrajPgto' => $receivableData->codInstitdrArrajPgto,
             'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr' => $client->document_number,
-            'dtPrevtLiquid' => $receivableData['dtPrevtLiquid'],
-            'indrDomcl' => $receivableData['indrDomcl'],
-            'vlrTot' =>  $receivableData['vlrTot'],
+            'dtPrevtLiquid' => $receivableData->dtPrevtLiquid,
+            'indrDomcl' => $receivableData->indrDomcl,
+            'vlrTot' =>  $receivableData->vlrTot,
             'available_value' => $totalAvailableAmount,
-            'amount_locked_by_others' => $receivableData['vlrTot'] - $totalAvailableAmount,
+            'amount_locked_by_others' => $receivableData->vlrTot - $totalAvailableAmount,
         ]);
     }
 
-    private function updateReceivable(Receivable $receivable, array $receivableData): Receivable
+    private function updateReceivable(Receivable $receivable, ReceivableData $receivableData): Receivable
     {
         $totalAvailableAmount = $this->getTotalAvailableAmount($receivableData);
 
         $receivable->update([
-            'vlrTot' =>  $receivableData['vlrTot'],
+            'vlrTot' =>  $receivableData->vlrTot,
             'available_value' => $totalAvailableAmount,
-            'amount_locked_by_others' => $receivableData['vlrTot'] - $totalAvailableAmount,
+            'amount_locked_by_others' => $receivableData->vlrTot - $totalAvailableAmount,
         ]);
 
         return $receivable;
     }
 
-    private function getTotalAvailableAmount(array $receivableData): float
+    private function getTotalAvailableAmount(ReceivableData $receivableData): float
     {
-        $holders =  $receivableData['titulares'];
+        $holders =  $receivableData->titulares;
         $totalAvailableAmount = 0;
 
         foreach ($holders as $holder) {

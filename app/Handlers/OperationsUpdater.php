@@ -3,6 +3,7 @@
 namespace App\Handlers;
 
 use App\Actions\RRC0021Action;
+use App\Auxiliary\ReceivableData;
 use App\Models\Core\Contract;
 use App\Models\Core\Operation;
 use App\Models\Core\Receivable;
@@ -12,23 +13,11 @@ class OperationsUpdater
 {
     public function updatesOperations(): void
     {
-        $contracts = Contract::with('operations')->get();
-
-        foreach ($contracts as $contract) {
-            $this->updateContractOperations($contract);
-        }
-    }
-
-    private function updateContractOperations(Contract $contract): void
-    {
-        $currentNegotiatedValue = 0;
-        $operations = $contract->operations;
+        $operations = Operation::get();
 
         foreach ($operations as $operation) {
             $currentNegotiatedValue += $this->syncOperationFromRegistrar($operation);
         }
-
-        $contract->update(['current_achieved_value' => $currentNegotiatedValue]);
     }
 
     private function syncOperationFromRegistrar(Operation $operation): float
@@ -49,13 +38,14 @@ class OperationsUpdater
         $currentNegotiatedValue = 0;
 
         foreach ($receivablesData as $receivableData) {
+            $receivableData = ReceivableData::fromArray($receivableData);
             $currentNegotiatedValue += $this->handleReceivableData($operation, $receivableData);
         }
 
         return $currentNegotiatedValue;
     }
 
-    private function handleReceivableData(Operation $operation, array $receivableData): float
+    private function handleReceivableData(Operation $operation, ReceivableData $receivableData): float
     {
         $receivable = app(ReceivableService::class)->findReceivable($operation->client, $receivableData);
 
@@ -66,9 +56,9 @@ class OperationsUpdater
         return 0;
     }
 
-    private function updateOperationReceivable(Operation $operation, Receivable $receivable, array $receivableData): float
+    private function updateOperationReceivable(Operation $operation, Receivable $receivable, ReceivableData $receivableData): float
     {
-        $negotiatedValue = $receivableData['VlrNegcd'];
+        $negotiatedValue = $receivableData->VlrNegcd;
 
         $operation
             ->receivables()

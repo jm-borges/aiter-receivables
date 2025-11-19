@@ -38,16 +38,11 @@ class RtmWebhookController extends Controller
     public function handleTimeTable(Request $request): JsonResponse
     {
         return $this->processEvent('Time Table Notification', $request, function (array $data) {
-            $clients = BusinessPartner::where('type', BusinessPartnerType::CLIENT)->get();
-
-            app(ReceivablesUpdater::class)->updatesReceivables($clients);
-            app(OperationsUpdater::class)->updatesOperations();
-
-            /*  if (Setting::first()->shouldAutomaticallyOperateContracts()) {
-                foreach ($clients as $client) {
-                    dispatch(new AutoOperateClientContractsJob($client));
-                }
-            } */
+            if (isset($data['openingDate'])) {
+                $clients = BusinessPartner::where('type', BusinessPartnerType::CLIENT)->get();
+                app(ReceivablesUpdater::class)->updatesReceivables($clients);
+                app(OperationsUpdater::class)->updatesOperations();
+            }
         });
     }
 

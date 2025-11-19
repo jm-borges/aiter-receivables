@@ -2,10 +2,10 @@
 
 namespace App\Services\Core;
 
+use App\Auxiliary\ReceivableData;
 use App\Enums\BusinessPartnerType;
 use App\Models\Core\Receivable;
 use App\Models\Core\BusinessPartner;
-use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Pivots\ContractHasReceivable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -39,13 +39,13 @@ class ReceivableService
 
     // ---
 
-    public function findReceivable(BusinessPartner $client, array $receivableData): ?Receivable
+    public function findReceivable(BusinessPartner $client, ReceivableData $receivableData): ?Receivable
     {
         return $client
             ->clientReceivables()
-            ->where('cnpjCreddrSub', $receivableData['cnpjCreddrSub'])
-            ->where('codInstitdrArrajPgto', $receivableData['codInstitdrArrajPgto'])
-            ->where('dtPrevtLiquid', $receivableData['dtPrevtLiquid'])
+            ->where('cnpjCreddrSub', $receivableData->cnpjCreddrSub)
+            ->where('codInstitdrArrajPgto', $receivableData->codInstitdrArrajPgto)
+            ->where('dtPrevtLiquid', $receivableData->dtPrevtLiquid)
             ->first();
     }
 
