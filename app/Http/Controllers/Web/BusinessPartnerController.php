@@ -6,6 +6,7 @@ use App\Models\Core\BusinessPartner;
 use App\Enums\BusinessPartnerType;
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchOptInJob;
+use App\Models\Core\Pivots\UserHasBusinessPartner;
 use Illuminate\Http\Request;
 
 class BusinessPartnerController extends Controller
@@ -42,18 +43,19 @@ class BusinessPartnerController extends Controller
         $partner = BusinessPartner::create($data);
 
         if (!$this->user->isSuperAdmin()) {
-            $this->user->businessPartners()->attach($partner, [
+            UserHasBusinessPartner::create([
+                'user_id' => $this->user->id,
+                'business_partner_id' => $partner->id,
                 'opt_in_start_date' => $request->opt_in_start_date,
                 'opt_in_end_date' => $request->opt_in_end_date,
             ]);
 
             $partner->load(['users']);
+
+            dispatch(new DispatchOptInJob($partner));
         }
 
-        dispatch(new DispatchOptInJob($partner));
-
-        return redirect()
-            ->route('business-partners.index')
+        return redirect('/business-partners')
             ->with('success', "Parceiro {$partner->name} criado com sucesso.");
     }
 
@@ -78,8 +80,7 @@ class BusinessPartnerController extends Controller
 
         $businessPartner->update($data);
 
-        return redirect()
-            ->route('business-partners.index')
+        return redirect('/business-partners')
             ->with('success', "Parceiro {$businessPartner->name} atualizado com sucesso.");
     }
 

@@ -4,8 +4,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <h1 class="text-2xl font-bold text-custom-blue-hover mb-6">
                 {{ $partner->exists ? 'Editar Parceiro' : 'Novo Parceiro' }}</h1>
-            <a href="{{ route('business-partners.index') }}"
-                class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
+            <a href="/business-partners" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
                 Voltar
             </a>
         </div>
