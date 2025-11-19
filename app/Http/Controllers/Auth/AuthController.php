@@ -9,7 +9,6 @@ use App\Http\Requests\Auth\StartPasswordResetRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Notifications\StartPasswordResetNotification;
-use App\Services\ChatService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -59,15 +58,6 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('API Token')->plainTextToken;
-
-        app(ChatService::class)->createFromArray([
-            'users_ids' => [$user->id],
-            'owner_id' => $user->id,
-            'is_group' => false,
-            'is_ai' => true,
-        ]);
-
-        //TODO: Adicionar créditos de teste (e agendar vencimento em 7 dias)
 
         return response()->json([
             'token' => $token,
