@@ -22,9 +22,8 @@
         </div>
     @endif
 
-    <form
-        action="{{ $partner->exists ? route('business-partners.update', $partner) : route('business-partners.store') }}"
-        method="POST" class="space-y-6 bg-white p-6 shadow rounded-lg">
+    <form action="{{ $partner->exists ? '/business-partners/' . $partner->id : '/business-partners' }}" method="POST"
+        class="space-y-6 bg-white p-6 shadow rounded-lg">
         @csrf
         @if ($partner->exists)
             @method('PUT')
