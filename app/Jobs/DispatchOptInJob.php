@@ -19,7 +19,6 @@ class DispatchOptInJob implements ShouldQueue
 
     public function handle(OptInService $optInService)
     {
-        // $optInService->requestOptInForContract($this->contract);
         $optInService->requestOptInForClient($this->client);
     }
 }
