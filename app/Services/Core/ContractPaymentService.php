@@ -3,8 +3,10 @@
 namespace App\Services\Core;
 
 use App\Models\Core\ContractPayment;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ContractPaymentService
 {
@@ -39,9 +41,17 @@ class ContractPaymentService
 
     // ------------------- VIEWS DATA ------------------------
 
-    public function getIndexViewData(Request $request): array
+    public function getIndexViewData(Request $request, User $user): array
     {
-        $contractPayments = $this->filter($request)->paginate($request->per_page ?? 20);
+        if ($user->isSuperAdmin()) {
+            $contractPayments = $this->filter($request)->with('contract')->paginate($request->per_page ?? 20);
+        } else {
+            $contracts = $user->contractPayments()
+                ?->with('contract')
+                ?->paginate($request->per_page ?? 20)
+                ?? new LengthAwarePaginator(collect(), 0, 10);
+        }
+
         return compact('contractPayments');
     }
 

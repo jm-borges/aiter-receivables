@@ -36,14 +36,6 @@
             {{ __('Pagamentos') }}
         </x-nav-link>
 
-        <x-nav-link :href="'/opt-ins'" :active="request()->routeIs('opt-ins.*')" icon="check_circle">
-            {{ __('Opt-Ins') }}
-        </x-nav-link>
-
-        <x-nav-link :href="'/receivables'" :active="request()->routeIs('receivables.*')" icon="account_balance_wallet">
-            {{ __('Recebíveis') }}
-        </x-nav-link>
-
         <x-nav-link :href="'/operations'" :active="request()->routeIs('operations.*')" icon="sync_alt">
             {{ __('Operações') }}
         </x-nav-link>

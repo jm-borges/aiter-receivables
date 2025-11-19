@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Webhooks;
 
 use App\Actions\RRC0010Action;
+use App\DataTransferObjects\ContractOperationData;
 use App\Enums\BusinessPartnerType;
 use App\Enums\OperationStatus;
 use App\Handlers\OperationsUpdater;
@@ -16,6 +17,8 @@ use App\Models\Core\Operation;
 use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
 use App\Models\Core\Setting;
+use App\Services\ContractOperationResponseService;
+use App\Services\ContractOperationService;
 use App\Services\Core\Files\ARRC018ResponseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,11 +43,11 @@ class RtmWebhookController extends Controller
             app(ReceivablesUpdater::class)->updatesReceivables($clients);
             app(OperationsUpdater::class)->updatesOperations();
 
-            if (Setting::first()->shouldAutomaticallyOperateContracts()) {
+            /*  if (Setting::first()->shouldAutomaticallyOperateContracts()) {
                 foreach ($clients as $client) {
                     dispatch(new AutoOperateClientContractsJob($client));
                 }
-            }
+            } */
         });
     }
 
@@ -57,38 +60,16 @@ class RtmWebhookController extends Controller
 
     public function handleOperationResponse(Request $request): JsonResponse
     {
-        return $this->processEvent('Operation Response', $request, function ($data) {
-            $identifier = $data['receivableNegociationId'];
-            $operation = Operation::find($identifier);
-
-            if ($operation) {
-                $operation->update([
-                    'identdOp' => $data['operationId'] ?? null,
-                    'sitRet' => strtolower($data['status']),
-                    'operation_href' => $data['operationHref'] ?? null,
-                    'status' => strtolower($data['status']) === 'recusado' ?
-                        OperationStatus::REFUSED : (strtolower($data['status']) === 'aceito' ?
-                            OperationStatus::ACCEPTED : OperationStatus::ERROR),
-                ]);
-
-                if (isset($data['cipMessages'])) {
-                    foreach ($data['cipMessages'] as $cipMessage) {
-                        $operation->cipMessages()->create([
-                            'code' => $cipMessage['code'],
-                            'content' => $cipMessage['content'],
-                            'field' => $cipMessage['field'],
-                            'message' => $cipMessage['message'],
-                        ]);
-                    }
-                }
-            }
+        return $this->processEvent('Operation Response', $request, function (array $data) {
+            app(ContractOperationResponseService::class)
+                ->handleOperationResponse($data);
         });
     }
 
     public function handleRetornosRegistroOperacao(Request $request): JsonResponse
     {
         return $this->processEvent('RetornosRegistroOperacao', $request, function ($data) {
-            $identifier = $data['receivableNegociationId'];
+            /*  $identifier = $data['receivableNegociationId'];
             $operation = Operation::find($identifier);
 
             if ($operation) {
@@ -100,7 +81,7 @@ class RtmWebhookController extends Controller
                         OperationStatus::REFUSED : (strtolower($data['status']) === 'aceito' ?
                             OperationStatus::ACCEPTED : OperationStatus::ERROR),
                 ]);
-            }
+            } */
         });
     }
 

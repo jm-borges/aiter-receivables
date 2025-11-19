@@ -2,37 +2,36 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Enums\BusinessPartnerType;
-use App\Enums\ContractStatus;
-use App\Handlers\ContractOperationHandler;
+use App\DataTransferObjects\ContractOperationData;
 use App\Http\Controllers\Controller;
-use App\Models\Core\BusinessPartner;
+use App\Http\Requests\ExecuteContractOperationRequest;
 use App\Models\Core\Operation;
-use App\Models\Core\PaymentArrangement;
-use App\Models\User;
-use App\Services\Core\ContractService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use App\Services\ContractOperationService;
+use Illuminate\Routing\Redirector;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class OperationController extends Controller
 {
-    private User $user;
-
     public function __construct()
     {
-        $this->user = Auth::user();
+        parent::__construct();
     }
-
 
     /**
      * Listagem 
      */
     public function index()
     {
-        $operations = Operation::with([
-            'action',
-        ])->paginate(20);
+        if ($this->user->isSuperAdmin()) {
+            $operations = Operation::with(['action', 'contract'])
+                ->paginate($request->per_page ?? 20);
+        } else {
+            $operations = $this->user->operations()
+                ?->with(['action', 'contract'])
+                ?->paginate($request->per_page ?? 20)
+                ?? new LengthAwarePaginator(collect(), 0, 10);
+        }
 
         return view('operations.index', compact('operations'));
     }
@@ -54,35 +53,15 @@ class OperationController extends Controller
         return view('operations.execute-index', []);
     }
 
-    public function execute(Request $request, ContractService $contractService)
+    public function execute(ExecuteContractOperationRequest $request, ContractOperationService $service): Redirector | RedirectResponse
     {
-        $client = BusinessPartner::findByDocumentNumber($request->document_number)->load('users');
+        $dto = ContractOperationData::fromRequest($request);
+        $resultInfo = $service->execute($dto);
 
-        $contractData = $this->buildContractData($client, $request->negotiation_type);
+        if ($resultInfo->hasError) {
+            return redirect('/dashboard')->with('error', 'Ocorreu um erro ao tentar enviar a operação para a registrada. A equipe técnica já foi informada');
+        }
 
-        $contract = $contractService->create($contractData);
-
-        $handler = new ContractOperationHandler($contract, $client);
-
-        $handler->dispatchOperation([
-            'value' => $request->warranted_value,
-            'negotiation_type' => $request->negotiation_type,
-        ]);
-
-        dd($request->all());
-    }
-
-    private function buildContractData(BusinessPartner $partner, Request $request): array
-    {
-        return [
-            'status' => ContractStatus::ACTIVE,
-            'client_id' => $partner->id,
-            'supplier_id' => $this->user->supplier()?->id,
-            'value' => $request->warranted_value,
-            'negotiation_type' => $request->negotiation_type,
-            'start_date' => $partner->pivot->opt_in_start_date,
-            'end_date' => $partner->pivot->opt_in_end_date,
-            'uses_registrar_management' => true,
-        ];
+        return redirect('/dashboard')->with('success', 'Operação solicitada com sucesso. Aguarde a resposta da registradora');
     }
 }

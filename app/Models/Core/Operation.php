@@ -20,10 +20,13 @@ class Operation extends Model
         'action_id',
         'contract_id',
         'client_id',
+        'supplier_id',
         'status',
         'identdOp',
         'sitRet',
         'operation_href',
+        'scheduled_at',
+        'request_payload',
     ];
 
     /**
@@ -35,6 +38,8 @@ class Operation extends Model
     {
         return [
             'status' => OperationStatus::class,
+            'scheduled_at' => 'datetime',
+            'request_payload' => 'array',
         ];
     }
 
@@ -46,6 +51,11 @@ class Operation extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(BusinessPartner::class, 'client_id');
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(BusinessPartner::class, 'supplier_id');
     }
 
     public function contract(): BelongsTo

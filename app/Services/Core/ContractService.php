@@ -6,8 +6,10 @@ use App\Jobs\DispatchOptInJob;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
 use App\Models\Core\PaymentArrangement;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class ContractService
@@ -56,9 +58,16 @@ class ContractService
 
     // ------------------- VIEWS DATA ------------------------
 
-    public function getIndexViewData(Request $request): array
+    public function getIndexViewData(Request $request, User $user): array
     {
-        $contracts = $this->filter($request)->paginate($request->per_page ?? 20);
+        if ($user->isSuperAdmin()) {
+            $contracts = $this->filter($request)->paginate($request->per_page ?? 20);
+        } else {
+            $contracts = $user->contracts()
+                ?->paginate($request->per_page ?? 20)
+                ?? new LengthAwarePaginator(collect(), 0, 10);
+        }
+
         return compact('contracts');
     }
 

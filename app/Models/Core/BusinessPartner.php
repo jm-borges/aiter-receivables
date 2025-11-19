@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class BusinessPartner extends Model
 {
@@ -67,6 +68,11 @@ class BusinessPartner extends Model
         return $this->hasMany(Contract::class, 'client_id');
     }
 
+    public function clientContractPayments(): HasManyThrough
+    {
+        return $this->hasManyThrough(ContractPayment::class, Contract::class,  'client_id', 'contract_id');
+    }
+
     public function supplierContracts(): HasMany
     {
         return $this->hasMany(Contract::class, 'supplier_id');
@@ -85,6 +91,16 @@ class BusinessPartner extends Model
     public function acquirerReceivables(): HasMany
     {
         return $this->hasMany(Receivable::class, 'acquirer_id');
+    }
+
+    public function operations(): HasMany
+    {
+        return $this->hasMany(Operation::class);
+    }
+
+    public function optIns(): HasMany
+    {
+        return $this->hasMany(OptIn::class);
     }
 
     public function users(): BelongsToMany

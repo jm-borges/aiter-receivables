@@ -6,18 +6,13 @@ use App\Models\Core\BusinessPartner;
 use App\Enums\BusinessPartnerType;
 use App\Http\Controllers\Controller;
 use App\Jobs\DispatchOptInJob;
-use App\Models\User;
-use App\Services\Core\ContractService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BusinessPartnerController extends Controller
 {
-    private User $user;
-
     public function __construct()
     {
-        $this->user = Auth::user();
+        parent::__construct();
     }
 
     public function index()

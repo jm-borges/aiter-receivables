@@ -14,6 +14,11 @@ use Illuminate\Contracts\View\View;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index(): Factory|View
     {
         $users = User::paginate(20);

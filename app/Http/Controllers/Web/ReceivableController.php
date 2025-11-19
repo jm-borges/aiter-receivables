@@ -7,6 +7,11 @@ use App\Models\Core\Receivable;
 
 class ReceivableController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index()
     {
         $receivables = Receivable::with(['client', 'acquirer', 'paymentArrangement', 'contracts', 'optIn'])

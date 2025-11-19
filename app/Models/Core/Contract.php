@@ -43,14 +43,9 @@ class Contract extends Model
             'start_date' => 'date',
             'end_date' => 'date',
             'uses_registrar_management' => 'boolean',
-            'is_automatic' => 'boolean',
+            'status' => ContractStatus::class,
             'negotiation_type' => NegotiationType::class,
         ];
-    }
-
-    public function isAutomatic(): bool
-    {
-        return $this->is_automatic;
     }
 
     public function client(): BelongsTo

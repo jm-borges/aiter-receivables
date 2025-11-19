@@ -6,6 +6,7 @@ import { installmentTypeField } from "./main.js";
 const getRequiredFields = () => {
     const ids = [
         'cnpj-input',
+        'negotiation-type-field',
         'warranted-value-field',
         'installment-type-field'
     ];

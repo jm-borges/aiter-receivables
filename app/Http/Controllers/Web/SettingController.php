@@ -9,6 +9,11 @@ use Illuminate\Http\RedirectResponse;
 
 class SettingController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index(SettingService $settingService)
     {
         $viewData = $settingService->getIndexViewData();

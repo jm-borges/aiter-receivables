@@ -7,6 +7,8 @@
     <div class="standard-container" style="width: {{ $width }}px; margin-top:10px">
         <x-operation-execute-index.warranted-value-field />
 
+        <x-operation-execute-index.negotiation-type-field />
+
         <x-operation-execute-index.installment-type-field />
 
         <x-operation-execute-index.single-installment-container />

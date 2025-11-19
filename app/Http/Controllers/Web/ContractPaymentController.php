@@ -15,12 +15,17 @@ use Illuminate\Contracts\View\Factory;
 
 class ContractPaymentController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(GetContractPaymentsRequest $request, ContractPaymentService $contractPaymentService): View|Factory
     {
-        $viewData = $contractPaymentService->getIndexViewData($request);
+        $viewData = $contractPaymentService->getIndexViewData($request, $this->user);
         return view('contract-payments.index', $viewData);
     }
 

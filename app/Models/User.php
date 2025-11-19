@@ -6,10 +6,13 @@ namespace App\Models;
 
 use App\Enums\BusinessPartnerType;
 use App\Models\Core\BusinessPartner;
+use App\Models\Core\Contract;
+use App\Models\Core\Operation;
 use App\Models\Core\Pivots\UserHasBusinessPartner;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -111,5 +114,25 @@ class User extends Authenticatable implements HasMedia
             ->businessPartners()
             ->where('type', BusinessPartnerType::SUPPLIER)
             ->first();
+    }
+
+    public function contracts(): ?HasMany
+    {
+        return $this->supplier()?->clientContracts();
+    }
+
+    public function contractPayments(): ?HasMany
+    {
+        return $this->supplier()?->clientContractPayments();
+    }
+
+    public function operations(): ?HasMany
+    {
+        return $this->supplier()?->operations();
+    }
+
+    public function optIns(): ?HasMany
+    {
+        return $this->supplier()?->optIns();
     }
 }

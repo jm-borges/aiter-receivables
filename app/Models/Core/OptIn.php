@@ -36,6 +36,7 @@ class OptIn extends Model
         'dtOptIn',
         'dtIniOptIn',
         'dtFimOptIn',
+        //
     ];
 
     /**
