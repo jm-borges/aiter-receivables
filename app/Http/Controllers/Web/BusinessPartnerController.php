@@ -43,16 +43,25 @@ class BusinessPartnerController extends Controller
         $partner = BusinessPartner::create($data);
 
         if (!$this->user->isSuperAdmin()) {
-            UserHasBusinessPartner::create([
+            $enableOptIn = $request->boolean('enable_opt_in');
+
+            $pivotData = [
                 'user_id' => $this->user->id,
                 'business_partner_id' => $partner->id,
-                'opt_in_start_date' => $request->opt_in_start_date,
-                'opt_in_end_date' => $request->opt_in_end_date,
-            ]);
+            ];
+
+            if ($enableOptIn && $request->opt_in_start_date && $request->opt_in_end_date) {
+                $pivotData['opt_in_start_date'] = $request->opt_in_start_date;
+                $pivotData['opt_in_end_date'] = $request->opt_in_end_date;
+
+                UserHasBusinessPartner::create($pivotData);
+
+                dispatch(new DispatchOptInJob($this->user, $partner));
+            } else {
+                UserHasBusinessPartner::create($pivotData);
+            }
 
             $partner->load(['users']);
-
-            dispatch(new DispatchOptInJob($this->user, $partner));
         }
 
         return redirect('/business-partners')

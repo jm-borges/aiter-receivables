@@ -21,8 +21,10 @@
     <link rel="stylesheet" href="/assets/styles/operation-execute-index.css">
     <link rel="stylesheet" href="/assets/styles/receivables-query.css">
 
+
     <script src="/assets/scripts/query-index/main.js" type="module"></script>
     <script src="/assets/scripts/operation-execute-index/main.js" type="module"></script>
+    <script src="/assets/scripts/credit-analysis/main.js" type="module"></script>
 </head>
 
 <body class="font-sans antialiased bg-page-bg">

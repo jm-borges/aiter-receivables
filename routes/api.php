@@ -86,6 +86,8 @@ Route::prefix('v1')->group(function () {
         Route::get('business-partners/{id}/receivables/summary', [BusinessPartnerController::class, 'receivablesSummary']);
         Route::get('business-partners/lookup/{cnpj}/receivables/summary', [BusinessPartnerController::class, 'receivablesSummaryByCnpj']);
         Route::get('business-partners/{id}/contract-payments/summary', [BusinessPartnerController::class, 'contractPaymentsSummary']);
+        Route::get('business-partners/lookup/{cnpj}/credit-analysis', [BusinessPartnerController::class, 'creditAnalysisByCnpj']);
+
 
         Route::post('attachment', [AttachmentController::class, 'addAttachment']);
         Route::delete('attachment', [AttachmentController::class, 'destroyAllAttachment']);

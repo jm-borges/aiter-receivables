@@ -6,7 +6,7 @@
 @php
     $classes = $active
         ? 'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-custom-blue-hover text-white'
-        : 'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md text-white hover:bg-custom-blue-hover';
+        : 'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md  hover:bg-custom-blue-hover hover:text-white text-page-bg';
 @endphp
 
 <a {{ $attributes->merge(['class' => $classes]) }}>

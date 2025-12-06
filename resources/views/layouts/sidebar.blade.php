@@ -1,7 +1,7 @@
-<aside class="w-64 bg-custom-blue text-white border-r border-white flex flex-col">
-    <div class="p-6 flex items-center justify-center border-b border-white">
+<aside class="w-64 bg-sidebar-bg text-white border-r border-white flex flex-col">
+    <div class="p-8 flex items-center justify-center border-b border-page-bg">
         <a href="{{ route('dashboard') }}">
-            <x-application-logo width="140" />
+            <x-application-logo width="250" />
         </a>
     </div>
 
@@ -22,7 +22,7 @@
             {{ __('Análise de crédito') }}
         </x-nav-link>
 
-        <hr class="border-white">
+        <hr class="border-page-bg">
 
         <x-nav-link :href="'/business-partners'" :active="request()->routeIs('business-partners.*')" icon="groups">
             {{ __('Parceiros') }}
@@ -41,7 +41,7 @@
         </x-nav-link>
     </nav>
 
-    <div class="p-4 border-t border-white">
+    <div class="p-4 border-t border-page-bg">
         <x-nav-link :href="'/settings'" :active="request()->routeIs('settings.*')" icon="settings">
             {{ __('Configurações') }}
         </x-nav-link>

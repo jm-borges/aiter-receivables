@@ -4,6 +4,7 @@ namespace App\Handlers;
 
 use App\Actions\RRC0010Action;
 use App\Auxiliary\ReceivableData;
+use App\Enums\ReceivableStatus;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\PaymentArrangement;
 use App\Models\Core\Receivable;
@@ -37,9 +38,47 @@ class ReceivablesUpdater
     {
         $receivablesData = $response['body'];
 
-        foreach ($receivablesData as $receivableData) {
-            $receivableData = ReceivableData::fromArray($receivableData);
-            $this->handleReceivableData($client, $receivableData);
+        $openLocalReceivables = $this->getOpenLocalReceivables($client);
+
+        $receivedIds = $this->syncAndCollectReceivedIds($client, $receivablesData);
+
+        $missingReceivables = $this->findMissingReceivables($openLocalReceivables, $receivedIds);
+
+        $this->markAsSettled($missingReceivables);
+    }
+
+    private function getOpenLocalReceivables(BusinessPartner $client)
+    {
+        return $client->clientReceivables()
+            ->where('status', '!=', ReceivableStatus::SETTLED)
+            ->get();
+    }
+
+    private function syncAndCollectReceivedIds(BusinessPartner $client, array $receivablesDataArr): array
+    {
+        $receivedIds = [];
+
+        foreach ($receivablesDataArr as $item) {
+            $receivableData = ReceivableData::fromArray($item);
+            $receivable = $this->handleReceivableData($client, $receivableData);
+
+            $receivedIds[] = $receivable->id;
+        }
+
+        return $receivedIds;
+    }
+
+    private function findMissingReceivables($openLocalReceivables, array $receivedIds)
+    {
+        return $openLocalReceivables->whereNotIn('id', $receivedIds);
+    }
+
+    private function markAsSettled($missingReceivables): void
+    {
+        foreach ($missingReceivables as $receivable) {
+            $receivable->update([
+                'status' => ReceivableStatus::SETTLED,
+            ]);
         }
     }
 

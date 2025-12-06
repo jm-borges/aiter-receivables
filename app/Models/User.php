@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -121,14 +122,14 @@ class User extends Authenticatable implements HasMedia
         return $this->supplier()?->clientContracts();
     }
 
-    public function contractPayments(): ?HasMany
+    public function contractPayments(): ?HasManyThrough
     {
         return $this->supplier()?->clientContractPayments();
     }
 
-    public function operations(): ?HasMany
+    public function operationsAsSupplier(): ?HasMany
     {
-        return $this->supplier()?->operations();
+        return $this->supplier()?->operationsAsSupplier();
     }
 
     public function optIns(): ?HasMany

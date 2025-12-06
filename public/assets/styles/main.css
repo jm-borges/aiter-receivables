@@ -5,13 +5,13 @@
 }
 
 .standard-container-title {
-    color: #01264F;
+    color: #211748;
     font-size: 20px;
     font-weight: 600;
 }
 
 .standard-container-sub-title {
-    color: #01264F;
+    color: #211748;
     font-size: 16px;
     font-weight: 600;
 }
@@ -19,24 +19,24 @@
 .sub-text {
     font-size: 14px;
     font-weight: 400;
-    color: #01264F;
+    color: #211748;
 }
 
 .form-section-title {
     font-size: 24px;
     font-weight: 600;
-    color: #01264F;
+    color: white;
     margin-top: 40px;
     margin-bottom: 5px;
 }
 
 .form-section-divider {
     border: none;
-    border-top: 2px solid #01264F;
+    border-top: 2px solid white;
 }
 
 .form-select {
-    background-color: #003DB5;
+    background-color: #69549F;
     color: white;
     border-radius: 5px;
     width: 100%;
@@ -44,25 +44,25 @@
 
 .form-select option {
     background-color: white;
-    color: #003DB5;
+    color: #69549F;
 }
 
 .form-select option:checked,
 .form-select option:focus,
 .form-select option:selected {
-    background-color: #003DB5;
+    background-color: #69549F;
     color: white;
 }
 
 .form-label {
-    color: #01264F;
+    color: #211748;
     font-weight: 600;
     font-size: 14px;
 }
 
 .form-text-field {
     border-radius: 5px;
-    border: 1px solid #01264F;
+    border: 1px solid #211748;
 }
 
 .form-search-text-field {
@@ -74,7 +74,7 @@
 }
 
 .form-date-text {
-    color: #01264F;
+    color: #211748;
     font-weight: 400;
     font-size: 12px;
     margin-top: 10px;

@@ -52,7 +52,7 @@ export const updateSubmitButtonState = () => {
     if (!button) return;
 
     const valid = isFormValid();
-    button.style.backgroundColor = valid ? '#003DB5' : '#9E9E9E';
+    button.style.backgroundColor = valid ? '#69549F' : '#9E9E9E';
 };
 
 /**

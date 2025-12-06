@@ -17,9 +17,6 @@ class BusinessPartner extends Model
     /** @use HasFactory<\Database\Factories\BusinessPartnerFactory> */
     use HasFactory, HasUuids;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
-
     protected $fillable = [
         'name',
         'fantasy_name',
@@ -93,9 +90,14 @@ class BusinessPartner extends Model
         return $this->hasMany(Receivable::class, 'acquirer_id');
     }
 
-    public function operations(): HasMany
+    public function operationsAsClient(): HasMany
     {
-        return $this->hasMany(Operation::class);
+        return $this->hasMany(Operation::class, 'client_id');
+    }
+
+    public function operationsAsSupplier(): HasMany
+    {
+        return $this->hasMany(Operation::class, 'supplier_id');
     }
 
     public function optIns(): HasMany

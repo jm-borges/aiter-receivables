@@ -15,12 +15,13 @@ export default {
                 sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
             colors: {
-                'page-bg': '#D9D9D980',
-                'custom-blue': '#003DB5',
-                'custom-blue-hover': '#01264F',
+                'page-bg': '#211748',
+                'sidebar-bg': '#E5E1E7',
+                'custom-blue': '#69549F',
+                'custom-blue-hover': '#211748',
             },
             backgroundColor: theme => ({
-                'custom-blue-hover': '#01264F',
+                'custom-blue-hover': '#211748',
             }),
         },
     },

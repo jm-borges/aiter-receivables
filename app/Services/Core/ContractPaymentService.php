@@ -46,7 +46,7 @@ class ContractPaymentService
         if ($user->isSuperAdmin()) {
             $contractPayments = $this->filter($request)->with('contract')->paginate($request->per_page ?? 20);
         } else {
-            $contracts = $user->contractPayments()
+            $contractPayments = $user->contractPayments()
                 ?->with('contract')
                 ?->paginate($request->per_page ?? 20)
                 ?? new LengthAwarePaginator(collect(), 0, 10);

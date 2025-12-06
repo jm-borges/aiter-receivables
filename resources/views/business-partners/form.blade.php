@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <h1 class="text-2xl font-bold text-custom-blue-hover mb-6">
+            <h1 class="text-2xl font-bold text-white mb-6">
                 {{ $partner->exists ? 'Editar Parceiro' : 'Novo Parceiro' }}</h1>
             <a href="/business-partners" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
                 Voltar
@@ -144,23 +144,46 @@
 
         <hr>
 
-        {{-- Datas --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        @php
+            $editing =
+                isset($partner->pivot) && ($partner->pivot->opt_in_start_date || $partner->pivot->opt_in_end_date);
+        @endphp
+
+        <div class="mt-4">
+            <label class="inline-flex items-center">
+                <input type="checkbox" id="toggle_opt_in" name="enable_opt_in"
+                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                    {{ $editing ? 'checked' : '' }}>
+                <span class="ml-2 text-gray-700">
+                    {{ $editing ? 'Atualizar Opt-in' : 'Realizar Opt-in' }}
+                </span>
+            </label>
+            <p class="text-xs text-gray-500 mt-1 ml-6">
+                (marcando essa opção, será feita solicitação de anuência para visualização dos recebíveis desse CNPJ)
+            </p>
+        </div>
+
+        {{-- Campos de datas — começam ocultos se não estiver editando --}}
+        <div id="opt_in_dates" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3 {{ $editing ? '' : 'hidden' }}">
+
+            {{-- Data Início --}}
             <div>
-                <label for="start_date" class="block text-sm font-medium text-gray-700">
-                    Data Início do Opt-in
-                </label>
+                <label for="start_date" class="block text-sm font-medium text-gray-700">Data Início do Opt-in</label>
                 <input type="date" name="opt_in_start_date" id="start_date"
-                    value="{{ $partner->pivot->opt_in_start_date ?? old('opt_in_start_date') }}" required
-                    class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    value="{{ $partner->pivot->opt_in_start_date ?? old('opt_in_start_date') }}"
+                    class="mt-1 block w-full rounded border-gray-300 shadow-sm
+                focus:border-indigo-500 focus:ring-indigo-500"
+                    {{ $editing ? '' : 'disabled' }}>
             </div>
+
+            {{-- Data Fim --}}
             <div>
-                <label for="end_date" class="block text-sm font-medium text-gray-700">
-                    Data Fim do Opt-in
-                </label>
+                <label for="end_date" class="block text-sm font-medium text-gray-700">Data Fim do Opt-in</label>
                 <input type="date" name="opt_in_end_date" id="end_date"
-                    value="{{ $partner->pivot->opt_in_end_date ?? old('opt_in_end_date') }}" required
-                    class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    value="{{ $partner->pivot->opt_in_end_date ?? old('opt_in_end_date') }}"
+                    class="mt-1 block w-full rounded border-gray-300 shadow-sm
+                focus:border-indigo-500 focus:ring-indigo-500"
+                    {{ $editing ? '' : 'disabled' }}>
             </div>
         </div>
 
@@ -177,4 +200,34 @@
             </a>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('toggle_opt_in');
+            const wrapper = document.getElementById('opt_in_dates');
+            const inputs = wrapper.querySelectorAll('input');
+
+            const updateState = () => {
+                const checked = toggle.checked;
+
+                // mostra/oculta container
+                if (checked) {
+                    wrapper.classList.remove('hidden');
+                } else {
+                    wrapper.classList.add('hidden');
+                }
+
+                // habilita/desabilita inputs
+                inputs.forEach(input => {
+                    input.disabled = !checked;
+                });
+            };
+
+            toggle.addEventListener('change', updateState);
+
+            updateState(); // inicial
+        });
+    </script>
+
+
 </x-app-layout>

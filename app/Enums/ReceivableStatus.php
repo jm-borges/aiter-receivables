@@ -11,7 +11,7 @@ enum ReceivableStatus: string
     {
         return match ($this) {
             self::AVAILABLE    => 'Disponível',
-            self::SETTLED  => 'Liquidado',
+            self::SETTLED      => 'Liquidado',
         };
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\BusinessPartnerController;
 use App\Http\Controllers\Web\ContractController;
 use App\Http\Controllers\Web\ContractPaymentController;
 use App\Http\Controllers\Web\CreditAnalysisController;
+use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\OperationController;
 use App\Http\Controllers\Web\OptInController;
 use App\Http\Controllers\Web\ReceivableController;
@@ -14,9 +15,7 @@ use App\Http\Controllers\Web\UserController;
 
 Route::redirect('/', '/dashboard', 301);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

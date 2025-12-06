@@ -4,7 +4,7 @@ namespace App\Handlers;
 
 use App\Actions\RRC0021Action;
 use App\Auxiliary\ReceivableData;
-use App\Models\Core\Contract;
+use App\Enums\OperationStatus;
 use App\Models\Core\Operation;
 use App\Models\Core\Receivable;
 use App\Services\Core\ReceivableService;
@@ -13,7 +13,7 @@ class OperationsUpdater
 {
     public function updatesOperations(): void
     {
-        $operations = Operation::get();
+        $operations = Operation::where('status', OperationStatus::ACCEPTED)->get();
 
         foreach ($operations as $operation) {
             $currentNegotiatedValue += $this->syncOperationFromRegistrar($operation);
@@ -22,10 +22,12 @@ class OperationsUpdater
 
     private function syncOperationFromRegistrar(Operation $operation): float
     {
-        $response = app(RRC0021Action::class)->find($operation->identdOp);
+        if ($operation->identdOp) {
+            $response = app(RRC0021Action::class)->find();
 
-        if ($response['status_code'] === 200) {
-            return $this->handleSuccessfulRRC0021($operation, $response);
+            if ($response['status_code'] === 200) {
+                return $this->handleSuccessfulRRC0021($operation, $response);
+            }
         }
 
         return 0;

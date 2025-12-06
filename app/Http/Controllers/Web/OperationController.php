@@ -27,7 +27,7 @@ class OperationController extends Controller
             $operations = Operation::with(['action', 'contract'])
                 ->paginate($request->per_page ?? 20);
         } else {
-            $operations = $this->user->operations()
+            $operations = $this->user->operationsAsSupplier()
                 ?->with(['action', 'contract'])
                 ?->paginate($request->per_page ?? 20)
                 ?? new LengthAwarePaginator(collect(), 0, 10);

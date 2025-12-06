@@ -4,13 +4,13 @@
     </x-slot>
 
     <div class="py-6">
-        <form method="POST" action="{{ route('settings.update') }}">
+        <form method="POST" action="/settings">
             @csrf
 
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" id="auto_operate_mode_is_enabled" name="auto_operate_mode_is_enabled" value="1"
-                    {{ old('auto_operate_mode_is_enabled', $settings->auto_operate_mode_is_enabled ?? false) ? 'checked' : '' }}>
-                <label for="auto_operate_mode_is_enabled">O sistema deve operar automaticamente nos contratos</label>
+            <div class="mb-4">
+                <h1 class="text-white">
+                    Nenhuma configuração disponível
+                </h1>
             </div>
 
             <div class="mt-4">

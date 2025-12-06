@@ -85,4 +85,33 @@ class BusinessPartnerController extends Controller
 
         return response()->json($summary);
     }
+
+    public function creditAnalysisByCnpj(string $cnpj): JsonResponse
+    {
+        $businessPartner = BusinessPartner::findByDocumentNumber($cnpj);
+
+        return response()->json([
+            "company_name" => $businessPartner->name,
+
+            "warranty" => [
+                "free" => 15989,
+                "receivable" => 547327.54,
+                "locked" => 752354.27,
+            ],
+
+            "payables" => [
+                "total" => 100000,
+            ],
+
+            "receivables" => [
+                "total" => 150000,
+            ],
+
+            "bank" => [
+                "limit_total" => 756803163,
+                "limit_used" => 54707356.54,
+                "limit_available" => 752354.27,
+            ],
+        ]);
+    }
 }
