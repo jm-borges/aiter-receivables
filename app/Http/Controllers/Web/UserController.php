@@ -33,11 +33,24 @@ class UserController extends Controller
         return view('users.form', ['suppliers' => $suppliers]);
     }
 
-    public function store(Request $request): Redirector | RedirectResponse
+    public function store(Request $request): Redirector|RedirectResponse
     {
-        $user = User::create($request->all());
+        $data = $request->all();
 
-        $user->businessPartners()->attach($request->supplier_id);
+        $user = User::create($data);
+
+        if (!empty($request->supplier_id)) {
+            $user->businessPartners()->attach($request->supplier_id);
+        } elseif ($request->filled('create_supplier')) {
+            $supplier = BusinessPartner::create([
+                'name'  => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'type'  => BusinessPartnerType::SUPPLIER,
+            ]);
+
+            $user->businessPartners()->attach($supplier->id);
+        }
 
         return redirect('/users')->with('success', 'Salvo com sucesso');
     }
@@ -55,10 +68,9 @@ class UserController extends Controller
         return view('users.form', ['user' => $user, 'suppliers' => $suppliers]);
     }
 
-    public function update(Request $request, User $user): Redirector | RedirectResponse
+    public function update(Request $request, User $user): Redirector|RedirectResponse
     {
         $data = $request->all();
-
         $data['is_super_admin'] = $request->has('is_super_admin');
 
         if (empty($data['password'])) {
@@ -67,15 +79,24 @@ class UserController extends Controller
 
         $user->update($data);
 
-        if ($request->filled('supplier_id')) {
+        if (!empty($request->supplier_id)) {
             $user->businessPartners()->sync([$request->supplier_id]);
+        } elseif ($request->filled('create_supplier')) {
+            if ($user->businessPartners()->count() === 0) {
+                $supplier = BusinessPartner::create([
+                    'name'  => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'type'  => BusinessPartnerType::SUPPLIER,
+                ]);
+                $user->businessPartners()->attach($supplier->id);
+            }
         } else {
             $user->businessPartners()->detach();
         }
 
         return redirect('/users')->with('success', 'Salvo com sucesso');
     }
-
 
     public function destroy(User $user): Redirector | RedirectResponse
     {

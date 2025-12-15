@@ -9,18 +9,18 @@
             </div>
 
             <div style="margin-top: 10px">
-                <x-form-item-card id="bank-limit-total" icon="/assets/images/PiggyBank.png" title="Total"
+                <x-common.form-item-card id="bank-limit-total" icon="/assets/images/PiggyBank.png" title="Total"
                     value="R$ 756.803.163,00" />
             </div>
 
             <div style="margin-top: 10px">
-                <x-form-item-card id="bank-limit-used" icon="/assets/images/Flag.png" title="Tomadas"
+                <x-common.form-item-card id="bank-limit-used" icon="/assets/images/Flag.png" title="Tomadas"
                     value="R$ 54.707.356,54" />
             </div>
 
             <div style="margin-top: 10px">
-                <x-form-item-card id="bank-limit-available" icon="/assets/images/lock_open.png" title="Disponível"
-                    value="R$ 752.354,27" />
+                <x-common.form-item-card id="bank-limit-available" icon="/assets/images/lock_open.png"
+                    title="Disponível" value="R$ 752.354,27" />
             </div>
         </div>
 

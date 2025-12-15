@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <x-page-header title="Operações" />
+        <x-common.page-header title="Operações" />
     </x-slot>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
@@ -20,7 +20,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="px-4 py-4 text-center text-gray-500">
-                            Ainda não foram registradas Operações
+                            Ainda não foram registradas operações
                         </td>
                     </tr>
                 @endforelse

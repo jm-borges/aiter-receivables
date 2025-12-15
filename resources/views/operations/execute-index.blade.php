@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-page-header title="Executar operação" subtitle="Configure e execute operações de trava de recebíveis" />
+        <x-common.page-header title="Executar operação" subtitle="Configure e execute operações de trava de recebíveis" />
     </x-slot>
 
     <form action="{{ route('operations.execute-submit') }}" method="post" id="execute-operation-form">

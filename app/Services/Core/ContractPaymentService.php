@@ -44,15 +44,15 @@ class ContractPaymentService
     public function getIndexViewData(Request $request, User $user): array
     {
         if ($user->isSuperAdmin()) {
-            $contractPayments = $this->filter($request)->with('contract')->paginate($request->per_page ?? 20);
+            $payments = $this->filter($request)->with('contract')->paginate($request->per_page ?? 20);
         } else {
-            $contractPayments = $user->contractPayments()
+            $payments = $user->contractPayments()
                 ?->with('contract')
                 ?->paginate($request->per_page ?? 20)
                 ?? new LengthAwarePaginator(collect(), 0, 10);
         }
 
-        return compact('contractPayments');
+        return compact('payments');
     }
 
     public function getCreateViewData(): array

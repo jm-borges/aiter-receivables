@@ -14,25 +14,25 @@
                 </div>
 
                 <!-- Session Status -->
-                <x-auth-session-status class="mb-4" :status="session('status')" />
+                <x-common.auth-session-status class="mb-4" :status="session('status')" />
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <!-- Email Address -->
                     <div>
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
+                        <x-common.input-label for="email" :value="__('Email')" />
+                        <x-common.text-input id="email" class="block mt-1 w-full" type="email" name="email"
                             :value="old('email')" required autofocus autocomplete="username" />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        <x-common.input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
                     <!-- Password -->
                     <div class="mt-4">
-                        <x-input-label for="password" :value="__('Password')" />
-                        <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                            autocomplete="current-password" />
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        <x-common.input-label for="password" :value="__('Password')" />
+                        <x-common.text-input id="password" class="block mt-1 w-full" type="password" name="password"
+                            required autocomplete="current-password" />
+                        <x-common.input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
 
                     <!-- Remember Me + Forgot Password -->
@@ -60,9 +60,9 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <x-primary-button class="ms-3">
+                        <x-common.primary-button class="ms-3">
                             {{ __('Login') }}
-                        </x-primary-button>
+                        </x-common.primary-button>
                     </div>
                 </form>
 

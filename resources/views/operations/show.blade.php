@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <x-page-header title="Detalhes da Operação" />
+        <x-common.page-header title="Detalhes da Operação" />
     </x-slot>
 
     {{-- Informações principais --}}

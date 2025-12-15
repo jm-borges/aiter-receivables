@@ -79,3 +79,21 @@
     font-size: 12px;
     margin-top: 10px;
 }
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.action-button img {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}

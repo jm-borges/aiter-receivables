@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-page-header title="Detalhamento operacional" />
+        <x-common.page-header title="Detalhamento operacional" />
     </x-slot>
 
     <x-dashboard.top-cards />

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-page-header title="Configurações" />
+        <x-common.page-header title="Configurações" />
     </x-slot>
 
     <div class="py-6">
@@ -14,7 +14,7 @@
             </div>
 
             <div class="mt-4">
-                <x-primary-button>Salvar</x-primary-button>
+                <x-common.primary-button>Salvar</x-common.primary-button>
             </div>
         </form>
 

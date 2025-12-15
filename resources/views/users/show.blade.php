@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-page-header title="Detalhes do usuário" />
+        <x-common.page-header title="Detalhes do usuário" />
     </x-slot>
 
     <div class="py-6">

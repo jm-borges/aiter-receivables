@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-page-header title="Análise de Crédito" />
+        <x-common.page-header title="Análise de Crédito" />
     </x-slot>
 
     <div style="width: 513px; background-color: white; border-radius: 5px;padding: 15px; margin-bottom:15px">

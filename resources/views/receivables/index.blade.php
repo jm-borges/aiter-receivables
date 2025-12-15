@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <x-page-header title="Recebíveis" />
+        <x-common.page-header title="Recebíveis" />
     </x-slot>
 
     <div class="overflow-x-auto">

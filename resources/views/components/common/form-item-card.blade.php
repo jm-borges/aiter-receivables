@@ -29,5 +29,5 @@
 
     <hr class="form-section-divider">
 
-    <x-form-date-text />
+    <x-common.form-date-text />
 </div>
