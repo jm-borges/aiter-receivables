@@ -23,7 +23,7 @@ class OperationsUpdater
     private function syncOperationFromRegistrar(Operation $operation): float
     {
         if ($operation->identdOp) {
-            $response = app(RRC0021Action::class)->find();
+            $response = app(RRC0021Action::class)->find($operation->identdOp);
 
             if ($response['status_code'] === 200) {
                 return $this->handleSuccessfulRRC0021($operation, $response);
