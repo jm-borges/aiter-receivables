@@ -97,8 +97,7 @@ class BusinessPartnerController extends Controller
     {
         $businessPartner->delete();
 
-        return redirect()
-            ->route('/business-partners')
+        return redirect('/business-partners')
             ->with('success', "Parceiro removido com sucesso.");
     }
 
