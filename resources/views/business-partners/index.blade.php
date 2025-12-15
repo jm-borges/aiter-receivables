@@ -50,7 +50,7 @@
                                         class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
                                         Editar
                                     </a>
-                                    <form action="{{ route('business-partners.destroy', $partner) }}" method="POST"
+                                    <form action="/business-partners/{{ $partner->id }}" method="POST"
                                         class="inline-block"
                                         onsubmit="return confirm('Tem certeza que deseja excluir este parceiro?')">
                                         @csrf
