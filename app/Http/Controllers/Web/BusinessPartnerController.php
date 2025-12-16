@@ -31,6 +31,7 @@ class BusinessPartnerController extends Controller
     {
         $types = BusinessPartnerType::cases();
         return view('business-partners.form', [
+            'partner' => null,
             'types'   => $types,
         ]);
     }
