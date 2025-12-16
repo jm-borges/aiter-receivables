@@ -112,7 +112,7 @@ class RequestOptInJob implements ShouldQueue
 
         $user = $users->firstWhere('id', $this->user->id);
 
-        return $user?->pivot?->opt_in_start_date;
+        return Carbon::parse($user?->pivot?->opt_in_start_date)->format('Y-m-d');
     }
 
     private function getDtFimOptIn(): ?string
@@ -122,7 +122,7 @@ class RequestOptInJob implements ShouldQueue
 
         $user = $users->firstWhere('id', $this->user->id);
 
-        return $user?->pivot?->opt_in_end_date;
+        return Carbon::parse($user?->pivot?->opt_in_end_date)->format('Y-m-d');
     }
 
     private function executeAction(OptIn $optIn): array
