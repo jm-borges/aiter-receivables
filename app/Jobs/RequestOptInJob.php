@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class RequestOptInJob implements ShouldQueue
 {
