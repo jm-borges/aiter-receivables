@@ -135,9 +135,9 @@ class RequestOptInJob implements ShouldQueue
             cnpjCreddrSub: $optIn->cnpjCreddrSub,
             codInstitdrArrajPgto: $optIn->codInstitdrArrajPgto,
             indrDomcl: $optIn->indrDomcl,
-            dtOptIn: $optIn->dtOptIn,
-            dtIniOptIn: $optIn->dtIniOptIn,
-            dtFimOptIn: $optIn->dtFimOptIn,
+            dtOptIn: Carbon::parse($optIn->dtOptIn)->format('Y-m-d'),
+            dtIniOptIn: Carbon::parse($optIn->dtIniOptIn)->format('Y-m-d'),
+            dtFimOptIn: Carbon::parse($optIn->dtFimOptIn)->format('Y-m-d'),
         );
     }
 
