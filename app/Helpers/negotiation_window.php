@@ -31,10 +31,9 @@ if (! function_exists('nextWindowDateTime')) {
             $startDate = setTimeFromBase($date, $start);
 
             if ($date->lessThan($startDate)) {
-                return $startDate; // hoje ainda não começou
+                return $startDate;
             }
 
-            // Já passou a janela → avança para o próximo dia útil
             $date = nextWeekdayMorning($date);
         }
     }
@@ -43,21 +42,23 @@ if (! function_exists('nextWindowDateTime')) {
 if (! function_exists('getWindowHours')) {
     function getWindowHours(): array
     {
-        //TODO: mover para config("negotiation.windows")
+        $tz = config('app.timezone');
+
         if (app()->environment('production')) {
             return [
-                Carbon::parse('09:00'),
-                Carbon::parse('18:00'),
+                Carbon::parse('09:00', $tz),
+                Carbon::parse('18:00', $tz),
             ];
         }
 
         // Homologação
         return [
-            Carbon::parse('12:00'),
-            Carbon::parse('18:00'),
+            Carbon::parse('12:00', $tz),
+            Carbon::parse('18:00', $tz),
         ];
     }
 }
+
 
 //
 // --- Funções menores auxiliares ---
@@ -82,7 +83,6 @@ if (! function_exists('nextWeekdayMorning')) {
 if (! function_exists('setTimeFromBase')) {
     function setTimeFromBase(CarbonInterface $base, CarbonInterface $timeSource): CarbonInterface
     {
-        // Carbon 3 tem setTimeFrom(); no Carbon 2, usamos setTime()
         return $base->copy()->setTime(
             $timeSource->hour,
             $timeSource->minute,
