@@ -14,7 +14,7 @@ const getRequiredFields = () => {
     const type = installmentTypeField.value;
 
     if (type === 'single') {
-        ids.push('single-installment-days-field');
+        ids.push('single-installment-days-field', 'single-installment-interest-field');
     } else if (type === 'multiple') {
         ids.push('multiple-installments-days-field', 'inform-installments-select');
     }
