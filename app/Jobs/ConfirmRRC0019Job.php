@@ -16,12 +16,12 @@ class ConfirmRRC0019Job implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private int $operationId;
-    private int $contractId;
-    private int $clientId;
+    private string $operationId;
+    private string $contractId;
+    private string $clientId;
     private ?array $data;
 
-    public function __construct(int $operationId, int $contractId, int $clientId, ?array $data)
+    public function __construct(string $operationId, string $contractId, string $clientId, ?array $data)
     {
         $this->operationId = $operationId;
         $this->contractId  = $contractId;
