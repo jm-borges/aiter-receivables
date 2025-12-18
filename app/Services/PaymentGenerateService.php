@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\DataTransferObjects\ContractOperationData;
-use App\Enums\ContractStatus;
+use App\Enums\ContractPaymentStatus;
 use App\Models\Core\Contract;
 use App\Models\Core\ContractPayment;
 use Carbon\Carbon;
@@ -38,12 +38,11 @@ class PaymentGenerateService
         }
     }
 
-
     private function storePayment(Contract $contract, float $amount, Carbon $dueDate): void
     {
         ContractPayment::create([
             'contract_id' => $contract->id,
-            'status' => ContractStatus::ACTIVE,
+            'status' => ContractPaymentStatus::PENDING,
             'amount' => $amount,
             'due_date' => $dueDate,
         ]);
