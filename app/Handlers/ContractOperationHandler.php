@@ -7,6 +7,7 @@ use App\DataTransferObjects\Nuclea\ConfirmOperationEntidadeRequest;
 use App\Enums\NegotiationType;
 use App\Enums\OperationStatus;
 use App\Enums\RRC0019ObjectType;
+use App\Jobs\ConfirmRRC0019Job;
 use App\Models\Core\Action;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
@@ -26,18 +27,21 @@ class ContractOperationHandler
         $now = now();
 
         $runAt = $this->determineRunAt($now);
-        $this->scheduleOperation($operation, $runAt);
 
-        if ($runAt->isSameMinute($now)) {
-            $this->executeOperation($operation, $data);
-        }
+        $operation->update([
+            'scheduled_at' => $runAt,
+        ]);
+
+        ConfirmRRC0019Job::dispatch(
+            $operation->id,
+            $this->contract->id,
+            $this->client->id,
+            $data
+        )->delay($runAt);
 
         return $operation;
     }
 
-    /**
-     * Decide se roda agora ou na próxima janela.
-     */
     private function determineRunAt(CarbonInterface $now): CarbonInterface
     {
         return isInsideWindow($now)
@@ -45,20 +49,7 @@ class ContractOperationHandler
             : nextWindowDateTime();
     }
 
-    /**
-     * Persiste a data/hora em que a operação deverá rodar.
-     */
-    private function scheduleOperation(Operation $operation, CarbonInterface $runAt): void
-    {
-        $operation->update([
-            'scheduled_at' => $runAt,
-        ]);
-    }
-
-    /**
-     * Executa imediatamente a operação Nuclea.
-     */
-    private function executeOperation(Operation $operation, array $data): void
+    public function executeOperation(Operation $operation, ?array $data = null): void
     {
         $dto = $this->prepareRequestDto($operation, $data);
 

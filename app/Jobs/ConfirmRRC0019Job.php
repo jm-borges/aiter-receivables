@@ -2,43 +2,41 @@
 
 namespace App\Jobs;
 
-use App\Actions\RRC0010Action;
-use App\Actions\RRC0019Action;
-use App\DataTransferObjects\Nuclea\ConfirmOperationRequest;
 use App\Handlers\ContractOperationHandler;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
 use App\Models\Core\Operation;
-use App\Models\Core\PaymentArrangement;
-use App\Services\Core\ContractService;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ConfirmRRC0019Job implements ShouldQueue
 {
-    use Queueable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(
-        private Contract $contract,
-        private Operation $operation,
-        private ConfirmOperationRequest $confirmOperationRequestData,
-    ) {}
+    private int $operationId;
+    private int $contractId;
+    private int $clientId;
+    private ?array $data;
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function __construct(int $operationId, int $contractId, int $clientId, ?array $data)
     {
-        $client = $this->contract->client;
-        /*      $contract->receivables = $contract->receivables()->get();
+        $this->operationId = $operationId;
+        $this->contractId  = $contractId;
+        $this->clientId    = $clientId;
+        $this->data        = $data;
+    }
 
-            $updatedContractInfo = app(ContractService::class)
-                ->updateReceivablesInContract($contract);
+    public function handle(ContractOperationHandler $handler)
+    {
+        $operation = Operation::findOrFail($this->operationId);
+        $contract  = Contract::findOrFail($this->contractId);
+        $client    = BusinessPartner::findOrFail($this->clientId);
 
-            $contract = $updatedContractInfo->contract; */
-        //  (new ContractOperationHandler($contract, $client))->handleContract();
+        $handler = new ContractOperationHandler($contract, $client);
+
+        $handler->executeOperation($operation, $this->data);
     }
 }
