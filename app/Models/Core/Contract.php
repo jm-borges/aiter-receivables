@@ -24,7 +24,7 @@ class Contract extends Model
         'client_id',
         'supplier_id',
         'value',
-        'current_achieved_value',
+        // 'current_achieved_value',
         'start_date',
         'end_date',
         'status',
