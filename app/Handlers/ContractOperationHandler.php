@@ -84,7 +84,7 @@ class ContractOperationHandler
             indrAlcancContrtoCreddrSub: 'G',
             indrActeIncondlOp: 'N',
             indrActeUniddRecbvlReserv: 'N',
-            indrAutcCess: $isGravame ? 'N' : 'S',
+            // indrAutcCess: $isGravame ? 'N' : 'S',
             titulares: $this->buildHoldersInfo()
         );
 
