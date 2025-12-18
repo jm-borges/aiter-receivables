@@ -24,6 +24,7 @@ class ContractOperationService
     public function execute(ContractOperationData $data): ContractOperationResultInfo
     {
         $partner = $this->getPartner($data);
+        dd($partner);
         $contract = $this->createContract($partner, $data);
         $operation = $this->runOperation($contract, $partner, $data);
 
