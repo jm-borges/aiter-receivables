@@ -24,7 +24,6 @@ class ContractOperationService
     public function execute(ContractOperationData $data): ContractOperationResultInfo
     {
         $partner = $this->getPartner($data);
-        dd($partner);
         $contract = $this->createContract($partner, $data);
         $operation = $this->runOperation($contract, $partner, $data);
 
@@ -90,23 +89,34 @@ class ContractOperationService
 
     private function createContract(BusinessPartner $partner, ContractOperationData $data): Contract
     {
-        $user = Auth::user();
-
-        return $this->contractService->create(
-            $this->buildContractData($partner, $data, $user)
-        );
+        return $this->contractService->create($this->buildContractData($partner, $data));
     }
 
-    private function buildContractData(BusinessPartner $partner, ContractOperationData $data, User $user): array
+    private function buildContractData(BusinessPartner $partner, ContractOperationData $data): array
     {
+        $currentUser = Auth::user();
+        $users = $partner->users;
+        $user = $users->firstWhere('id', $currentUser->id);
+
+        dd([
+            'status' => ContractStatus::PENDING,
+            'client_id' => $partner->id,
+            'supplier_id' => $user->supplier()?->id,
+            'value' => $data->warrantedValue,
+            'negotiation_type' => $data->negotiationType,
+            'start_date' => $user?->pivot?->opt_in_start_date,
+            'end_date' => $user?->pivot?->opt_in_end_date,
+            'uses_registrar_management' => true,
+        ]);
+
         return [
             'status' => ContractStatus::PENDING,
             'client_id' => $partner->id,
             'supplier_id' => $user->supplier()?->id,
             'value' => $data->warrantedValue,
             'negotiation_type' => $data->negotiationType,
-            'start_date' => $partner->pivot->opt_in_start_date,
-            'end_date' => $partner->pivot->opt_in_end_date,
+            'start_date' => $user?->pivot?->opt_in_start_date,
+            'end_date' => $user?->pivot?->opt_in_end_date,
             'uses_registrar_management' => true,
         ];
     }
