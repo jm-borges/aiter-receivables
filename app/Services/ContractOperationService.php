@@ -98,17 +98,6 @@ class ContractOperationService
         $users = $partner->users;
         $user = $users->firstWhere('id', $currentUser->id);
 
-        dd([
-            'status' => ContractStatus::PENDING,
-            'client_id' => $partner->id,
-            'supplier_id' => $user->supplier()?->id,
-            'value' => $data->warrantedValue,
-            'negotiation_type' => $data->negotiationType,
-            'start_date' => $user?->pivot?->opt_in_start_date,
-            'end_date' => $user?->pivot?->opt_in_end_date,
-            'uses_registrar_management' => true,
-        ]);
-
         return [
             'status' => ContractStatus::PENDING,
             'client_id' => $partner->id,
