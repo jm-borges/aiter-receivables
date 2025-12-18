@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-
+use App\Models\Core\Pivots\UserHasBusinessPartner;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -77,5 +77,10 @@ class BusinessPartnerSeeder extends Seeder
                 'updated_at' => $now,
             ], $p), $partners)
         );
+
+        UserHasBusinessPartner::create([
+            'business_partner_id' => '0199e442-a78f-70dc-8847-19a3d226460d',
+            'user_id' => '019b329f-265e-70c1-9705-de91ae9db0f6',
+        ]);
     }
 }
