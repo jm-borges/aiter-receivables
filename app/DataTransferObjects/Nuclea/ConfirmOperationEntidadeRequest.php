@@ -16,7 +16,6 @@ class ConfirmOperationEntidadeRequest extends ConfirmOperationRequest
         string $indrActeIncondlOp,
         string $indrActeUniddRecbvlReserv,
         public array  $titulares = [],
-        string $indrAutcCess = '',
         public ?string $indrPeriodRecalc = null,
         public ?string $diaExeccRecalc = null,
         public array  $cessionariosAutorizados = [],
@@ -34,7 +33,6 @@ class ConfirmOperationEntidadeRequest extends ConfirmOperationRequest
             $indrAlcancContrtoCreddrSub,
             $indrActeIncondlOp,
             $indrActeUniddRecbvlReserv,
-            $indrAutcCess,
 
         );
     }

@@ -16,7 +16,6 @@ abstract class ConfirmOperationRequest
         public string $indrAlcancContrtoCreddrSub,
         public string $indrActeIncondlOp,
         public string $indrActeUniddRecbvlReserv,
-        public string $indrAutcCess = '',
     ) {}
 
     public function toArray(): array
