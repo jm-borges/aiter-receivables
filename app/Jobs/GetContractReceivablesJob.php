@@ -30,7 +30,11 @@ class GetContractReceivablesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $response = app(RRC0010Action::class)->execute(cnpjOuCnpjBaseOuCpfUsuFinalRecbdr: $this->contract->client->document_number);
+        $response = app(RRC0010Action::class)->execute(
+            cnpjOuCnpjBaseOuCpfUsuFinalRecbdr: $this->contract->client->document_number,
+            dtIniPrevtLiquid: date('Y-m-d'),
+            dtFimPrevtLiquid: now()->addYear(1)->format('Y-m-d'),
+        );
         if ($response['status_code'] === 200) {
             $receivables = collect($response['body']);
             $receivables->each(fn(array $receivable) => $this->storeReceivable($receivable));

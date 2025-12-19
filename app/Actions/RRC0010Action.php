@@ -36,6 +36,16 @@ class RRC0010Action
             );
         }
 
+        if (
+            empty($dtPrevtLiquid) &&
+            (empty($dtIniPrevtLiquid) || empty($dtFimPrevtLiquid))
+        ) {
+            throw new InvalidArgumentException(
+                "Obrigatório informar pelo menos um dos campos: " .
+                    "'dtPrevtLiquid' ou ambos 'dtIniPrevtLiquid' e 'dtFimPrevtLiquid'."
+            );
+        }
+
         $payload = array_filter([
             'cnpjOuCnpjBaseOuCpfUsuFinalRecbdr' => $cnpjOuCnpjBaseOuCpfUsuFinalRecbdr,
             'codInstitdrArrajPgto'              => $codInstitdrArrajPgto,
