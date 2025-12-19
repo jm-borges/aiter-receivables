@@ -49,6 +49,7 @@ class RequestOptInJob implements ShouldQueue
         $contractData = $this->getContractData();
         $acquirerData = $this->getAcquirerData();
         $clientData = $this->getClientData();
+        $supplierData = $this->getSupplierData();
         $metaData = $this->getMetaData();
 
         return array_merge($contractData, $acquirerData, $clientData, $metaData);
@@ -75,6 +76,13 @@ class RequestOptInJob implements ShouldQueue
         return [
             'client_id' => $this->client->id,
             'cnpjOuCnpjBaseOuCpfUsuFinalRecbdrOuTitlar' => $this->client->document_number,
+        ];
+    }
+
+    private function getSupplierData(): array
+    {
+        return [
+            'supplier_id' => $this->user->supplier()?->id,
         ];
     }
 

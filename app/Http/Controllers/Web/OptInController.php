@@ -28,7 +28,7 @@ class OptInController extends Controller
                 'paymentArrangement',
             ])->paginate($request->per_page ?? 20);
         } else {
-            $optins = $this->user->optIns()
+            $optins = $this->user->optInsAsSupplier()
                 ?->with([
                     'client',
                     'acquirer',

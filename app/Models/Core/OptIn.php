@@ -37,6 +37,7 @@ class OptIn extends Model
         'dtIniOptIn',
         'dtFimOptIn',
         //
+        'supplier_id',
     ];
 
     /**
@@ -62,6 +63,11 @@ class OptIn extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(BusinessPartner::class, 'client_id');
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(BusinessPartner::class, 'supplier_id');
     }
 
     public function contract(): BelongsTo

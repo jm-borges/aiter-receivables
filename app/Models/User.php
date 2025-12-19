@@ -132,8 +132,8 @@ class User extends Authenticatable implements HasMedia
         return $this->supplier()?->operationsAsSupplier();
     }
 
-    public function optIns(): ?HasMany
+    public function optInsAsSupplier(): ?HasMany
     {
-        return $this->supplier()?->optIns();
+        return $this->supplier()?->optInsAsSupplier();
     }
 }
