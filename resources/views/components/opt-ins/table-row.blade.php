@@ -19,6 +19,7 @@
         </span>
     </td>
 
-    <x-common.table-row-actions :model="$optin" modelTitle="Opt-In" modelName="opt-ins" :showEdit="false" />
+    <x-common.table-row-actions :model="$optin" modelTitle="Opt-In" modelName="opt-ins" :showEdit="false"
+        :showDelete="$optin->status === \App\Enums\OptInStatus::ACTIVE" />
 
 </tr>
