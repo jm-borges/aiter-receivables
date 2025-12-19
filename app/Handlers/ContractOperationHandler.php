@@ -60,6 +60,7 @@ class ContractOperationHandler
     private function storeNewOperation(): Operation
     {
         return Operation::create([
+            'supplier_id'  => $this->contract->supplier_id,
             'contract_id'  => $this->contract->id,
             'action_id'    => Action::getByName('RRC0019')?->id,
             'status'       => OperationStatus::PENDING,

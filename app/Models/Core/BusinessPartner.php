@@ -95,7 +95,7 @@ class BusinessPartner extends Model
         return $this->hasMany(Operation::class, 'client_id');
     }
 
-    public function operationsAsSupplier(): HasMany
+    public function  operationsAsSupplier(): HasMany
     {
         return $this->hasMany(Operation::class, 'supplier_id');
     }
