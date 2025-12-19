@@ -10,6 +10,7 @@ use App\Models\Core\OptOut;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class OptOutService
 {
@@ -41,8 +42,17 @@ class OptOutService
 
     public function requestOptOut(OptIn $optIn): OptOut
     {
-        $action = app(RRC0013Action::class);
+        $this->ensureOptOutExists($optIn);
 
+        $response = $this->executeOptOutAction($optIn);
+
+        $this->handleOptOutResponse($optIn, $response);
+
+        return $optIn->optOut;
+    }
+
+    private function ensureOptOutExists(OptIn $optIn): void
+    {
         if (!$optIn->optOut) {
             $optIn->optOut = OptOut::create([
                 'opt_in_id' => $optIn->id,
@@ -51,24 +61,37 @@ class OptOutService
                 'identdCtrlReqSolicte' => (string) Str::uuid(),
             ]);
         }
+    }
 
-        $response = $action->execute(optInIdentifier: $optIn->identdCtrlReqSolicte);
+    private function executeOptOutAction(OptIn $optIn): array
+    {
+        $action = app(RRC0013Action::class);
+        return $action->execute(optInIdentifier: $optIn->identdCtrlReqSolicte);
+    }
 
-        if ($response['status_code'] === 200) {
-            $optIn->update([
-                'status' => OptInStatus::OPTED_OUT,
-            ]);
-
-            $optIn->optOut->update([
-                'identdCtrlOptOut' => $response['body']['identdCtrlOptOut'],
-                'status' => OptOutStatus::CONFIRMED,
-            ]);
-        } else {
+    private function handleOptOutResponse(OptIn $optIn, array $response): void
+    {
+        if ($response['status_code'] !== 200) {
             $optIn->optOut->update([
                 'status' => OptOutStatus::HAS_ERRORS,
             ]);
+            return;
         }
 
-        return $optIn->optOut;
+        $body = $response['body'] ?? [];
+
+        if (!isset($body['identdCtrlOptOut'])) {
+            $optIn->optOut->update([
+                'status' => OptOutStatus::HAS_ERRORS,
+            ]);
+            throw new RuntimeException('Resposta inválida: campo "identdCtrlOptOut" não encontrado.');
+        }
+
+        $optIn->update(['status' => OptInStatus::OPTED_OUT]);
+
+        $optIn->optOut->update([
+            'identdCtrlOptOut' => $body['identdCtrlOptOut'],
+            'status' => OptOutStatus::CONFIRMED,
+        ]);
     }
 }

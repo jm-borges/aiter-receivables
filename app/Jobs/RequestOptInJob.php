@@ -13,6 +13,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use RuntimeException;
 
 class RequestOptInJob implements ShouldQueue
 {
@@ -56,7 +57,6 @@ class RequestOptInJob implements ShouldQueue
     private function getContractData(): array
     {
         return [
-            // 'contract_id' => $this->contract->id,
             'payment_arrangement_id' => $this->paymentArrangement->id,
             'codInstitdrArrajPgto' => $this->paymentArrangement->code,
         ];
@@ -144,10 +144,18 @@ class RequestOptInJob implements ShouldQueue
     private function handleResponse(OptIn $optIn, array $response): void
     {
         if ($response['status_code'] === 200) {
+            $body = $response['body'] ?? [];
+
+            if (!isset($body['identdCtrlReqSolicte'], $body['identdCtrlOptIn'], $body['cnpjER'])) {
+                throw new RuntimeException('Resposta inválida: campos obrigatórios não encontrados.');
+            }
+
             $optIn->update([
-                'identdCtrlOptIn' => $response['body']['identdCtrlOptIn'],
+                'identdCtrlOptIn' => $body['identdCtrlOptIn'],
                 'status' => OptInStatus::ACTIVE,
             ]);
+        } else {
+            throw new RuntimeException("Erro na requisição: status {$response['status_code']}");
         }
     }
 }

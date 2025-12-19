@@ -39,6 +39,10 @@
         <x-common.nav-link :href="'/operations'" :active="request()->routeIs('operations.*')" icon="sync_alt">
             {{ __('Operações') }}
         </x-common.nav-link>
+
+        <x-common.nav-link :href="'/opt-ins'" :active="request()->routeIs('opt-ins.*')" icon="assignment_turned_in">
+            {{ __('Anuências') }}
+        </x-common.nav-link>
     </nav>
 
     <div class="p-4 border-t border-page-bg">

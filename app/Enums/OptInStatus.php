@@ -18,4 +18,14 @@ enum OptInStatus: string
             self::OPTED_OUT => 'Opted-out',
         };
     }
+
+    public function cssClass(): string
+    {
+        return match ($this) {
+            self::ACTIVE    => 'text-green-600 font-semibold',
+            self::PENDING   => 'text-yellow-600 font-semibold',
+            self::FINISHED  => 'text-gray-600 font-semibold',
+            self::OPTED_OUT => 'text-red-600 font-semibold',
+        };
+    }
 }
