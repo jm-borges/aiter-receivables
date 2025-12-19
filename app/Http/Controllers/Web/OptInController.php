@@ -22,17 +22,15 @@ class OptInController extends Controller
     public function index()
     {
         if ($this->user->isSuperAdmin()) {
-            $optIns = OptIn::with([
+            $optins = OptIn::with([
                 'client',
-                'contract',
                 'acquirer',
                 'paymentArrangement',
             ])->paginate($request->per_page ?? 20);
         } else {
-            $optIns = $this->user->optIns()
+            $optins = $this->user->optIns()
                 ?->with([
                     'client',
-                    'contract',
                     'acquirer',
                     'paymentArrangement',
                 ])

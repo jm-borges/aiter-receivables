@@ -102,7 +102,7 @@ class BusinessPartner extends Model
 
     public function optIns(): HasMany
     {
-        return $this->hasMany(OptIn::class);
+        return $this->hasMany(OptIn::class, 'client_id');
     }
 
     public function users(): BelongsToMany
