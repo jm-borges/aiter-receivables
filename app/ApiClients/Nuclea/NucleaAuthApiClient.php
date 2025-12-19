@@ -26,7 +26,7 @@ class NucleaAuthApiClient extends ApiClient
      * @param array $payload The payload to be signed.
      * @return string The signed JWS, including the JOSE header and the signature.
      */
-    public function getJsonWebSignature(array $payload, string $method): string
+    public function getJsonWebSignature(string $method, ?array $payload = null): string
     {
         $joseHeader = $this->getJoseHeader();
         $jsonEncodedJoseHeader = $this->jsonEncodeBase64Url($joseHeader);

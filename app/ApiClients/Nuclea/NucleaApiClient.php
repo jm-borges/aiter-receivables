@@ -43,7 +43,7 @@ class NucleaApiClient extends ApiClient implements ApiClientContract
     public function buildHeaders(string $method, ?array $payload = null): array
     {
         return [
-            'x-jws-signature' => $this->authClient->getJsonWebSignature($payload, $method),
+            'x-jws-signature' => $this->authClient->getJsonWebSignature($method, $payload),
             'Content-Type' => 'application/json'
         ];
     }
