@@ -66,7 +66,7 @@ class OptOutService
     private function executeOptOutAction(OptIn $optIn): array
     {
         $action = app(RRC0013Action::class);
-        return $action->execute(optInIdentifier: $optIn->identdCtrlReqSolicte);
+        return $action->execute(optInIdentifier: $optIn->identdCtrlOptIn);
     }
 
     private function handleOptOutResponse(OptIn $optIn, array $response): void

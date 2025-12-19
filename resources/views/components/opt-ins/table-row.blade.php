@@ -11,7 +11,7 @@
         {{ $optin->acquirer?->document_number ?? '—' }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {{ $optin->paymentArrangement?->code ?? '—' }}
+        {{ $optin->paymentArrangement?->name ?? '—' }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm">
         <span class="{{ $optin->status->cssClass() }}">
