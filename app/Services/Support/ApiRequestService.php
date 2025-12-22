@@ -15,7 +15,7 @@ class ApiRequestService
      * @param string $api
      * @return \App\Models\Support\ApiRequest
      */
-    public function log(string $url, array $body, string $method, string $api, array $headers): ApiRequest
+    public function log(string $url, ?array $body, string $method, string $api, array $headers): ApiRequest
     {
         return ApiRequest::create([
             'body' => json_encode($body),
