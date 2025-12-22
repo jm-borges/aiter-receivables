@@ -15,11 +15,11 @@ enum OperationStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::ACTIVE    => 'Ativo',
+            self::ACTIVE    => 'Ativa',
             self::PENDING   => 'Pendente',
-            self::FINISHED  => 'Encerrado',
-            self::ACCEPTED  => 'Aceito',
-            self::REFUSED   => 'Recusado',
+            self::FINISHED  => 'Encerrada',
+            self::ACCEPTED  => 'Aceita',
+            self::REFUSED   => 'Recusada',
             self::WAITING_RESPONSE => 'Aguardando retorno',
             self::ERROR     => 'Erro',
         };

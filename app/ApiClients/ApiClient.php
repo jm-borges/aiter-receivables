@@ -15,7 +15,7 @@ class ApiClient
      * @param Request $request
      * @return ApiRequest
      */
-    public function logRequest(string $method, array $body, array $headers, string $url): ApiRequest
+    public function logRequest(string $method, ?array $body, array $headers, string $url): ApiRequest
     {
         return app(ApiRequestService::class)->log($url, $body, $method, get_called_class(), $headers);
     }
