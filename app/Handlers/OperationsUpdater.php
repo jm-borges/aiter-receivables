@@ -16,7 +16,7 @@ class OperationsUpdater
         $operations = Operation::where('status', OperationStatus::ACCEPTED)->get();
 
         foreach ($operations as $operation) {
-            $currentNegotiatedValue += $this->syncOperationFromRegistrar($operation);
+            $this->syncOperationFromRegistrar($operation);
         }
     }
 
