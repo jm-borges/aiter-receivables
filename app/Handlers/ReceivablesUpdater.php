@@ -28,7 +28,7 @@ class ReceivablesUpdater
         $response = app(RRC0010Action::class)->execute(
             cnpjOuCnpjBaseOuCpfUsuFinalRecbdr: $client->document_number,
             dtIniPrevtLiquid: date('Y-m-d'),
-            dtFimPrevtLiquid: now()->addYear(1)->format('Y-m-d'),
+            dtFimPrevtLiquid: now()->addMonths(6)->format('Y-m-d'),
         );
 
         if ($response['status_code'] === 200) {
