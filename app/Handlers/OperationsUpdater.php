@@ -9,6 +9,7 @@ use App\Models\Core\Operation;
 use App\Models\Core\Receivable;
 use App\Services\Core\ReceivableService;
 
+/** Aqui assumimos que todas as URs que ainda não foram liquidadas vão estar no banco de dados */
 class OperationsUpdater
 {
     public function updatesOperations(): void
