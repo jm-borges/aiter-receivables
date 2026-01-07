@@ -4,10 +4,10 @@ namespace App\Models\Core\Pivots;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class OperationHasReceivable extends Model
+class OperationHasReceivable extends Pivot
 {
     /** @use HasFactory<\Database\Factories\OperationHasReceivableFactory> */
     use HasFactory, HasUuids, HasUuid;
