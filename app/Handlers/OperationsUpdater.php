@@ -13,7 +13,8 @@ class OperationsUpdater
 {
     public function updatesOperations(): void
     {
-        $operations = Operation::where('status', OperationStatus::ACCEPTED)->get();
+        $operations = Operation::with('contract.client')
+            ->where('status', OperationStatus::ACCEPTED)->get();
 
         foreach ($operations as $operation) {
             $this->syncOperationFromRegistrar($operation);
@@ -88,7 +89,7 @@ class OperationsUpdater
     private function handleReceivableData(Operation $operation, ReceivableData $receivableData): float
     {
         $receivable = app(ReceivableService::class)
-            ->findReceivable($operation->client, $receivableData);
+            ->findReceivable($operation->contract->client, $receivableData);
 
         if (!$receivable) {
             return 0;
@@ -106,10 +107,11 @@ class OperationsUpdater
 
         $operation
             ->receivables()
-            ->updateExistingPivot(
-                $receivable->id,
-                ['amount' => $negotiatedValue],
-            );
+            ->syncWithoutDetaching([
+                $receivable->id => [
+                    'amount' => $negotiatedValue,
+                ],
+            ]);
 
         return $negotiatedValue;
     }
