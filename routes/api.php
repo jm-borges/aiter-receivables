@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\BusinessPartnerType;
+use App\Handlers\OperationsUpdater;
+use App\Handlers\ReceivablesUpdater;
 use App\Http\Controllers\Core\ContractPaymentController;
 use App\Http\Controllers\Core\PaymentArrangementController;
 use App\Http\Controllers\Core\ContractController;
@@ -16,7 +19,14 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Core\CipMessageController;
 use App\Http\Controllers\Core\SettingController;
+use App\Models\Core\BusinessPartner;
 use Illuminate\Support\Facades\Route;
+
+Route::get('sdgjdsjdjj', function () {
+    app(OperationsUpdater::class)->updatesOperations();
+    $clients = BusinessPartner::where('type', BusinessPartnerType::CLIENT)->get();
+    app(ReceivablesUpdater::class)->updatesReceivables($clients);
+});
 
 Route::prefix('v1')->group(function () {
 

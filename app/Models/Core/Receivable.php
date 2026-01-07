@@ -37,6 +37,8 @@ class Receivable extends Model
         //---
         'available_value',
         'amount_locked_by_others',
+
+        'is_to_be_constituted',
     ];
 
     /**
@@ -49,6 +51,7 @@ class Receivable extends Model
         return [
             'status' => ReceivableStatus::class,
             'dtPrevtLiquid' => 'date',
+            'is_to_be_constituted' => 'boolean',
         ];
     }
 

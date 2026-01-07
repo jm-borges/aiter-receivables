@@ -22,45 +22,87 @@ class OperationsUpdater
 
     private function syncOperationFromRegistrar(Operation $operation): float
     {
-        if ($operation->identdOp) {
-            $response = app(RRC0021Action::class)->find($operation->identdOp);
-
-            if ($response['status_code'] === 200) {
-                return $this->handleSuccessfulRRC0021($operation, $response);
-            }
+        if (!$operation->identdOp) {
+            return 0;
         }
 
-        return 0;
+        $rrc0021 = app(RRC0021Action::class);
+        $response = $rrc0021->find($operation->identdOp);
+
+        if ($response['status_code'] !== 200) {
+            return 0;
+        }
+
+        return $this->handleSuccessfulRRC0021($operation, $response['body'], $rrc0021);
     }
 
-    private function handleSuccessfulRRC0021(Operation $operation, array $response): float
+    private function handleSuccessfulRRC0021(Operation $operation, array $operationData, RRC0021Action $rrc0021): float
     {
-        $operationData = $response['body'];
-        $receivablesData = $operationData['unidadesRecebiveis'];
-        $currentNegotiatedValue = 0;
+        $total = 0;
 
-        /*  foreach ($receivablesData as $receivableData) { 
-            $receivableData = ReceivableData::fromArray($receivableData);
-            $currentNegotiatedValue += $this->handleReceivableData($operation, $receivableData);
+        $total += $this->syncReceivableUnits(
+            $operation,
+            $operationData['unidadesRecebiveis']['href'] ?? null,
+            fn() => $rrc0021->findReceivableUnits($operation->identdOp),
+        );
+
+        $total += $this->syncReceivableUnits(
+            $operation,
+            $operationData['unidadesRecebiveisAConstituir']['href'] ?? null,
+            fn() => $rrc0021->findReceivableUnitsToConstitute($operation->identdOp),
+        );
+
+        return $total;
+    }
+
+    private function syncReceivableUnits(
+        Operation $operation,
+        ?string $href,
+        callable $fetcher
+    ): float {
+        if (!$href) {
+            return 0;
         }
- */
-        return $currentNegotiatedValue;
+
+        $response = $fetcher();
+
+        if ($response['status_code'] !== 200) {
+            return 0;
+        }
+
+        return $this->processReceivableUnits($operation, $response['body']);
+    }
+
+    private function processReceivableUnits(Operation $operation, array $units): float
+    {
+        $total = 0;
+
+        foreach ($units as $unit) {
+            $dto = ReceivableData::fromArray($unit);
+            $total += $this->handleReceivableData($operation, $dto);
+        }
+
+        return $total;
     }
 
     private function handleReceivableData(Operation $operation, ReceivableData $receivableData): float
     {
-        $receivable = app(ReceivableService::class)->findReceivable($operation->client, $receivableData);
+        $receivable = app(ReceivableService::class)
+            ->findReceivable($operation->client, $receivableData);
 
-        if ($receivable) {
-            return $this->updateOperationReceivable($operation, $receivable, $receivableData);
+        if (!$receivable) {
+            return 0;
         }
 
-        return 0;
+        return $this->updateOperationReceivable($operation, $receivable, $receivableData);
     }
 
-    private function updateOperationReceivable(Operation $operation, Receivable $receivable, ReceivableData $receivableData): float
-    {
-        $negotiatedValue = $receivableData->VlrNegcd;
+    private function updateOperationReceivable(
+        Operation $operation,
+        Receivable $receivable,
+        ReceivableData $receivableData
+    ): float {
+        $negotiatedValue = $receivableData->vlrNegcd ?? 0;
 
         $operation
             ->receivables()
