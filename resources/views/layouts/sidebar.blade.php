@@ -22,7 +22,7 @@
             {{ __('Análise de crédito') }}
         </x-common.nav-link>
 
-        <hr class="border-page-bg">
+        {{--  <hr class="border-page-bg">
 
         <x-common.nav-link :href="'/business-partners'" :active="request()->routeIs('business-partners.*')" icon="groups">
             {{ __('Parceiros') }}
@@ -42,7 +42,7 @@
 
         <x-common.nav-link :href="'/opt-ins'" :active="request()->routeIs('opt-ins.*')" icon="assignment_turned_in">
             {{ __('Anuências') }}
-        </x-common.nav-link>
+        </x-common.nav-link> --}}
     </nav>
 
     <div class="p-4 border-t border-page-bg">
