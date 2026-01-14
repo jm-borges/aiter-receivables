@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 ">
-            {{ __('Profile Information') }}
+            {{ __('common.profile_information') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 ">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __('common.update_profile_info') }}
         </p>
     </header>
 
@@ -18,14 +18,14 @@
         @method('patch')
 
         <div>
-            <x-common.input-label for="name" :value="__('Name')" />
+            <x-common.input-label for="name" :value="__('common.name')" />
             <x-common.text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
                 required autofocus autocomplete="name" />
             <x-common.input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-common.input-label for="email" :value="__('Email')" />
+            <x-common.input-label for="email" :value="__('common.email')" />
             <x-common.text-input id="email" name="email" type="email" class="mt-1 block w-full"
                 :value="old('email', $user->email)" required autocomplete="username" />
             <x-common.input-error class="mt-2" :messages="$errors->get('email')" />
@@ -33,17 +33,17 @@
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
+                        {{ __('common.email_unverified') }}
 
                         <button form="send-verification"
-                            class="underline text-sm text-gray-600  hover:text-gray-900  rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ">
-                            {{ __('Click here to re-send the verification email.') }}
+                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('common.click_to_resend_verification') }}
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600 ">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                            {{ __('common.verification_link_sent') }}
                         </p>
                     @endif
                 </div>
@@ -51,11 +51,11 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-common.primary-button>{{ __('Save') }}</x-common.primary-button>
+            <x-common.primary-button>{{ __('common.save') }}</x-common.primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 ">{{ __('Saved.') }}</p>
+                    class="text-sm text-gray-600 ">{{ __('common.saved') }}</p>
             @endif
         </div>
     </form>

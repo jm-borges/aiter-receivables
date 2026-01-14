@@ -12,6 +12,7 @@ class OperationHasReceivable extends Pivot
     /** @use HasFactory<\Database\Factories\OperationHasReceivableFactory> */
     use HasFactory, HasUuids, HasUuid;
 
+    protected $table = 'operation_has_receivables';
 
     protected $fillable = [
         'operation_id',

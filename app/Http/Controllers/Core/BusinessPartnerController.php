@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Core;
 
+use App\Enums\ReceivableStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BusinessPartners\GetBusinessPartnersRequest;
 use App\Http\Requests\BusinessPartners\StoreBusinessPartnerRequest;
@@ -112,6 +113,36 @@ class BusinessPartnerController extends Controller
                 "limit_used" => 54707356.54,
                 "limit_available" => 752354.27,
             ],
+        ]);
+    }
+
+    public function receivablesSchedule(string $id): JsonResponse
+    {
+        $businessPartner = BusinessPartner::find($id);
+
+        $rows = $businessPartner
+            ->clientReceivables()
+            ->whereNotNull('dtPrevtLiquid')
+            ->selectRaw("
+        DATE(dtPrevtLiquid) as date,
+        SUM(CASE WHEN status = ? THEN vlrTot ELSE 0 END) as received,
+        SUM(CASE WHEN status IS NULL OR status != ? THEN vlrTot ELSE 0 END) as to_receive
+    ", [
+                ReceivableStatus::SETTLED->value,
+                ReceivableStatus::SETTLED->value,
+            ])
+            ->groupByRaw('DATE(dtPrevtLiquid)')
+            ->orderByRaw('DATE(dtPrevtLiquid)')
+            ->get();
+
+
+        return response()->json([
+            'business_partner_id' => $businessPartner->id,
+            'schedule' => $rows->map(fn($row) => [
+                'date' => $row->date,
+                'received' => (float) $row->received,
+                'to_receive' => (float) $row->to_receive,
+            ]),
         ]);
     }
 }

@@ -6,7 +6,10 @@ use App\Auxiliary\ReceivableData;
 use App\Enums\BusinessPartnerType;
 use App\Models\Core\Receivable;
 use App\Models\Core\BusinessPartner;
+use App\Models\Core\Operation;
 use App\Models\Core\Pivots\ContractHasReceivable;
+use App\Models\Core\Pivots\OperationHasReceivable;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -67,7 +70,13 @@ class ReceivableService
         $locked = $receivables->sum('amount_locked_by_others');
         $free = $receivables->sum('available_value');
 
-        $lockedByUser = ContractHasReceivable::whereIn('contract_id', $businessPartner->clientContracts->pluck('id'))
+        $contractsIds = $businessPartner->clientContracts->pluck('id');
+        $operationsIds = Operation::whereIn('contract_id', $contractsIds)
+            ->get('id')
+            ->pluck('id')
+            ->toArray();
+
+        $lockedByUser = OperationHasReceivable::whereIn('operation_id', $operationsIds)
             ->whereIn('receivable_id', $receivables->pluck('id'))
             ->sum('amount');
 
@@ -76,6 +85,7 @@ class ReceivableService
             'to_be_received' => $toBeReceived,
             'locked' => $locked,
             'locked_by_user' =>  $lockedByUser,
+            'locked_by_others' => $locked,
             'free' => $free,
         ];
     }
@@ -87,7 +97,11 @@ class ReceivableService
 
     public function loadBusinessPartnerWithRelationsByCnpj(string $documentNumber): BusinessPartner
     {
-        return BusinessPartner::findByDocumentNumber($documentNumber)->load('clientContracts.receivables');
+        $businessPartner = BusinessPartner::findByDocumentNumber($documentNumber)?->load('clientContracts.receivables');
+        if (!$businessPartner) {
+            throw new Exception('Parceiro com esse CNPJ não encontrado');
+        }
+        return $businessPartner;
     }
 
     public function calculateReceivablesSummary(string $businessPartnerId): array

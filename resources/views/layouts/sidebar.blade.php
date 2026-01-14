@@ -15,7 +15,7 @@
         </x-common.nav-link>
 
         <x-common.nav-link :href="route('receivables.query')" :active="request()->routeIs('receivables.query')" icon="search">
-            {{ __('Consulta de recebíveis') }}
+            {{ __('Conciliação de Operações') }}
         </x-common.nav-link>
 
         <x-common.nav-link :href="route('credit-analysis.index')" :active="request()->routeIs('credit-analysis.*')" icon="analytics">

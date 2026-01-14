@@ -8,9 +8,8 @@
 
             <div class="w-full max-w-sm">
 
-                <div class=" inset-0 flex items-center justify-center">
+                <div class="inset-0 flex items-center justify-center">
                     <img src="/assets/images/logo_nova.png" alt="Logo" class="w-64 mb-16">
-
                 </div>
 
                 <!-- Session Status -->
@@ -21,7 +20,7 @@
 
                     <!-- Email Address -->
                     <div>
-                        <x-common.input-label for="email" :value="__('Email')" />
+                        <x-common.input-label for="email" :value="__('common.email')" />
                         <x-common.text-input id="email" class="block mt-1 w-full" type="email" name="email"
                             :value="old('email')" required autofocus autocomplete="username" />
                         <x-common.input-error :messages="$errors->get('email')" class="mt-2" />
@@ -29,7 +28,7 @@
 
                     <!-- Password -->
                     <div class="mt-4">
-                        <x-common.input-label for="password" :value="__('Password')" />
+                        <x-common.input-label for="password" :value="__('common.password')" />
                         <x-common.text-input id="password" class="block mt-1 w-full" type="password" name="password"
                             required autocomplete="current-password" />
                         <x-common.input-error :messages="$errors->get('password')" class="mt-2" />
@@ -41,19 +40,18 @@
                         {{-- Remember me --}}
                         <label for="remember_me" class="inline-flex items-center">
                             <input id="remember_me" type="checkbox"
-                                class="rounded  border-gray-300  text-indigo-600 shadow-sm
-                   focus:ring-indigo-500  "
+                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                 name="remember">
-                            <span class="ms-2 text-sm text-gray-600 ">
-                                {{ __('Remember me') }}
+                            <span class="ms-2 text-sm text-gray-600">
+                                {{ __('common.remember_me') }}
                             </span>
                         </label>
 
                         {{-- Forgot Password --}}
                         @if (Route::has('password.request'))
-                            <a class="underline text-sm text-gray-600  hover:text-gray-900 "
+                            <a class="underline text-sm text-gray-600 hover:text-gray-900"
                                 href="{{ route('password.request') }}">
-                                {{ __('Forgot your password?') }}
+                                {{ __('common.forgot_password') }}
                             </a>
                         @endif
 
@@ -61,7 +59,7 @@
 
                     <div class="flex items-center justify-end mt-4">
                         <x-common.primary-button class="ms-3">
-                            {{ __('Login') }}
+                            {{ __('common.login') }}
                         </x-common.primary-button>
                     </div>
                 </form>
@@ -77,7 +75,6 @@
 
             <div class="absolute inset-0 flex items-center justify-center">
                 <img src="/assets/images/symbol.png" alt="Logo" class="w-full max-w-2xl h-auto opacity-90">
-
             </div>
         </div>
 

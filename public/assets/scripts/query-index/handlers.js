@@ -1,7 +1,7 @@
 
 import { debounce } from '../common/utils.js';
 import { fetchPartners, fetchPartnerReceivablesDetails, fetchPartnerContractsPaymentsDetails } from './api.js';
-import { input, select, toggleSections, renderOptions, setLoading, renderReceivables, renderDefaultInfo } from './dom.js';
+import { input, select, toggleSections, renderOptions, setLoading, renderReceivables, renderDefaultInfo, setReceivablesMode } from './dom.js';
 
 const handleInput = debounce(async ({ target }) => {
     const q = target.value.trim();
@@ -16,25 +16,39 @@ const handleInput = debounce(async ({ target }) => {
 
 const handleSelect = async ({ target }) => {
     const id = target.value;
-    if (!id) return toggleSections(false);
+
+    // Nenhuma empresa selecionada
+    if (!id) {
+        toggleSections(true);
+        setReceivablesMode(false);   // modo "empty" da seção de status
+        setDefaultsMode(false);      // modo "empty" da seção de inadimplência
+        return;
+    }
+
     try {
         setLoading(true);
+
         const receivablesData = await fetchPartnerReceivablesDetails(id);
         const contractsPaymentsData = await fetchPartnerContractsPaymentsDetails(id);
+
         setLoading(false);
-        console.log('Dados recebidos:', receivablesData);
-        console.log('Dados recebidos:', contractsPaymentsData);
+
+        // se empresa selecionada:
         renderReceivables(receivablesData);
         renderDefaultInfo(contractsPaymentsData);
+
         toggleSections(true);
+        setReceivablesMode(true); // modo "com empresa"
+        setDefaultsMode(true);    // modo "com empresa"
+
     } catch (e) {
         setLoading(false);
         console.error(e);
     }
 };
 
+
 export const registerEventHandlers = () => {
-    toggleSections(false);
     if (input && select) {
         input.addEventListener('input', handleInput);
         select.addEventListener('change', handleSelect);

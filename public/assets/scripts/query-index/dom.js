@@ -5,6 +5,27 @@ export const select = document.querySelector('.form-select');
 export const receivablesSection = document.getElementById('receivables-section');
 export const defaultsSection = document.getElementById('defaults-section');
 
+export const receivablesContent = document.getElementById('receivables-content');
+export const receivablesEmpty = document.getElementById('receivables-empty');
+
+export const setReceivablesMode = (hasCompany) => {
+    if (!receivablesContent || !receivablesEmpty) return;
+
+    receivablesContent.style.display = hasCompany ? 'flex' : 'none';
+    receivablesEmpty.style.display = hasCompany ? 'none' : 'block';
+};
+
+export const setDefaultsMode = (hasCompany) => {
+    const content = document.getElementById('payment-default-content');
+    const empty = document.getElementById('payment-default-empty');
+
+    if (!content || !empty) return;
+
+    content.style.display = hasCompany ? 'flex' : 'none';
+    empty.style.display = hasCompany ? 'none' : 'block';
+};
+
+
 export const toggleSections = (visible) => {
     [receivablesSection, defaultsSection].forEach(sec => {
         if (sec) sec.style.display = visible ? '' : 'none';

@@ -9,41 +9,86 @@
         <p class="dashboard-sub-text">{{ $partner->document_number }}</p>
     </div>
 
+    <!-- Período atual (usando locked_by_user como garantia) -->
     <div class="dashboard-cell">
-        <p class="dashboard-main-text">R$ 0,00</p>
+        <p class="dashboard-main-text">
+            R$ {{ number_format($partner->receivables_summary['locked_by_user'] ?? 0, 2, ',', '.') }}
+        </p>
         <p class="dashboard-sub-text">período atual</p>
     </div>
 
+    <!-- Total (total_operation) -->
     <div class="dashboard-cell">
-        <p class="dashboard-main-text">R$ 0,00</p>
+        <p class="dashboard-main-text">
+            R$ {{ number_format(0, 2, ',', '.') }}
+        </p>
         <p class="dashboard-sub-text">Total</p>
     </div>
 
+    <!-- Monitoring (usando free como valor) -->
     <div class="dashboard-cell">
         <div class="monitoring">
             <div class="gray-gradient-circle"></div>
-            <p class="dashboard-main-text">0.0</p>
+            <p class="dashboard-main-text">{{ number_format($partner->receivables_summary['total_operation'] ?? 0, 1) }}
+            </p>
         </div>
 
         @php
             $hasOptIn = $partner->pivot?->opt_in_start_date && $partner->pivot?->opt_in_end_date;
         @endphp
 
-        @if ($hasOptIn)
-            <p class="dashboard-sub-text" style="margin-left: 30px;">
-                Anuência ativa
-            </p>
-        @else
-            <p class="dashboard-sub-text" style="margin-left: 30px;">
-                Sem anuência
-            </p>
-        @endif
+        <p class="dashboard-sub-text" style="margin-left: 30px;">
+            {{ $hasOptIn ? 'Anuência ativa' : 'Sem anuência' }}
+        </p>
     </div>
 
-    <div class="dashboard-cell">
-        <div class="dashboard-actions">
-            <img src="/assets/images/pin.png" alt="Fixar" width="20">
-            <img src="/assets/images/options.png" alt="Opções" width="6">
+    <div class="dashboard-cell relative">
+        <div class="dashboard-actions flex items-center gap-2">
+            <img src="/assets/images/pin.png" alt="Fixar" width="20" class="cursor-pointer">
+            <button id="options-btn-{{ $partner->id }}" class="relative">
+                <img src="/assets/images/options.png" alt="Opções" width="6" class="cursor-pointer">
+            </button>
+        </div>
+
+        <!-- Menu popup -->
+        <div id="options-menu-{{ $partner->id }}"
+            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+            <ul class="flex flex-col py-1">
+                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onclick="window.location.href='/credit-analysis'">Análise de crédito</li>
+                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onclick="window.location.href='/receivables/query'">Status de inadimplência</li>
+                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onclick="window.location.href='/receivables/query'">Conciliação de recebíveis</li>
+            </ul>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Toggle menu
+        document.querySelectorAll('[id^="options-btn-"]').forEach(btn => {
+            const partnerId = btn.id.replace('options-btn-', '');
+            const menu = document.getElementById(`options-menu-${partnerId}`);
+            if (!menu) return;
+
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+        });
+
+        // Fechar ao clicar fora
+        document.addEventListener('click', () => {
+            document.querySelectorAll('[id^="options-menu-"]').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Evitar fechar ao clicar dentro do menu
+        document.querySelectorAll('[id^="options-menu-"]').forEach(menu => {
+            menu.addEventListener('click', (e) => e.stopPropagation());
+        });
+    });
+</script>

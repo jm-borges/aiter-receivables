@@ -7,6 +7,10 @@ export const showMessage = (msg) => {
 };
 
 export const renderReceivables = (data) => {
+    document.getElementById('operation-info-fields-container').style.display = 'flex';
+
+    console.log(data)
+
     const map = {
         received: 'received-values',
         to_be_received: 'to-be-received-values',
