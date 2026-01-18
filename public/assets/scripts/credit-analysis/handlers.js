@@ -1,10 +1,13 @@
 import { fetchCreditAnalysisByCnpj } from './api.js';
 import {
+    renderBankDebtEvolutionChart,
+    renderBankDebtProfileChart,
+    renderBankDebts,
     renderBasicInfo,
+    renderPaymentsVsRevenueChart,
     renderWarrantyAvailability,
-    renderBankDebts
-} from './renderers.js';
-
+    renderWarrantyEvolutionChart
+} from './renderers/index.js';
 
 export const registerEventHandlers = () => {
     const input = document.getElementById('credit-analysis-cnpj-input');
@@ -53,6 +56,10 @@ async function loadCreditAnalysis(cnpj, resultBox, container) {
         renderBasicInfo(resultBox, response);
         renderWarrantyAvailability(response);
         renderBankDebts(response);
+        renderWarrantyEvolutionChart(response);
+        renderPaymentsVsRevenueChart(response);
+        renderBankDebtEvolutionChart(response);
+        renderBankDebtProfileChart(response);
 
         container.classList.remove('hidden');
 

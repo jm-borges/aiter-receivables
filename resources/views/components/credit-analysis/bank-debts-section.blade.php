@@ -2,7 +2,7 @@
     <div class="form-section-title">Dívidas Bancárias</div>
     <hr class="form-section-divider">
 
-    <div style="display: flex; margin-top: 20px;">
+    <div style="display: flex;  margin-top: 20px;">
         <div>
             <div class="standard-container-sub-title">
                 Limite de crédito bancário
@@ -24,11 +24,12 @@
             </div>
         </div>
 
-        <div style="margin-left: 10px; width: 644px; height: 405px; background-color: white;">
+        <div style="margin-left: 10px">
+            <x-credit-analysis.bank-debt-evolution-chart />
         </div>
 
-        <div style="margin-left: 10px;width: 513px; height: 405px; background-color: white;">
-
+        <div style="margin-left: 10px">
+            <x-credit-analysis.bank-debt-profile-chart />
         </div>
     </div>
 </div>

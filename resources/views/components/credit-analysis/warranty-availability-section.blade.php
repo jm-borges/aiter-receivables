@@ -3,10 +3,10 @@
     <hr class="form-section-divider">
 
     <div style="display: flex; margin-top: 20px">
-        <div style="width: 513px; height: 405px;background-color: white">
-        </div>
+        <x-credit-analysis.warranty-evolution-chart />
+
         <div style="margin-left: 10px">
-            <div style="color:#211748;font-weight: 600; font-size: 16px;">
+            <div style="color:white;font-weight: 600; font-size: 16px;">
                 Produção de garantias do recebíveis
             </div>
             <div style="margin-top: 10px">
@@ -22,18 +22,18 @@
                     value="R$ 752.354,27" />
             </div>
         </div>
+
         <div style="margin-left: 10px">
-            <div style="color:#211748;font-weight: 600; font-size: 16px;">
-                Contas a pagar X Contas a receber
+            <div style="color:white;font-weight: 600; font-size: 16px;">
+                Pagamentos X Faturamento
             </div>
-            <div style="display:flex; margin-top: 10px;">
+            <div style="display:flex;justify-content:space-between ;margin-top: 10px;margin-bottom:10px;">
                 <x-common.form-item-card width="316" id="payables-total" icon="/assets/images/Cash.png"
-                    title="Contas a pagar" value="R$ 100.000,00" />
+                    title="Pagamentos" value="R$ 100.000,00" />
                 <x-common.form-item-card width="316" id="receivables-total" icon="/assets/images/CalendarCheck.png"
-                    title="Contas a receber" value="R$ 150.000,00" />
+                    title="Faturamento" value="R$ 150.000,00" marginLeft="10" />
             </div>
-            <div style="width: 644px; height: 243px;background-color: white; margin-top:10px">
-            </div>
+            <x-credit-analysis.payments-vs-revenue-chart />
         </div>
     </div>
 </div>
