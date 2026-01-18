@@ -1,4 +1,3 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
@@ -7,6 +6,21 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './public/assets/scripts/**/*.js',
+    ],
+
+    safelist: [
+        'w-6',
+        'w-full',
+        'max-w-[32px]',
+        'rounded-full',
+        'transition-all',
+        'flex',
+        'flex-col',
+        'items-center',
+        'justify-end',
+        'h-full',
+        'flex-1',
     ],
 
     theme: {
@@ -20,9 +34,6 @@ export default {
                 'custom-blue': '#69549F',
                 'custom-blue-hover': '#211748',
             },
-            backgroundColor: theme => ({
-                'custom-blue-hover': '#211748',
-            }),
         },
     },
 
