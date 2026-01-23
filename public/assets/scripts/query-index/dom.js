@@ -1,7 +1,8 @@
-import { formatCurrency } from "../common/utils.js";
+import { formatCurrency, formatCnpj } from "../common/utils.js";
 
-export const input = document.querySelector('.form-search-text-field');
-export const select = document.querySelector('.form-select');
+export const searchInput = document.querySelector('.form-search-text-field');
+export const selectField = document.querySelector('.form-select');
+
 export const receivablesSection = document.getElementById('receivables-section');
 export const defaultsSection = document.getElementById('defaults-section');
 
@@ -33,22 +34,46 @@ export const toggleSections = (visible) => {
 };
 
 export const renderOptions = (partners) => {
-    select.innerHTML = '<option value="">Selecione uma empresa</option>';
+    if (!selectField) return;
+
+    selectField.innerHTML = '<option value="">Selecione uma empresa</option>';
+
     partners.forEach(p => {
         const o = document.createElement('option');
         o.value = p.id;
-        o.textContent = p.name || p.business_name;
-        select.appendChild(o);
+
+        const name = p.name || p.business_name || '—';
+        const cnpjFormatted = formatCnpj(p.document_number);
+
+        if (cnpjFormatted) {
+            o.textContent = `${name} — ${cnpjFormatted}`;
+        } else {
+            o.textContent = name;
+        }
+
+        selectField.appendChild(o);
     });
 };
 
 export const setLoading = (loading) => {
     document.getElementById('loading-message')?.remove();
-    if (loading)
-        select.insertAdjacentHTML(
+
+    if (loading && selectField) {
+        selectField.insertAdjacentHTML(
             'afterend',
             '<div id="loading-message" style="margin-top:10px;">Carregando dados...</div>'
         );
+    }
+};
+
+export const setPartnersLoading = (isLoading) => {
+    if (!selectField) return;
+
+    selectField.disabled = isLoading;
+
+    if (isLoading) {
+        selectField.innerHTML = `<option value="">Carregando empresas...</option>`;
+    }
 };
 
 const updateContainerValue = (containerId, value) => {

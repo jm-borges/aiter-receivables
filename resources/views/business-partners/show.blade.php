@@ -31,7 +31,8 @@
                 </tr>
                 <tr>
                     <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Documento</th>
-                    <td class="px-4 py-2 text-sm text-gray-900">{{ $businessPartner->document_number }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-900">
+                        {{ format_document($businessPartner->document_number ?? null) }}</td>
                 </tr>
                 <tr>
                     <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>

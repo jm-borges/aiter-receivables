@@ -3,14 +3,12 @@
 namespace App\Models\Core;
 
 use App\Enums\ReceivableStatus;
-use App\Models\Core\Pivots\ContractHasReceivable;
 use App\Models\Core\Pivots\OperationHasReceivable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Collection;
 
 class Receivable extends Model
 {
@@ -20,7 +18,6 @@ class Receivable extends Model
     protected $fillable = [
         'status',
         //
-        'opt_in_id',
         'client_id',
         'acquirer_id',
         'payment_arrangement_id',
@@ -70,7 +67,6 @@ class Receivable extends Model
         return $this->belongsTo(PaymentArrangement::class);
     }
 
-
     public function operations(): BelongsToMany
     {
         return $this->belongsToMany(Operation::class, 'operation_has_receivables')
@@ -78,27 +74,8 @@ class Receivable extends Model
             ->withPivot(['amount']);
     }
 
-    public function optIn(): BelongsTo
-    {
-        return $this->belongsTo(OptIn::class);
-    }
-
     public function wasSettled(): bool
     {
         return $this->status === ReceivableStatus::SETTLED;
-    }
-
-    public function isInContracts(Collection $contracts): bool
-    {
-        return ContractHasReceivable::where('receivable_id', $this->id)
-            ->whereIn('contract_id', $contracts->pluck('id'))
-            ->exists();
-    }
-
-    public function amountInContracts(Collection $contracts): float
-    {
-        return ContractHasReceivable::where('receivable_id', $this->id)
-            ->whereIn('contract_id', $contracts->pluck('id'))
-            ->sum('amount');
     }
 }

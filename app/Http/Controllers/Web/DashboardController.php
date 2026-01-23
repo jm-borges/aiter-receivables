@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Web;
 use App\Enums\BusinessPartnerType;
 use App\Http\Controllers\Controller;
 use App\Models\Core\BusinessPartner;
+use App\Services\ClientMonitoringService;
 use App\Services\Core\ReceivableService;
 
 class DashboardController extends Controller
 {
-    public function index(ReceivableService $receivableService)
+    public function index(ReceivableService $receivableService, ClientMonitoringService $clientMonitoringService)
     {
         $cnpj = request('cnpj') ? removeSpecialCharacters(request('cnpj')) : null;
 
@@ -26,15 +27,14 @@ class DashboardController extends Controller
 
         $partners = $partners->paginate(20);
 
-        // Enriquecimento semelhante ao ReceivableController
-        $partners = $this->enrichPartnerSummaries($partners, $receivableService);
+        $partners = $this->enrichPartnerSummaries($partners, $receivableService, $clientMonitoringService);
 
         return view('dashboard', ['partners' => $partners]);
     }
 
-    private function enrichPartnerSummaries($partners, ReceivableService $receivableService)
+    private function enrichPartnerSummaries($partners, ReceivableService $receivableService, ClientMonitoringService $clientMonitoringService)
     {
-        return $partners->getCollection()->transform(function ($partner) use ($receivableService) {
+        return $partners->getCollection()->transform(function ($partner) use ($receivableService, $clientMonitoringService) {
             $receivablesSummary = $receivableService->calculateReceivablesSummary($partner->id);
 
             $partner->receivables_summary = [
@@ -47,6 +47,8 @@ class DashboardController extends Controller
                 'amount_to_be_recovered' => 0,
                 'amount_recovered' => 0,
             ];
+
+            $partner->monitoring = $clientMonitoringService->buildForClient($partner);
 
             return $partner;
         });

@@ -7,8 +7,13 @@
 
     <form action="{{ route('operations.execute-submit') }}" method="post" id="execute-operation-form">
         @csrf
-        <x-operation-execute-index.operation-client-field-container />
+        <x-common.company-selector title="Identificação" search-label="Buscar empresa por CNPJ ou Razão Social"
+            select-label="Empresa" />
         <x-operation-execute-index.operation-info-fields-container />
     </form>
+
+    @push('page-scripts')
+        <script type="module" src="/assets/scripts/operation-execute-index/main.js"></script>
+    @endpush
 
 </x-app-layout>

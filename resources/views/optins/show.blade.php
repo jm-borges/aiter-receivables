@@ -42,7 +42,7 @@
             </div>
             <div>
                 <dt class="text-sm font-medium text-gray-600">CNPJ Financiadora</dt>
-                <dd class="mt-1">{{ $optIn->cnpj_financiadora ?? '—' }}</dd>
+                <dd class="mt-1">{{ format_document($optIn->cnpj_financiadora ?? null) }}</dd>
             </div>
         </dl>
     </div>
@@ -53,7 +53,8 @@
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Cliente (EC)</h2>
             @if ($optIn->client)
                 <p><span class="font-medium text-gray-700">Nome:</span> {{ $optIn->client->name }}</p>
-                <p><span class="font-medium text-gray-700">CNPJ:</span> {{ $optIn->client->document_number }}</p>
+                <p><span class="font-medium text-gray-700">CNPJ:</span>
+                    {{ format_document($optIn->client->document_number) }}</p>
                 <p><span class="font-medium text-gray-700">Email:</span> {{ $optIn->client->email ?? '—' }}</p>
                 <p><span class="font-medium text-gray-700">Telefone:</span> {{ $optIn->client->phone ?? '—' }}</p>
             @else

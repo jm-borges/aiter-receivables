@@ -4,10 +4,8 @@ namespace App\Models\Core;
 
 use App\Enums\ContractStatus;
 use App\Enums\NegotiationType;
-use App\Enums\OperationStatus;
 use App\Models\Core\Pivots\ContractHasAcquirer;
 use App\Models\Core\Pivots\ContractHasPaymentArrangement;
-use App\Models\Core\Pivots\ContractHasReceivable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -24,7 +22,6 @@ class Contract extends Model
         'client_id',
         'supplier_id',
         'value',
-        // 'current_achieved_value',
         'start_date',
         'end_date',
         'status',
@@ -70,26 +67,9 @@ class Contract extends Model
             ->using(ContractHasPaymentArrangement::class);
     }
 
-    public function receivables(): BelongsToMany
-    {
-        return $this->belongsToMany(Receivable::class, 'contract_has_receivables')
-            ->using(ContractHasReceivable::class)
-            ->withPivot(['amount']);
-    }
-
     public function operations(): HasMany
     {
         return $this->hasMany(Operation::class);
-    }
-
-    public function thereWerePreviousOperations(): bool
-    {
-        return $this->operations()
-            ->where('status', OperationStatus::WAITING_RESPONSE)
-            ->orWhere('status', OperationStatus::ACCEPTED)
-            ->orWhere('status', OperationStatus::FINISHED)
-            ->orWhere('status', OperationStatus::ACTIVE)
-            ->exists();
     }
 
     public function isExpired(): bool
@@ -100,16 +80,6 @@ class Contract extends Model
     public function isFinished(): bool
     {
         return $this->status === ContractStatus::FINISHED;
-    }
-
-    public function hasAchievedGoal(): bool
-    {
-        return $this->value <= $this->current_achieved_value;
-    }
-
-    public function pendingValue(): float
-    {
-        return $this->hasAchievedGoal() ? 0 :  $this->value - $this->current_achieved_value;
     }
 
     public function payments(): HasMany

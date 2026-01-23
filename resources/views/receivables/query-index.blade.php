@@ -4,7 +4,8 @@
             subtitle="Selecione uma empresa e visualize o status de recebíveis e inadimplência" />
     </x-slot>
 
-    <x-receivables-query.partner-selector-container />
+    <x-common.company-selector title="Identificação" search-label="Buscar empresa por CNPJ ou Razão Social"
+        select-label="Empresa" />
 
     <x-receivables-query.receivables-status-section :partners="$partners" />
 
@@ -22,6 +23,11 @@
             </div>
         </div>
     </div>
+
+    @push('page-scripts')
+        <script type="module" src="/assets/scripts/query-index/main.js"></script>
+    @endpush
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

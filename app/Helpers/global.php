@@ -25,3 +25,46 @@ if (!function_exists('decodeLlmJsonResponse')) {
         return is_array($decoded) ? $decoded : [];
     }
 }
+
+if (! function_exists('format_document')) {
+    function format_document(?string $doc): string
+    {
+        if (! $doc) return '—';
+
+        $doc = preg_replace('/\D/', '', $doc);
+
+        if (strlen($doc) === 11) {
+            // CPF
+            return preg_replace('/^(\d{3})(\d{3})(\d{3})(\d{2})$/', '$1.$2.$3-$4', $doc);
+        }
+
+        if (strlen($doc) === 14) {
+            // CNPJ
+            return format_cnpj($doc);
+        }
+
+        return $doc;
+    }
+}
+
+if (! function_exists('format_cnpj')) {
+    function format_cnpj(?string $cnpj): string
+    {
+        if (! $cnpj) {
+            return '—';
+        }
+
+        // remove tudo que não for número
+        $cnpj = preg_replace('/\D/', '', $cnpj);
+
+        if (strlen($cnpj) !== 14) {
+            return $cnpj; // fallback defensivo
+        }
+
+        return preg_replace(
+            '/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/',
+            '$1.$2.$3/$4-$5',
+            $cnpj
+        );
+    }
+}

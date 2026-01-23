@@ -6,7 +6,7 @@
 
     <div class="dashboard-cell">
         <p class="dashboard-main-text">{{ $partner->fantasy_name ?? $partner->name }}</p>
-        <p class="dashboard-sub-text">{{ $partner->document_number }}</p>
+        <p class="dashboard-sub-text">{{ format_document($partner->document_number) }}</p>
     </div>
 
     <!-- Período atual (usando locked_by_user como garantia) -->
@@ -25,21 +25,9 @@
         <p class="dashboard-sub-text">Total</p>
     </div>
 
-    <!-- Monitoring (usando free como valor) -->
+    <!-- Monitoring -->
     <div class="dashboard-cell">
-        <div class="monitoring">
-            <div class="gray-gradient-circle"></div>
-            <p class="dashboard-main-text">{{ number_format($partner->receivables_summary['total_operation'] ?? 0, 1) }}
-            </p>
-        </div>
-
-        @php
-            $hasOptIn = $partner->pivot?->opt_in_start_date && $partner->pivot?->opt_in_end_date;
-        @endphp
-
-        <p class="dashboard-sub-text" style="margin-left: 30px;">
-            {{ $hasOptIn ? 'Anuência ativa' : 'Sem anuência' }}
-        </p>
+        <x-dashboard.monitoring-cell :monitoring="$partner->monitoring ?? null" />
     </div>
 
     <div class="dashboard-cell relative">

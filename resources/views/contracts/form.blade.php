@@ -38,7 +38,7 @@
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}"
                         {{ isset($contract) && $contract->client_id == $client->id ? 'selected' : '' }}>
-                        {{ $client->name }} | {{ $client->document_number }}
+                        {{ $client->name }} | {{ format_document($client->document_number) }}
                     </option>
                 @endforeach
             </select>
@@ -53,7 +53,7 @@
                 @foreach ($suppliers as $supplier)
                     <option value="{{ $supplier->id }}"
                         {{ isset($contract) && $contract->supplier_id == $supplier->id ? 'selected' : '' }}>
-                        {{ $supplier->name }} | {{ $supplier->document_number }}
+                        {{ $supplier->name }} | {{ format_document($supplier->document_number) }}
                     </option>
                 @endforeach
             </select>
@@ -70,7 +70,7 @@
                             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                             {{ isset($contract) && $contract->acquirers->contains($acquirer->id) ? 'checked' : '' }}>
                         <span class="ml-2 text-sm text-gray-700">
-                            {{ $acquirer->name }} | CNPJ: {{ $acquirer->document_number }}
+                            {{ $acquirer->name }} | CNPJ: {{ format_document($acquirer->document_number) }}
                         </span>
                     </label>
                 @endforeach

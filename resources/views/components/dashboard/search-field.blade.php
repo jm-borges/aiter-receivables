@@ -5,7 +5,8 @@
         </p>
         <div style="display: flex; justify-content: start">
             <div>
-                <input type="text" name="cnpj" value="{{ request('cnpj') }}" placeholder="00.000.000/0000-00"
+                <input type="text" name="cnpj" class="cnpj-input" value="{{ request('cnpj') }}"
+                    placeholder="00.000.000/0000-00" maxlength="18"
                     style="width: 339px; border-radius: 5px; border-color: #211748">
             </div>
             <div style="margin-left: 4px">

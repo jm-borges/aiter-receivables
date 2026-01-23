@@ -29,14 +29,14 @@
                 <div class="company-avatar">{{ $initials }}</div>
                 <div>
                     <div class="company-name">{{ $name }}</div>
-                    <div class="company-doc">{{ $doc }}</div>
+                    <div class="company-doc">{{ format_document($doc) }}</div>
                 </div>
             </div>
 
             {{-- Valor devido --}}
             <div class="money-cell">
                 <div class="money-value">
-                    {{ $summary['amount_due'] ?? 0 }}
+                    {{ 'R$ ' . number_format($summary['amount_due'] ?? 0, 2, ',', '.') }}
                 </div>
                 <div class="money-sub">Total</div>
             </div>
@@ -44,7 +44,7 @@
             {{-- Valor a recuperar --}}
             <div class="money-cell">
                 <div class="money-value">
-                    {{ $summary['amount_to_be_recovered'] ?? 0 }}
+                    {{ 'R$ ' . number_format($summary['amount_to_be_recovered'] ?? 0, 2, ',', '.') }}
                 </div>
                 <div class="money-sub">Total</div>
             </div>
@@ -52,7 +52,7 @@
             {{-- Valor recuperado --}}
             <div class="money-cell">
                 <div class="money-value">
-                    {{ $summary['amount_recovered'] ?? 0 }}
+                    {{ 'R$ ' . number_format($summary['amount_recovered'] ?? 0, 2, ',', '.') }}
                 </div>
                 <div class="money-sub">Total</div>
             </div>

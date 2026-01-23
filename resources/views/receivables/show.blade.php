@@ -27,7 +27,8 @@
                 <dt class="font-medium text-gray-600">Cliente</dt>
                 <dd class="mt-1 text-gray-800">
                     {{ $receivable->client?->name ?? '—' }}
-                    ({{ $receivable->client?->document_number ?? '—' }})
+                    ({{ format_document($receivable->client?->document_number ?? null) }})
+
                 </dd>
             </div>
 
@@ -35,7 +36,8 @@
                 <dt class="font-medium text-gray-600">Adquirente</dt>
                 <dd class="mt-1 text-gray-800">
                     {{ $receivable->acquirer?->name ?? '—' }}
-                    ({{ $receivable->acquirer?->document_number ?? '—' }})
+                    ({{ format_document($receivable->acquirer?->document_number ?? null) }})
+
                 </dd>
             </div>
 
@@ -49,17 +51,21 @@
 
             <div>
                 <dt class="font-medium text-gray-600">CNPJ ER</dt>
-                <dd class="mt-1 text-gray-800">{{ $receivable->cnpjER ?? '—' }}</dd>
+                <dd class="mt-1 text-gray-800">{{ format_document($receivable->cnpjER ?? null) }}</dd>
+
             </div>
 
             <div>
                 <dt class="font-medium text-gray-600">CNPJ Credenciador Sub</dt>
-                <dd class="mt-1 text-gray-800">{{ $receivable->cnpjCreddrSub ?? '—' }}</dd>
+                <dd class="mt-1 text-gray-800">{{ format_document($receivable->cnpjCreddrSub ?? null) }}</dd>
+
             </div>
 
             <div>
                 <dt class="font-medium text-gray-600">CNPJ Usuário Final/Recebedor</dt>
-                <dd class="mt-1 text-gray-800">{{ $receivable->cnpjOuCnpjBaseOuCpfUsuFinalRecbdr ?? '—' }}</dd>
+                <dd class="mt-1 text-gray-800">
+                    {{ format_document($receivable->cnpjOuCnpjBaseOuCpfUsuFinalRecbdr ?? null) }}
+                </dd>
             </div>
 
             <div>

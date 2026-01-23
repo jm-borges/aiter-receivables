@@ -30,14 +30,14 @@
                 <div class="company-avatar">{{ $initials }}</div>
                 <div>
                     <div class="company-name">{{ $name }}</div>
-                    <div class="company-doc">{{ $doc }}</div>
+                    <div class="company-doc">{{ format_document($doc) }}</div>
                 </div>
             </div>
 
             {{-- Total de recebíveis performados coletados --}}
             <div class="money-cell">
                 <div class="money-value">
-                    {{ $summary['locked_by_user'] ?? 0 }}
+                    {{ 'R$ ' . number_format($summary['locked_by_user'] ?? 0, 2, ',', '.') }}
                 </div>
                 <div class="money-sub">período atual</div>
             </div>
@@ -45,7 +45,7 @@
             {{-- Recebíveis a performar --}}
             <div class="money-cell">
                 <div class="money-value">
-                    {{ $summary['to_be_received'] ?? 0 }}
+                    {{ 'R$ ' . number_format($summary['to_be_received'] ?? 0, 2, ',', '.') }}
                 </div>
                 <div class="money-sub">Total</div>
             </div>
@@ -53,7 +53,7 @@
             {{-- Total da operação --}}
             <div class="money-cell">
                 <div class="money-value">
-                    {{ $summary['total_operation'] ?? 0 }}
+                    {{ 'R$ ' . number_format($summary['total_operation'] ?? 0, 2, ',', '.') }}
                 </div>
                 <div class="money-sub">Total</div>
             </div>

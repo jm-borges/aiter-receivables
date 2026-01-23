@@ -33,11 +33,32 @@
     }
 
 
-    .gray-gradient-circle {
+    .gradient-circle {
         width: 24px;
         height: 24px;
+        min-width: 24px;
+        /* 🔒 isso é o mais importante */
+        min-height: 24px;
         border-radius: 50%;
+        flex-shrink: 0;
+        /* 🔒 impede o flex de achatar */
+    }
+
+
+    .gray-gradient-circle {
         background: linear-gradient(135deg, #D9D9D9, #9E9E9E);
+    }
+
+    .red-gradient-circle {
+        background: linear-gradient(135deg, #FFB3B3, #E53935);
+    }
+
+    .green-gradient-circle {
+        background: linear-gradient(135deg, #B9F6CA, #2E7D32);
+    }
+
+    .yellow-gradient-circle {
+        background: linear-gradient(135deg, #FFF3B0, #F9A825);
     }
 
     .dashboard-actions {
@@ -50,11 +71,20 @@
         cursor: pointer;
     }
 
-    .monitoring {
-        display: flex;
-        align-items: center;
+    .monitoring .dashboard-main-text {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.1;
     }
 
-    .monitoring p {
-        margin-left: 5px;
+    .monitoring .dashboard-sub-text {
+        font-size: 11px;
+        line-height: 1.1;
+    }
+
+    .monitoring {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        max-width: 100%;
     }

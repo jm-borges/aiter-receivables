@@ -11,7 +11,7 @@
         {{ ucfirst($payment->type->label()) }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {{ $payment->document_number }}
+        {{ format_document($payment->document_number) }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {{ $payment->email }}

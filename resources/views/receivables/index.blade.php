@@ -21,8 +21,10 @@
                 @forelse ($receivables as $receivable)
                     <tr class="hover:bg-gray-50">
                         <td class="border px-4 py-2">{{ $receivable->id }}</td>
-                        <td class="border px-4 py-2">{{ $receivable->client?->document_number ?? '—' }}</td>
-                        <td class="border px-4 py-2">{{ $receivable->acquirer?->document_number ?? '—' }}</td>
+                        <td class="border px-4 py-2">
+                            {{ format_document($receivable->client?->document_number ?? null) }}</td>
+                        <td class="border px-4 py-2">
+                            {{ format_document($receivable->acquirer?->document_number ?? null) }}</td>
                         <td class="border px-4 py-2">
                             {{ $receivable->paymentArrangement?->name ?? ($receivable->codInstitdrArrajPgto ?? '—') }}
                         </td>

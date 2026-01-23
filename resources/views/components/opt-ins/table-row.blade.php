@@ -5,10 +5,10 @@
         {{ $optin->unique_identifier ?? $optin->id }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {{ $optin->client?->document_number ?? '—' }}
+        {{ format_document($optin->client?->document_number ?? null) }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {{ $optin->acquirer?->document_number ?? '—' }}
+        {{ format_document($optin->acquirer?->document_number ?? null) }}
     </td>
     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {{ $optin->paymentArrangement ? $optin->paymentArrangement->name . '(' . $optin->paymentArrangement->code . ')' : '—' }}
