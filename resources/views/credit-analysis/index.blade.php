@@ -9,7 +9,6 @@
     <div id="cnpj-result">
     </div>
 
-
     <div id="credit-analysis-data-container" class="hidden">
         <x-credit-analysis.value-field-container />
 
@@ -18,9 +17,11 @@
         <x-credit-analysis.bank-debts-section />
     </div>
 
+    <x-common.calendar-modal :id="'receivables'" />
+    <x-common.calendar-modal :id="'cards-revenue'" />
+
     @push('page-scripts')
         <script type="module" src="/assets/scripts/credit-analysis/main.js"></script>
     @endpush
-
 
 </x-app-layout>

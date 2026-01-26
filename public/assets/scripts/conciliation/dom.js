@@ -1,4 +1,4 @@
-import { formatCurrency, formatCnpj } from "../common/utils.js";
+import { formatCurrency } from "../common/utils.js";
 
 export const searchInput = document.querySelector('[data-company-search]');
 export const selectField = document.querySelector('[data-company-select]');
@@ -33,28 +33,6 @@ export const toggleSections = (visible) => {
     });
 };
 
-export const renderOptions = (partners) => {
-    if (!selectField) return;
-
-    selectField.innerHTML = '<option value="">Selecione uma empresa</option>';
-
-    partners.forEach(p => {
-        const o = document.createElement('option');
-        o.value = p.id;
-
-        const name = p.name || p.business_name || '—';
-        const cnpjFormatted = formatCnpj(p.document_number);
-
-        if (cnpjFormatted) {
-            o.textContent = `${name} — ${cnpjFormatted}`;
-        } else {
-            o.textContent = name;
-        }
-
-        selectField.appendChild(o);
-    });
-};
-
 export const setLoading = (loading) => {
     document.getElementById('loading-message')?.remove();
 
@@ -66,23 +44,6 @@ export const setLoading = (loading) => {
     }
 };
 
-export const setPartnersLoading = (isLoading) => {
-    if (!selectField) return;
-
-    selectField.disabled = isLoading;
-
-    if (isLoading) {
-        selectField.innerHTML = `<option value="">Carregando empresas...</option>`;
-    }
-};
-
-const updateContainerValue = (containerId, value) => {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const valueEl = container.querySelector('.form-item-value');
-    if (valueEl) valueEl.textContent = formatCurrency(value);
-};
 
 export const renderReceivables = (data) => {
     const map = {
@@ -108,4 +69,13 @@ export const renderDefaultInfo = (data) => {
     Object.entries(map).forEach(([key, id]) => {
         updateContainerValue(id, data[key]);
     });
+};
+
+
+const updateContainerValue = (containerId, value) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const valueEl = container.querySelector('.form-item-value');
+    if (valueEl) valueEl.textContent = formatCurrency(value);
 };

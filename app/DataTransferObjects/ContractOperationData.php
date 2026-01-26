@@ -8,6 +8,7 @@ class ContractOperationData
         public readonly string $documentNumber,
         public readonly float  $warrantedValue,
         public readonly string $negotiationType,
+        public readonly string $type,
         public readonly string $installmentsType,
         public readonly ?int   $singleInstallmentDays,
         public readonly ?float $singleInstallmentInterest,
@@ -21,6 +22,7 @@ class ContractOperationData
         return new self(
             documentNumber: $request->document_number,
             warrantedValue: (float) $request->warranted_value,
+            type: $request->type,
             negotiationType: $request->negotiation_type,
             installmentsType: $request->installments_type,
             singleInstallmentDays: $request->single_installment_days,
@@ -36,6 +38,7 @@ class ContractOperationData
         return new self(
             documentNumber: $data['documentNumber'],
             warrantedValue: (float) $data['warrantedValue'],
+            type: $data['type'],
             negotiationType: $data['negotiationType'],
             installmentsType: $data['installmentsType'],
             singleInstallmentDays: $data['singleInstallmentDays'] ?? null,
@@ -51,6 +54,7 @@ class ContractOperationData
         return [
             'documentNumber'             => $this->documentNumber,
             'warrantedValue'             => $this->warrantedValue,
+            'type'                       => $this->type,
             'negotiationType'            => $this->negotiationType,
             'installmentsType'           => $this->installmentsType,
             'singleInstallmentDays'      => $this->singleInstallmentDays,

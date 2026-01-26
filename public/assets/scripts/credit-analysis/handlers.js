@@ -1,6 +1,6 @@
 import { initCompanySelector } from '../common/company-selector.js';
 import { formatCnpj } from '../common/utils.js';
-import { fetchPartners } from '../query-index/api.js';
+import { fetchPartners } from '../conciliation/api.js';
 import { fetchCreditAnalysis } from './api.js';
 
 import {
@@ -28,6 +28,10 @@ export const registerEventHandlers = () => {
 
         onSelect: async (id) => {
             container.classList.add('hidden');
+
+            if (window.receivablesCalendar) {
+                window.receivablesCalendar.reset();
+            }
 
             const response = await fetchCreditAnalysis(id);
 

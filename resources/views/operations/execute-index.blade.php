@@ -12,6 +12,8 @@
         <x-operation-execute-index.operation-info-fields-container />
     </form>
 
+    <x-common.calendar-modal :id="'receivables'" />
+
     @push('page-scripts')
         <script type="module" src="/assets/scripts/operation-execute-index/main.js"></script>
     @endpush

@@ -1,6 +1,6 @@
 import { initCompanySelector } from "../common/company-selector.js";
 import { formatCnpj } from "../common/utils.js";
-import { fetchPartners } from "../query-index/api.js";
+import { fetchPartners } from "../conciliation/api.js";
 import { fetchReceivables } from "./api.js";
 import { renderReceivables, showMessage } from "./dom.js";
 
@@ -18,6 +18,10 @@ export const initOperationCompanySelector = () => {
             showMessage('Buscando...');
 
             try {
+                if (window.receivablesCalendar) {
+                    window.receivablesCalendar.reset();
+                }
+
                 const data = await fetchReceivables(id);
 
                 document.getElementById('operation-info-fields-container').style.display = 'flex';

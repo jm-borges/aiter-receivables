@@ -4,7 +4,8 @@
     </h2>
 
     <!-- Área do gráfico -->
-    <div id="warranty-evolution-chart" class="relative h-64 flex items-end justify-between gap-4 px-2">
+    <div id="warranty-evolution-chart"
+        class="relative h-64 w-full overflow-x-auto flex items-end justify-between gap-4 px-2">
         <!-- JS vai renderizar aqui -->
     </div>
 

@@ -21,14 +21,15 @@
     </div>
 
     {{-- Estado: empresa selecionada --}}
-    <div id="receivables-content" class="hidden mt-5 flex">
-        <x-common.form-item-card id="locked-by-user-values" width="513" icon="/assets/images/PiggyBank.png"
-            title="Total de recebíveis performados coletados" value="R$ 0,00" />
+    <div id="receivables-content" class="hidden mt-5 flex flex-wrap gap-4">
+        <x-common.form-item-card id="locked-by-user-values" icon="/assets/images/PiggyBank.png"
+            title="Total de recebíveis performados coletados" value="R$ 0,00" class="w-full md:w-[48%] lg:flex-1" />
 
         <x-common.form-item-card id="received-values" icon="/assets/images/CalendarCheck.png" title="Recebido"
-            value="R$ 0,00" marginLeft="10" />
+            value="R$ 0,00" class="w-full md:w-[48%] lg:flex-1" />
 
         <x-common.form-item-card id="to-be-received-values" icon="/assets/images/CalendarMinus.png"
-            title="Falta receber" value="R$ 0,00" marginLeft="10" />
+            title="Falta receber" value="R$ 0,00" class="w-full md:w-[48%] lg:flex-1" />
     </div>
+
 </div>

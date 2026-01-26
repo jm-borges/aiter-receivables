@@ -21,22 +21,26 @@ export const registerEventHandlers = () => {
         },
 
         onSelect: async (id) => {
-            toggleSections(true);
             setReceivablesMode(false);
             setDefaultsMode(false);
+            toggleSections(false);
 
             setLoading(true);
 
             const receivablesData = await fetchPartnerReceivablesDetails(id);
             const contractsPaymentsData = await fetchPartnerContractsPaymentsDetails(id);
 
-            setLoading(false);
-
             renderReceivables(receivablesData);
             renderDefaultInfo(contractsPaymentsData);
 
+            setLoading(false);
+
             setReceivablesMode(true);
             setDefaultsMode(true);
+            toggleSections(true);
         }
     });
 };
+
+setReceivablesMode(false);
+setDefaultsMode(false);

@@ -1,15 +1,27 @@
-import { state } from './state.js';
+export function createNavigation(state, renderer, config) {
+    let prevBtn, nextBtn;
 
-export function createNavigation(dom, renderer) {
+    const baseId = config.id;
+
     return {
-        changeMonth(delta) {
-            state.currentDate.setMonth(state.currentDate.getMonth() + delta);
-            renderer.build();
+        bind() {
+            prevBtn = document.getElementById(`${baseId}-calendar-prev-month`);
+            nextBtn = document.getElementById(`${baseId}-calendar-next-month`);
+
+            prevBtn.addEventListener('click', () => {
+                state.currentDate.setMonth(state.currentDate.getMonth() - 1);
+                renderer.build();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                state.currentDate.setMonth(state.currentDate.getMonth() + 1);
+                renderer.build();
+            });
         },
 
-        bind() {
-            dom.prevBtn.addEventListener('click', () => this.changeMonth(-1));
-            dom.nextBtn.addEventListener('click', () => this.changeMonth(1));
+        unbind() {
+            prevBtn?.replaceWith(prevBtn.cloneNode(true));
+            nextBtn?.replaceWith(nextBtn.cloneNode(true));
         }
     };
 }

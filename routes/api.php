@@ -102,7 +102,7 @@ Route::prefix('v1')->group(function () {
         Route::get('business-partners/lookup/{cnpj}/credit-analysis', [BusinessPartnerController::class, 'creditAnalysisByCnpj']);
 
         Route::get('business-partners/{id}/receivables/schedule', [BusinessPartnerController::class, 'receivablesSchedule']);
-
+        Route::get('business-partners/{id}/cards-revenue/schedule', [BusinessPartnerController::class, 'cardsRevenueSchedule']);
 
         Route::post('attachment', [AttachmentController::class, 'addAttachment']);
         Route::delete('attachment', [AttachmentController::class, 'destroyAllAttachment']);

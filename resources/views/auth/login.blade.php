@@ -70,8 +70,7 @@
 
         {{-- COLUNA DIREITA – BACKGROUND + LOGO --}}
         <div class="relative hidden md:block">
-            <div class="absolute inset-0 bg-[url('/assets/images/background.png')] bg-cover bg-center">
-            </div>
+            <div class="absolute inset-0 bg-[url('/resources/images/background.png')] bg-cover bg-center"></div>
 
             <div class="absolute inset-0 flex items-center justify-center">
                 <img src="/assets/images/symbol.png" alt="Logo" class="w-full max-w-2xl h-auto opacity-90">

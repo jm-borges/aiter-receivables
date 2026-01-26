@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Enums\ContractOperationType;
 use App\Enums\ContractStatus;
 use App\Enums\NegotiationType;
 use App\Models\Core\Pivots\ContractHasAcquirer;
@@ -26,6 +27,7 @@ class Contract extends Model
         'end_date',
         'status',
         'uses_registrar_management',
+        'type',
         'negotiation_type',
     ];
 
@@ -41,6 +43,7 @@ class Contract extends Model
             'end_date' => 'date',
             'uses_registrar_management' => 'boolean',
             'status' => ContractStatus::class,
+            'type' => ContractOperationType::class,
             'negotiation_type' => NegotiationType::class,
         ];
     }

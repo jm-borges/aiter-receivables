@@ -81,6 +81,8 @@ class ReceivableService
             ->sum('amount');
 
         return [
+            'company_name' => $businessPartner->name,
+            'company_id' => $businessPartner->id,
             'received' => $received,
             'to_be_received' => $toBeReceived,
             'locked' => $locked,

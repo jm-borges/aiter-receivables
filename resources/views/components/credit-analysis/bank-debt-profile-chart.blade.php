@@ -1,4 +1,4 @@
-<div class="bg-[#f4f2f7] rounded-xl p-6 w-full">
+<div class="bg-[#f4f2f7] rounded-xl p-6 w-full h-full">
     <h2 class="text-[#2d1b69] font-semibold text-lg mb-4">
         Perfil das dívidas bancárias
     </h2>

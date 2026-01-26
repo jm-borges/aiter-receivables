@@ -14,6 +14,8 @@ export function renderWarrantyAvailability(data) {
         "payables-total": "payables.total",
         "receivables-total": "receivables.total",
     }, data);
+
+    setupWarrantyCalendarButtons(data);
 }
 
 export function renderBankDebts(data) {
@@ -24,3 +26,23 @@ export function renderBankDebts(data) {
     }, data);
 }
 
+function setupWarrantyCalendarButtons(data) {
+    const companyId = data.company_id || data.company?.id || data.id;
+    if (!companyId) return;
+
+    const buttons = [
+        { id: 'btn-warranty-free-schedule', calendarId: 'receivables', type: 'free' },
+        { id: 'btn-warranty-cards-revenue-schedule', calendarId: 'cards-revenue', type: 'receivable' }
+    ];
+
+    for (const btnCfg of buttons) {
+        const btn = document.getElementById(btnCfg.id);
+        if (!btn) continue;
+
+        btn.dataset.openCalendar = btnCfg.calendarId;
+        btn.dataset.calendarContext = JSON.stringify({
+            partnerId: companyId,
+            type: btnCfg.type
+        });
+    }
+}

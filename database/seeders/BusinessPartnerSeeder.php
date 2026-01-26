@@ -17,12 +17,6 @@ class BusinessPartnerSeeder extends Seeder
 
         $partners = [
             [
-                'id' => '0199e43f-41cc-7072-875d-b4e58bd15dd4',
-                'name' => 'EC Teste',
-                'type' => 'client',
-                'document_number' => '94000001000180',
-            ],
-            [
                 'id' => '0199e442-a78f-70dc-8847-19a3d226460d',
                 'name' => 'Fornecedor Teste',
                 'type' => 'supplier',
@@ -40,12 +34,6 @@ class BusinessPartnerSeeder extends Seeder
                 'name' => 'BANCO SAFRA S A',
                 'type' => 'acquirer',
                 'document_number' => '58160789000128',
-            ],
-            [
-                'id' => '0199e445-c982-728d-8347-0f860c78ec7a',
-                'name' => 'EC Teste 2',
-                'type' => 'client',
-                'document_number' => '00000878000127',
             ],
             [
                 'id' => '0199e446-23bc-71b4-8ab9-2854109bb145',

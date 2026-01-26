@@ -19,11 +19,12 @@
     </div>
 
     {{-- Estado: empresa selecionada --}}
-    <div id="payment-default-content" class="hidden mt-5 flex">
-        <x-common.form-item-card id="amount-due" icon="/assets/images/Cash.png" title="Valor devido" value="R$ 0,00" />
+    <div id="payment-default-content" class="hidden mt-5 flex flex-wrap gap-4">
+        <x-common.form-item-card id="amount-due" icon="/assets/images/Cash.png" title="Valor devido" value="R$ 0,00"
+            class="w-full md:w-[48%] lg:flex-1" />
         <x-common.form-item-card id="amount-to-be-recovered" icon="/assets/images/Coin.png" title="Valor a recuperar"
-            value="R$ 0,00" marginLeft="10" />
+            value="R$ 0,00" class="w-full md:w-[48%] lg:flex-1" />
         <x-common.form-item-card id="amount-recovered" icon="/assets/images/Check2Square.png" title="Valor recuperado"
-            value="R$ 0,00" marginLeft="10" />
+            value="R$ 0,00" class="w-full md:w-[48%] lg:flex-1" />
     </div>
 </div>

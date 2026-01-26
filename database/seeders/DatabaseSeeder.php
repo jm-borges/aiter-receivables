@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ActionSeeder::class,
             PaymentArrangementSeeder::class,
             BusinessPartnerSeeder::class,
+            TestDataSeeder::class,
         ]);
     }
 }

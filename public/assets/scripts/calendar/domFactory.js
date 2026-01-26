@@ -14,32 +14,15 @@ export const domFactory = {
         return el;
     },
 
-    day(day, info) {
+    day(day, info, config) {
+        if (config.renderDay) {
+            return config.renderDay(day, info);
+        }
+
+        // fallback genérico
         const el = document.createElement('div');
-        el.className = 'bg-[#eceaec] min-h-[110px] p-2.5 flex flex-col justify-between';
-
-        el.innerHTML = `
-            <div class="text-xl font-bold text-[#1e144f]">
-                ${String(day).padStart(2, '0')}
-            </div>
-
-            <div class="flex flex-col gap-1.5 text-xs">
-                <div>
-                    <strong class="text-[13px] text-[#0a7a2f]">
-                        ${utils.formatMoney(info.received)}
-                    </strong><br>
-                    <span class="text-[#0a7a2f]">Recebido</span>
-                </div>
-
-                <div>
-                    <strong class="text-[13px] text-[#c40000]">
-                        ${utils.formatMoney(info.to_receive)}
-                    </strong><br>
-                    <span class="text-[#c40000]">A receber</span>
-                </div>
-            </div>
-        `;
-
+        el.className = 'bg-[#eceaec] min-h-[110px] p-2.5';
+        el.textContent = day;
         return el;
     },
 

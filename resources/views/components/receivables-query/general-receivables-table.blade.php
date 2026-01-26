@@ -65,11 +65,12 @@
 
             {{-- Agenda --}}
             <div class="flex justify-center">
-                <button class="conciliation-open-receivables-modal text-lg hover:scale-110 transition"
-                    data-partner-id="{{ $partner->id }}" title="Ver agenda">
+                <button class="text-lg hover:scale-110 transition" title="Ver agenda" data-open-calendar="receivables"
+                    data-calendar-context='@json(['partnerId' => $partner->id])'>
                     📅
                 </button>
             </div>
+
 
         </div>
 

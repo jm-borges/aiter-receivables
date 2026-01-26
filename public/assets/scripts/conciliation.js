@@ -12,8 +12,6 @@ function initReceivablesModal() {
         const partnerId = btn.dataset.partnerId;
         console.log('Abrir modal para partner:', partnerId);
 
-        // depois vamos usar esse ID pra carregar dados
-
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
     });
@@ -42,27 +40,37 @@ function initCollapsibleSection(prefix) {
 
     if (!toggle || !content || !empty || !arrow) return;
 
+    // 🔒 FORÇA COMEÇAR FECHADO
+    content.style.display = 'none';
+    empty.style.display = 'none';
+    arrow.classList.remove('rotate-180');
+
     toggle.addEventListener('click', () => {
-        const contentIsVisible = !content.classList.contains('hidden');
-        const emptyIsVisible = !empty.classList.contains('hidden');
+        const contentVisible = content.style.display !== 'none';
+        const emptyVisible = empty.style.display !== 'none';
 
-        const isOpen = contentIsVisible || emptyIsVisible;
+        const isOpen = contentVisible || emptyVisible;
 
-        content.classList.add('hidden');
-        empty.classList.add('hidden');
+        // Fecha ambos
+        content.style.display = 'none';
+        empty.style.display = 'none';
 
         if (!isOpen) {
-            const elToOpen =
-                contentIsVisible || (!contentIsVisible && !emptyIsVisible)
-                    ? content
-                    : empty;
+            // Decide o que reabrir baseado no "modo" atual
+            const shouldShowContent = content.dataset.active === '1';
 
-            elToOpen.classList.remove('hidden');
+            if (shouldShowContent) {
+                content.style.display = 'flex';
+            } else {
+                empty.style.display = 'block';
+            }
         }
 
         arrow.classList.toggle('rotate-180', !isOpen);
     });
 }
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     initReceivablesModal();

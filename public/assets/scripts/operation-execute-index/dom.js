@@ -7,9 +7,8 @@ export const showMessage = (msg) => {
 };
 
 export const renderReceivables = (data) => {
-    document.getElementById('operation-info-fields-container').style.display = 'flex';
-
     console.log(data)
+    document.getElementById('operation-info-fields-container').style.display = 'flex';
 
     const map = {
         received: 'received-values',
@@ -24,6 +23,8 @@ export const renderReceivables = (data) => {
         const el = container?.querySelector('.form-item-value');
         if (el) el.textContent = formatCurrency(data[key]);
     });
+
+    setupCalendarButtons(data);
 };
 
 export const toggleInstallmentContainers = (type) => {
@@ -53,3 +54,27 @@ export const renderInstallments = (count) => {
         installmentsContainer.appendChild(div);
     }
 };
+
+function setupCalendarButtons(data) {
+    const companyId = data.company_id || data.company?.id || data.id;
+
+    if (!companyId) return;
+
+    const buttons = [
+        {
+            id: 'btn-free-values-schedule',
+            type: 'free'
+        },
+    ];
+
+    for (const btnCfg of buttons) {
+        const btn = document.getElementById(btnCfg.id);
+        if (!btn) continue;
+
+        btn.dataset.openCalendar = 'receivables';
+        btn.dataset.calendarContext = JSON.stringify({
+            partnerId: companyId,
+            warrantyType: btnCfg.type
+        });
+    }
+}

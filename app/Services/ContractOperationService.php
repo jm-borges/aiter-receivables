@@ -10,7 +10,6 @@ use App\Handlers\ContractOperationHandler;
 use App\Models\Core\BusinessPartner;
 use App\Models\Core\Contract;
 use App\Models\Core\Operation;
-use App\Models\User;
 use App\Services\Core\ContractService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -103,6 +102,7 @@ class ContractOperationService
             'client_id' => $partner->id,
             'supplier_id' => $user->supplier()?->id,
             'value' => $data->warrantedValue,
+            'type' => $data->type,
             'negotiation_type' => $data->negotiationType,
             'start_date' => $user?->pivot?->opt_in_start_date,
             'end_date' => $user?->pivot?->opt_in_end_date,

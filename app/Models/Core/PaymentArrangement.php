@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Enums\PaymentArrangementType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -15,6 +16,7 @@ class PaymentArrangement extends Model
     protected $fillable = [
         'name',
         'code',
+        'type',
     ];
 
     /**
@@ -25,7 +27,7 @@ class PaymentArrangement extends Model
     protected function casts(): array
     {
         return [
-            // Add your casts here
+            'type' => PaymentArrangementType::class,
         ];
     }
 

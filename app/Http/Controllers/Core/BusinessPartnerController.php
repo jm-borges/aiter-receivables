@@ -140,4 +140,44 @@ class BusinessPartnerController extends Controller
             ]),
         ]);
     }
+
+    public function cardsRevenueSchedule(string $id): JsonResponse
+    {
+        $businessPartner = BusinessPartner::findOrFail($id);
+
+        $rows = $businessPartner
+            ->clientReceivables()
+            ->whereNotNull('dtPrevtLiquid')
+            ->with('paymentArrangement')
+            ->get()
+            ->groupBy(fn($r) => $r->dtPrevtLiquid->format('Y-m-d'));
+
+        $schedule = collect();
+
+        foreach ($rows as $date => $receivables) {
+            $credit = 0;
+            $debit = 0;
+
+            foreach ($receivables as $r) {
+                $type = $r->paymentArrangement->type ?? 'debit';
+
+                if ($type === 'credit') {
+                    $credit += $r->vlrTot;
+                } else {
+                    $debit += $r->vlrTot;
+                }
+            }
+
+            $schedule->push([
+                'date' => $date,
+                'credit_card' => (float) $credit,
+                'debit_card' => (float) $debit,
+            ]);
+        }
+
+        return response()->json([
+            'business_partner_id' => $businessPartner->id,
+            'schedule' => $schedule,
+        ]);
+    }
 }

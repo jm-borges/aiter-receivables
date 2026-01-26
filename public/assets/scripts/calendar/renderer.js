@@ -1,12 +1,31 @@
-import { utils } from './utils.js';
 import { domFactory } from './domFactory.js';
-import { state } from './state.js';
+import { utils } from './utils.js';
 
-export function createRenderer(dom) {
+export function createRenderer(state, config) {
+    const baseId = config.id;
+
+    const dom = {
+        root: document.getElementById(`${baseId}-calendar-root`),
+        title: document.getElementById(`${baseId}-calendar-title`),
+        grid: document.getElementById(`${baseId}-calendar-grid`),
+        loading: document.getElementById(`${baseId}-calendar-loading`),
+    };
 
     return {
         clear() {
             dom.grid.innerHTML = '';
+        },
+
+        showLoading() {
+            if (dom.loading) {
+                dom.loading.classList.remove('hidden');
+            }
+        },
+
+        hideLoading() {
+            if (dom.loading) {
+                dom.loading.classList.add('hidden');
+            }
         },
 
         renderTitle() {
@@ -15,52 +34,32 @@ export function createRenderer(dom) {
             dom.title.textContent = `${utils.getMonthName(m)} ${y}`;
         },
 
-        renderWeekdays() {
-            utils.getWeekdays().forEach(label => {
-                dom.grid.appendChild(domFactory.weekday(label));
-            });
-        },
-
-        renderEmptyDays(count) {
-            for (let i = 0; i < count; i++) {
-                dom.grid.appendChild(domFactory.emptyDay());
-            }
-        },
-
-        renderMonthDays() {
-            const y = state.currentDate.getFullYear();
-            const m = state.currentDate.getMonth();
-
-            const { totalDays } = utils.getMonthMeta(y, m);
-
-            for (let day = 1; day <= totalDays; day++) {
-                const key = utils.formatDateKey(y, m, day);
-
-                const info = state.fullDataMap[key] || {
-                    received: 0,
-                    to_receive: 0
-                };
-
-                dom.grid.appendChild(domFactory.day(day, info));
-            }
-        },
-
         build() {
             const y = state.currentDate.getFullYear();
             const m = state.currentDate.getMonth();
 
-            const { startWeekDay } = utils.getMonthMeta(y, m);
+            const { startWeekDay, totalDays } = utils.getMonthMeta(y, m);
 
             this.clear();
             this.renderTitle();
-            this.renderWeekdays();
-            this.renderEmptyDays(startWeekDay);
-            this.renderMonthDays();
-        },
 
-        showLoading() {
-            this.clear();
-            dom.grid.appendChild(domFactory.loading());
+            utils.getWeekdays().forEach(label => {
+                dom.grid.appendChild(domFactory.weekday(label));
+            });
+
+            for (let i = 0; i < startWeekDay; i++) {
+                dom.grid.appendChild(domFactory.emptyDay());
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const key = utils.formatDateKey(y, m, day);
+
+                const info = state.dataMap[key] || config.emptyDayData || {};
+
+                dom.grid.appendChild(
+                    domFactory.day(day, info, config)
+                );
+            }
         }
     };
 }
