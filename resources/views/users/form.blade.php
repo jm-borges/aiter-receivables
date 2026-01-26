@@ -15,4 +15,9 @@
             </div>
         </div>
     </div>
+
+    @push('page-scripts')
+        <script type="module" src="/assets/scripts/user-form.js"></script>
+    @endpush
+
 </x-app-layout>

@@ -1,11 +1,11 @@
 @props(['partners'])
 
-<div id="receivables-section" style="display:block">
-    <div class="form-section-title" style="display: flex; justify-content: space-between; cursor: pointer;"
+<div id="receivables-section" class="block">
+    <div class="text-2xl font-semibold text-white mt-10 mb-[5px] flex justify-between cursor-pointer"
         id="receivables-toggle">
         <span>Status de Operações</span>
 
-        <span id="receivables-arrow" style="transition: transform 0.2s ease;color:white">
+        <span id="receivables-arrow" class="transition-transform duration-200 text-white">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
                 <path d="M6 9L12 15L18 9" stroke="white" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" />
@@ -13,15 +13,15 @@
         </span>
     </div>
 
-    <hr class="form-section-divider">
+    <hr class="border-0 border-t-2 border-white">
 
     {{-- Estado: nenhuma empresa selecionada --}}
-    <div id="receivables-empty" style="display: none; margin-top: 20px;">
+    <div id="receivables-empty" class="hidden mt-5">
         <x-receivables-query.general-receivables-table :partners="$partners" />
     </div>
 
     {{-- Estado: empresa selecionada --}}
-    <div id="receivables-content" style="display: none; margin-top: 20px;">
+    <div id="receivables-content" class="hidden mt-5 flex">
         <x-common.form-item-card id="locked-by-user-values" width="513" icon="/assets/images/PiggyBank.png"
             title="Total de recebíveis performados coletados" value="R$ 0,00" />
 
@@ -32,31 +32,3 @@
             title="Falta receber" value="R$ 0,00" marginLeft="10" />
     </div>
 </div>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggle = document.getElementById('receivables-toggle');
-        const content = document.getElementById('receivables-content');
-        const arrow = document.getElementById('receivables-arrow');
-        const empty = document.getElementById('receivables-empty');
-
-        if (!toggle || !content || !arrow) return;
-
-        toggle.addEventListener('click', () => {
-            const contentEl = content.style.display !== 'none' ? content : empty;
-            if (!contentEl) return;
-
-            const isOpen = contentEl.style.display !== 'none';
-
-            content.style.display = 'none';
-            empty.style.display = 'none';
-
-            if (!isOpen) {
-                contentEl.style.display = contentEl === content ? 'flex' : 'block';
-            }
-
-            arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-        });
-    });
-</script>

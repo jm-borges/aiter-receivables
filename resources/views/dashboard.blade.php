@@ -21,4 +21,8 @@
 
     <x-dashboard.dashboard-table :partners="$partners" />
 
+    @push('page-scripts')
+        <script type="module" src="/assets/scripts/dashboard.js"></script>
+    @endpush
+
 </x-app-layout>

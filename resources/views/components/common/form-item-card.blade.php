@@ -12,8 +12,9 @@
     'infoHeight' => 21,
 ])
 
-<div class="standard-container" {{ isset($id) ? 'id=' . $id : '' }}
+<div class="p-4 bg-white rounded-md" {{ isset($id) ? 'id=' . $id : '' }}
     style="width:{{ $width }}px; margin-left: {{ $marginLeft }}px; margin-top: {{ $marginTop }}px">
+
     <div class="flex justify-between items-center">
         <div class="flex items-center">
             <img src="{{ $icon }}" width="{{ $iconWidth }}" height="{{ $iconHeight }}">
@@ -23,11 +24,11 @@
         <img src="/assets/images/InfoCircle.png" width="{{ $infoWidth }}" height="{{ $infoHeight }}">
     </div>
 
-    <div class="form-item-value standard-container-title">
+    <div class="form-item-value text-[#211748] text-xl font-semibold">
         {{ $value }}
     </div>
 
-    <hr class="form-section-divider">
+    <hr class="border-0 border-t-2 border-white">
 
     <x-common.form-date-text />
 </div>

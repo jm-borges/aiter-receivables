@@ -1,7 +1,7 @@
 import { formatCurrency, formatCnpj } from "../common/utils.js";
 
-export const searchInput = document.querySelector('.form-search-text-field');
-export const selectField = document.querySelector('.form-select');
+export const searchInput = document.querySelector('[data-company-search]');
+export const selectField = document.querySelector('[data-company-select]');
 
 export const receivablesSection = document.getElementById('receivables-section');
 export const defaultsSection = document.getElementById('defaults-section');
@@ -61,7 +61,7 @@ export const setLoading = (loading) => {
     if (loading && selectField) {
         selectField.insertAdjacentHTML(
             'afterend',
-            '<div id="loading-message" style="margin-top:10px;">Carregando dados...</div>'
+            '<div id="loading-message" class="conciliation-loading-message">Carregando dados...</div>'
         );
     }
 };

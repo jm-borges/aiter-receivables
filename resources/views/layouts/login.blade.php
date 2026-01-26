@@ -8,6 +8,8 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <link rel="stylesheet" href="/assets/styles/login.css">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 

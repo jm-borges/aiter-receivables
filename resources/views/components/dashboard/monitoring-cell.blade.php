@@ -7,23 +7,23 @@
         $variation = $monitoring['variation_percent'] ?? 0;
     @endphp
 
-    <div class="monitoring">
-        <div class="gradient-circle {{ $status->color() }}-gradient-circle"></div>
+    <div class="flex items-start gap-2 max-w-full">
+        <div class="w-6 h-6 min-w-6 min-h-6 rounded-full shrink-0 bg-gradient-{{ $status->color() }}"></div>
 
         <div>
-            <p class="dashboard-main-text">
+            <p class="text-[13px] font-semibold leading-[1.1]">
                 {{ $status->title() }}
             </p>
-            <p class="dashboard-sub-text">
+            <p class="text-[11px] leading-[1.1]">
                 {{ $status->subtitle($variation) }}
             </p>
         </div>
     </div>
 @else
     {{-- Fallback --}}
-    <div class="monitoring">
-        <div class="gray-gradient-circle"></div>
-        <p class="dashboard-main-text">
+    <div class="flex items-start gap-2 max-w-full">
+        <div class="gray-w-6 h-6 min-w-6 min-h-6 rounded-full shrink-0 bg-gradient-gray"></div>
+        <p class="text-[13px] font-semibold leading-[1.1]">
             Sem dados
         </p>
     </div>

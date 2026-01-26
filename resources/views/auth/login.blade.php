@@ -4,7 +4,8 @@
     <div class="min-h-screen w-full grid grid-cols-1 md:grid-cols-[30%_70%]">
 
         {{-- COLUNA ESQUERDA – FORM --}}
-        <div class="flex items-center justify-center p-8" style="background-color: #E5E1E7;">
+        <div class="flex items-center justify-center p-8 bg-[#E5E1E7]">
+
 
             <div class="w-full max-w-sm">
 
@@ -69,8 +70,7 @@
 
         {{-- COLUNA DIREITA – BACKGROUND + LOGO --}}
         <div class="relative hidden md:block">
-            <div class="absolute inset-0 bg-cover bg-center"
-                style="background-image: url('/assets/images/background.png');">
+            <div class="absolute inset-0 bg-[url('/assets/images/background.png')] bg-cover bg-center">
             </div>
 
             <div class="absolute inset-0 flex items-center justify-center">

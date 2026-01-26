@@ -1,0 +1,15 @@
+.bg-gradient-gray {
+    background: linear-gradient(135deg, #D9D9D9, #9E9E9E);
+}
+
+.bg-gradient-red {
+    background: linear-gradient(135deg, #FFB3B3, #E53935);
+}
+
+.bg-gradient-green {
+    background: linear-gradient(135deg, #B9F6CA, #2E7D32);
+}
+
+.bg-gradient-yellow {
+    background: linear-gradient(135deg, #FFF3B0, #F9A825);
+}

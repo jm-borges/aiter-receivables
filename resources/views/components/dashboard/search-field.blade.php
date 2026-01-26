@@ -1,17 +1,16 @@
-<form method="GET" action="{{ url('/dashboard') }}" style="margin-top: 30px">
-    <label>
-        <p style="color: white; font-weight: 600; font-size: 14px">
+<form method="GET" action="{{ url('/dashboard') }}" class="mt-8">
+    <label class="block">
+        <p class="text-white font-semibold text-sm mb-2">
             Buscar CNPJ
         </p>
-        <div style="display: flex; justify-content: start">
+        <div class="flex justify-start items-center">
             <div>
-                <input type="text" name="cnpj" class="cnpj-input" value="{{ request('cnpj') }}"
-                    placeholder="00.000.000/0000-00" maxlength="18"
-                    style="width: 339px; border-radius: 5px; border-color: #211748">
+                <input type="text" name="cnpj" class="cnpj-input w-[339px] rounded border border-[#211748] px-2 py-1"
+                    value="{{ request('cnpj') }}" placeholder="00.000.000/0000-00" maxlength="18">
             </div>
-            <div style="margin-left: 4px">
-                <button type="submit" style="background: transparent; border: none; padding: 0">
-                    <img src="/assets/images/search_icon.png" alt="Buscar" style="cursor: pointer; width: 36px">
+            <div class="ml-1">
+                <button type="submit" class="bg-transparent border-none p-0">
+                    <img src="/assets/images/search_icon.png" alt="Buscar" class="cursor-pointer w-9">
                 </button>
             </div>
         </div>

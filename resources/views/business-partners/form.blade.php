@@ -17,4 +17,8 @@
         </div>
     </div>
 
+    @push('page-scripts')
+        <script type="module" src="/assets/scripts/business-partner-form.js"></script>
+    @endpush
+
 </x-app-layout>

@@ -1,0 +1,11 @@
+select option {
+    background-color: white;
+    color: #69549F;
+}
+
+select option:checked,
+select option:focus,
+select option:selected {
+    background-color: #69549F;
+    color: white;
+}

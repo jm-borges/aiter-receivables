@@ -16,10 +16,10 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link rel="stylesheet" href="/assets/styles/main.css">
-    <link rel="stylesheet" href="/assets/styles/dashboard.css">
-    <link rel="stylesheet" href="/assets/styles/operation-execute-index.css">
-    <link rel="stylesheet" href="/assets/styles/receivables-query.css">
+
+    <link rel="stylesheet" href="/assets/styles/colors.css">
+    <link rel="stylesheet" href="/assets/styles/forms.css">
+
 
 </head>
 

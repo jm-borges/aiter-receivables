@@ -1,14 +1,14 @@
 @props(['partners'])
 
-<div class="dashboard-main-table">
+<div class="mt-10 w-[1300px]">
     @if ($partners->isNotEmpty())
-        <div class="dashboard-table-header">
-            <p class="dashboard-header-text">Logo</p>
-            <p class="dashboard-header-text">Empresa/CNPJ</p>
-            <p class="dashboard-header-text">Garantia disponível</p>
-            <p class="dashboard-header-text">Dívidas bancárias tomadas</p>
-            <p class="dashboard-header-text">Monitoramento</p>
-            <p class="dashboard-header-text">Ação</p>
+        <div class="grid grid-cols-[5%_24%_18%_25%_18%_10%] items-center mb-2.5">
+            <p class="font-medium text-base text-white mx-2">Logo</p>
+            <p class="font-medium text-base text-white mx-2">Empresa/CNPJ</p>
+            <p class="font-medium text-base text-white mx-2">Garantia disponível</p>
+            <p class="font-medium text-base text-white mx-2">Dívidas bancárias tomadas</p>
+            <p class="font-medium text-base text-white mx-2">Monitoramento</p>
+            <p class="font-medium text-base text-white mx-2">Ação</p>
         </div>
     @endif
 

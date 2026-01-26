@@ -5,8 +5,8 @@ export const initCompanySelector = ({
     onSelect,
     formatOption
 }) => {
-    const searchInput = document.querySelector('.form-search-text-field');
-    const selectField = document.querySelector('.form-select');
+    const searchInput = document.querySelector('[data-company-search]');
+    const selectField = document.querySelector('[data-company-select]');
 
     if (!searchInput || !selectField) return;
 

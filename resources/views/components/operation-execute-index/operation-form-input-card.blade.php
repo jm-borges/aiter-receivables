@@ -1,10 +1,10 @@
 @props(['title', 'width' => 512])
 
 <div class="ml-2">
-    <div class="form-section-title">{{ $title }}</div>
-    <hr class="form-section-divider">
+    <div class="text-2xl font-semibold text-white mt-10 mb-[5px]">{{ $title }}</div>
+    <hr class="border-0 border-t-2 border-white">
 
-    <div class="standard-container" style="width: {{ $width }}px; margin-top:10px">
+    <div class="p-4 bg-white rounded-md" style="width: {{ $width }}px; margin-top:10px">
         <x-operation-execute-index.warranted-value-field />
 
         <x-operation-execute-index.negotiation-type-field />

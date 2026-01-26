@@ -1,6 +1,6 @@
 <div>
-    <div class="form-section-title">Agenda de Recebíveis</div>
-    <hr class="form-section-divider">
+    <div class="text-2xl font-semibold text-white mt-10 mb-[5px]">Agenda de Recebíveis</div>
+    <hr class="border-0 border-t-2 border-white">
 
     <div class="mt-3">
         <x-common.form-item-card id="free-values" icon="/assets/images/lock_open.png" title="Livre" value="R$ 0" />
